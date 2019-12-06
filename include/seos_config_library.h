@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "seos_err.h"
+#include "SeosError.h"
 
 #include "seos_config_data_types.h"
 #include "seos_config_instance_store.h"

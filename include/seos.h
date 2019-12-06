@@ -11,7 +11,7 @@
 // filesystem
 #include "seos_fs.h"    // include path to fs-core must be set in cmakelists.txt
 
-#include "seos_err.h"    
+#include "SeosError.h"
 
 #if 0
 // partition manager

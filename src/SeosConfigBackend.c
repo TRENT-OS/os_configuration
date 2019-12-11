@@ -25,7 +25,7 @@ typedef struct SeosConfigBackend_BackendFsLayout
 }
 SeosConfigBackend_BackendFsLayout;
 
-
+#if defined(FS_SUPPORT)
 static
 bool SeosConfigBackend_writeToFile(hPartition_t phandle, const char* name,
                                    unsigned int offset, void* buffer, int length)
@@ -190,6 +190,7 @@ SeosConfigBackend_createFileBackend(SeosConfigBackend_FileName name,
     return SEOS_SUCCESS;
 }
 
+#endif
 
 seos_err_t
 SeosConfigBackend_createMemBackend(void* buffer, size_t bufferSize,
@@ -227,7 +228,7 @@ SeosConfigBackend_createMemBackendAutoSized(void* buffer, size_t bufferSize,
                sizeOfRecord);
 }
 
-
+#if defined(FS_SUPPORT)
 seos_err_t
 SeosConfigBackend_initializeFileBackend(SeosConfigBackend* instance,
                                         SeosConfigBackend_FileName name, hPartition_t phandle)
@@ -254,7 +255,7 @@ SeosConfigBackend_initializeFileBackend(SeosConfigBackend* instance,
 
     return SEOS_SUCCESS;
 }
-
+#endif
 
 seos_err_t
 SeosConfigBackend_initializeMemBackend(SeosConfigBackend* instance,
@@ -313,6 +314,7 @@ SeosConfigBackend_readRecord(SeosConfigBackend* instance,
 
         return SEOS_SUCCESS;
     }
+    #if defined(FS_SUPPORT)
     else if (instance->backendType == SEOS_CONFIG_BACKEND_BACKEND_TYPE_FS)
     {
         unsigned int offset = sizeof(SeosConfigBackend_BackendFsLayout) + recordIndex *
@@ -332,6 +334,7 @@ SeosConfigBackend_readRecord(SeosConfigBackend* instance,
 
         return readResult ? SEOS_SUCCESS : SEOS_ERROR_GENERIC;
     }
+    #endif
     else
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
@@ -366,6 +369,7 @@ SeosConfigBackend_writeRecord(SeosConfigBackend* instance,
 
         return SEOS_SUCCESS;
     }
+    #if defined(FS_SUPPORT)
     else if (instance->backendType == SEOS_CONFIG_BACKEND_BACKEND_TYPE_FS)
     {
         unsigned int offset = sizeof(SeosConfigBackend_BackendFsLayout) + recordIndex *
@@ -385,6 +389,7 @@ SeosConfigBackend_writeRecord(SeosConfigBackend* instance,
 
         return writeResult ? SEOS_SUCCESS : SEOS_ERROR_GENERIC;
     }
+    #endif
     else
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);

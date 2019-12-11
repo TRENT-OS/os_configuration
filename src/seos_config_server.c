@@ -63,6 +63,13 @@ server_seos_configuration_createHandle(
     unsigned int id,
     SeosConfigHandle* handle)
 {
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+
     if (handleKind == SEOS_CONFIG_HANDLE_KIND_RPC)
     {
         SeosConfigLib* instance = seos_configuration_instance_store_getInstance(
@@ -75,16 +82,25 @@ server_seos_configuration_createHandle(
                 id,
                 handle);
         
-            return SEOS_SUCCESS;
+            result = SEOS_SUCCESS;
         }
         else
         {
-            return SEOS_ERROR_INVALID_PARAMETER;
+            result = SEOS_ERROR_INVALID_PARAMETER;
         }
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -95,14 +111,29 @@ server_seos_configuration_domainEnumeratorInit(
     SeosConfigLib_DomainEnumerator* enumerator)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
-        return library_seos_configuration_domainEnumeratorInit(localHandle, enumerator);
+        result = library_seos_configuration_domainEnumeratorInit(localHandle, enumerator);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -111,16 +142,31 @@ server_seos_configuration_domainEnumeratorClose(SeosConfigHandle handle,
                                     SeosConfigLib_DomainEnumerator* enumerator)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
         library_seos_configuration_domainEnumeratorClose(localHandle, enumerator);
 
-        return SEOS_SUCCESS;
+        result = SEOS_SUCCESS;
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -130,16 +176,31 @@ server_seos_configuration_domainEnumeratorReset(SeosConfigHandle handle,
                                     SeosConfigLib_DomainEnumerator* enumerator)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
         library_seos_configuration_domainEnumeratorReset(localHandle, enumerator);
 
-        return SEOS_SUCCESS;
+        result = SEOS_SUCCESS;
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -149,14 +210,29 @@ server_seos_configuration_domainEnumeratorIncrement(SeosConfigHandle handle,
                                         SeosConfigLib_DomainEnumerator* enumerator)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
-        return library_seos_configuration_domainEnumeratorIncrement(localHandle, enumerator);
+        result = library_seos_configuration_domainEnumeratorIncrement(localHandle, enumerator);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -168,14 +244,29 @@ server_seos_configuration_domainEnumeratorGetElement(
     SeosConfigLib_Domain* domain)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
-        return library_seos_configuration_domainEnumeratorGetElement(localHandle, enumerator, domain);
+        result = library_seos_configuration_domainEnumeratorGetElement(localHandle, enumerator, domain);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -187,14 +278,29 @@ server_seos_configuration_parameterEnumeratorInit(
     SeosConfigLib_ParameterEnumerator* enumerator)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
-        return library_seos_configuration_parameterEnumeratorInit(localHandle, domainEnumerator, enumerator);
+        result = library_seos_configuration_parameterEnumeratorInit(localHandle, domainEnumerator, enumerator);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -204,16 +310,31 @@ server_seos_configuration_parameterEnumeratorClose(SeosConfigHandle handle,
                                        SeosConfigLib_ParameterEnumerator* enumerator)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
         library_seos_configuration_parameterEnumeratorClose(localHandle, enumerator);
 
-        return SEOS_SUCCESS;
+        result = SEOS_SUCCESS;
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -223,14 +344,29 @@ server_seos_configuration_parameterEnumeratorReset(SeosConfigHandle handle,
                                        SeosConfigLib_ParameterEnumerator* enumerator)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
-        return library_seos_configuration_parameterEnumeratorReset(localHandle, enumerator);
+        result = library_seos_configuration_parameterEnumeratorReset(localHandle, enumerator);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -240,14 +376,29 @@ server_seos_configuration_parameterEnumeratorIncrement(SeosConfigHandle handle,
                                                SeosConfigLib_ParameterEnumerator* enumerator)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
-        return library_seos_configuration_parameterEnumeratorIncrement(localHandle, enumerator);
+        result = library_seos_configuration_parameterEnumeratorIncrement(localHandle, enumerator);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -259,14 +410,29 @@ server_seos_configuration_parameterEnumeratorGetElement(
     SeosConfigLib_Parameter* parameter)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
-        return library_seos_configuration_parameterEnumeratorGetElement(localHandle, enumerator, parameter);
+        result = library_seos_configuration_parameterEnumeratorGetElement(localHandle, enumerator, parameter);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -288,14 +454,29 @@ server_seos_configuration_domainCreateParameterEnumerator(
     SeosConfigLib_ParameterEnumerator* parameterEnumerator)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
-        return library_seos_configuration_domainCreateParameterEnumerator(localHandle, domain, parameterName, parameterEnumerator);
+        result = library_seos_configuration_domainCreateParameterEnumerator(localHandle, domain, parameterName, parameterEnumerator);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -308,14 +489,29 @@ server_seos_configuration_domainGetElement(
     SeosConfigLib_Parameter* parameter)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
-        return library_seos_configuration_domainGetElement(localHandle, domain, parameterName, parameter);
+        result = library_seos_configuration_domainGetElement(localHandle, domain, parameterName, parameter);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -355,15 +551,30 @@ server_seos_configuration_parameterGetValue(
     size_t* bytesCopied)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
         void *tmpBuf = dataport_unwrap_ptr(buffer);
-        return library_seos_configuration_parameterGetValue(localHandle, parameter, tmpBuf, bufferLength, bytesCopied);
+        result = library_seos_configuration_parameterGetValue(localHandle, parameter, tmpBuf, bufferLength, bytesCopied);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -375,14 +586,29 @@ server_seos_configuration_parameterGetValueAsU32(
     uint32_t* value)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
-        return library_seos_configuration_parameterGetValueAsU32(localHandle, parameter, value);
+        result = library_seos_configuration_parameterGetValueAsU32(localHandle, parameter, value);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -394,14 +620,29 @@ server_seos_configuration_parameterGetValueAsU64(
     uint64_t* value)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
-        return library_seos_configuration_parameterGetValueAsU64(localHandle, parameter, value);
+        result = library_seos_configuration_parameterGetValueAsU64(localHandle, parameter, value);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -414,15 +655,30 @@ server_seos_configuration_parameterGetValueAsString(
     size_t bufferLength)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
         void *tmpBuf = dataport_unwrap_ptr(buffer);
-        return library_seos_configuration_parameterGetValueAsString(localHandle, parameter, tmpBuf, bufferLength);
+        result = library_seos_configuration_parameterGetValueAsString(localHandle, parameter, tmpBuf, bufferLength);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -435,15 +691,30 @@ server_seos_configuration_parameterGetValueAsBlob(
     size_t bufferLength)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
         void *tmpBuf = dataport_unwrap_ptr(buffer);
-        return library_seos_configuration_parameterGetValueAsBlob(localHandle, parameter, tmpBuf, bufferLength);
+        result = library_seos_configuration_parameterGetValueAsBlob(localHandle, parameter, tmpBuf, bufferLength);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -457,15 +728,30 @@ server_seos_configuration_parameterSetValue(
     size_t bufferLength)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
         void *tmpBuf = dataport_unwrap_ptr(buffer);
-        return library_seos_configuration_parameterSetValue(localHandle, enumerator, parameterType, tmpBuf, bufferLength);
+        result = library_seos_configuration_parameterSetValue(localHandle, enumerator, parameterType, tmpBuf, bufferLength);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -477,14 +763,29 @@ server_seos_configuration_parameterSetValueAsU32(
     uint32_t value)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
-        return library_seos_configuration_parameterSetValueAsU32(localHandle, enumerator, value);
+        result = library_seos_configuration_parameterSetValueAsU32(localHandle, enumerator, value);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -496,14 +797,29 @@ server_seos_configuration_parameterSetValueAsU64(
     uint64_t value)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
-        return library_seos_configuration_parameterSetValueAsU64(localHandle, enumerator, value);
+        result = library_seos_configuration_parameterSetValueAsU64(localHandle, enumerator, value);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -517,15 +833,30 @@ server_seos_configuration_parameterSetValueAsString(
     size_t bufferLength)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
         void *tmpBuf = dataport_unwrap_ptr(buffer);
-        return library_seos_configuration_parameterSetValueAsString(localHandle, enumerator, parameterType, tmpBuf, bufferLength);
+        result = library_seos_configuration_parameterSetValueAsString(localHandle, enumerator, parameterType, tmpBuf, bufferLength);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 
@@ -539,15 +870,30 @@ server_seos_configuration_parameterSetValueAsBlob(
     size_t bufferLength)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
         void *tmpBuf = dataport_unwrap_ptr(buffer);
-        return library_seos_configuration_parameterSetValueAsBlob(localHandle, enumerator, parameterType, tmpBuf, bufferLength);
+        result = library_seos_configuration_parameterSetValueAsBlob(localHandle, enumerator, parameterType, tmpBuf, bufferLength);
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
     }
 }
 

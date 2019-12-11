@@ -9,7 +9,10 @@
 
 
 // filesystem
+#if defined(FS_SUPPORT)
 #include "seos_fs.h"    // include path to fs-core must be set in cmakelists.txt
+#endif
+
 
 #include "SeosError.h"
 

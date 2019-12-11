@@ -4,9 +4,13 @@
 
 #pragma once
 
-#include "SeosError.h"
-#include "seos_fs_datatypes.h"
+//#define FS_SUPPORT
 
+#include "SeosError.h"
+
+#if defined(FS_SUPPORT)
+#include "seos_fs_datatypes.h"
+#endif
 
 enum
 {
@@ -34,7 +38,9 @@ typedef struct SeosConfigBackend
         struct
         {
             SeosConfigBackend_FileName name;
-            hPartition_t phandle;
+#if defined(FS_SUPPORT)
+        hPartition_t phandle;
+#endif
         } fileSystem;
 
         struct
@@ -49,11 +55,12 @@ typedef struct SeosConfigBackend
 }
 SeosConfigBackend;
 
+#if defined(FS_SUPPORT)
 // Management function: creates the given file to contain the specified backend layout.
 seos_err_t
 SeosConfigBackend_createFileBackend(SeosConfigBackend_FileName name,
                                     hPartition_t phandle, unsigned int numberOfRecords, size_t sizeOfRecord);
-
+#endif
 // Management function: initializes the given buffer to contain the specified backend layout.
 seos_err_t
 SeosConfigBackend_createMemBackend(void* buffer, size_t bufferSize,
@@ -64,11 +71,12 @@ seos_err_t
 SeosConfigBackend_createMemBackendAutoSized(void* buffer, size_t bufferSize,
                                             size_t sizeOfRecord);
 
+#if defined(FS_SUPPORT)
 // Initialize the given backend object with the backend layout retrieved from the given file.
 seos_err_t
 SeosConfigBackend_initializeFileBackend(SeosConfigBackend* instance,
                                         SeosConfigBackend_FileName name, hPartition_t phandle);
-
+#endif
 // Initialize the given backend object with the backend layout retrieved from the given buffer.
 seos_err_t
 SeosConfigBackend_initializeMemBackend(SeosConfigBackend* instance,

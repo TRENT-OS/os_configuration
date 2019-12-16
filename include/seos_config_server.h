@@ -171,3 +171,12 @@ server_seos_configuration_parameterSetValueAsBlob(
     SeosConfigLib_ParameterType parameterType,
     dataport_ptr_t buffer,
     size_t bufferLength);
+
+seos_err_t
+server_seos_configuration_parameterGetValueFromDomainName(
+    SeosConfigHandle handle,
+    const char* domain_name,
+    const char* param_name,
+    dataport_ptr_t buffer,
+    size_t bufferLength,
+    size_t* bytesCopied);

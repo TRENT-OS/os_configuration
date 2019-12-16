@@ -1002,3 +1002,162 @@ SeosConfigLib_parameterSetValueAsBlob(
                buffer,
                bufferLength);
 }
+
+
+/*
+   This funtion does steps 2 and 3 which include
+   Get param enumerator from domain enumerator and loop over all params to get
+   the value of the requested param
+*/
+static int
+SeosConfigLib_get_param_FromDomainEnumerator(
+    SeosConfigLib* instance,
+    SeosConfigLib_DomainEnumerator domain_enumerator,
+    const char* param_name,
+    void* buffer,
+    size_t bufferLength,
+    size_t* bytesCopied)
+{
+    // Step 2: Get param enumerator from domain enumerator
+    SeosConfigLib_ParameterEnumerator param_enumerator;
+
+    SeosConfigLib_parameterEnumeratorInit(instance,
+                                          &domain_enumerator,
+                                          &param_enumerator
+                                         );
+
+    int  err = -1;
+    int intResult;
+    bool flag = true;
+
+    // Step 3: Loop over the params and get the value of the requested param.
+
+    do
+    {
+        SeosConfigLib_Parameter parameter;
+        SeosConfigLib_ParameterName parameterName;
+        memset(&parameter, 0, sizeof(parameter));
+        // Get parameter from param enumerator
+        intResult = SeosConfigLib_parameterEnumeratorGetElement(
+                    instance,
+                    &param_enumerator,
+                    &parameter
+                    );
+        if (0 == intResult)
+        {
+            // Get param type from param
+            SeosConfigLib_ParameterType param_type;
+            SeosConfigLib_parameterGetType(&parameter, &param_type);
+
+            SeosConfigLib_parameterGetName(&parameter, &parameterName);
+
+
+            switch (parameter.parameterType)
+            {
+                case SEOS_CONFIG_LIB_PARAMETER_TYPE_INTEGER32:
+                case SEOS_CONFIG_LIB_PARAMETER_TYPE_INTEGER64:
+                // TODO ?
+                break;
+
+                case SEOS_CONFIG_LIB_PARAMETER_TYPE_STRING:
+                {
+                    SeosConfigLib_parameterGetName(&parameter, &parameterName);
+
+                    if (memcmp(parameter.parameterName.name, param_name,
+                                    strlen(param_name)) == 0)
+                    {
+                        err = SeosConfigLib_parameterGetValueAsString(
+                              instance,
+                              &parameter,
+                              buffer,
+                              SEOS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH
+                              );
+                        *bytesCopied = (err == 0) ? bufferLength : 0;
+                        flag = false; // Param found, break from the while loop
+                        Debug_LOG_TRACE("parameterName:%s, Value:%s", parameter.parameterName.name, (char*)buffer);
+                        break;
+                    }
+
+                }
+                break;
+
+                case SEOS_CONFIG_LIB_PARAMETER_TYPE_BLOB:
+                 // TODO  ?
+                break;
+
+                default:
+                Debug_LOG_ERROR(" Error Incorrect Param type !!");
+                flag = false; // break from while
+                break;
+            } // end of switch
+
+            // Increment enumerator to go to next param
+            intResult = SeosConfigLib_parameterEnumeratorIncrement(instance,
+                                                                       &param_enumerator);
+        } // end of if
+    }while((0 == intResult) || (true == flag));
+
+ return (bytesCopied > 0) ? 0 : -1;
+
+}
+
+/*
+   To get parameter value from domain-name and parameter-name:
+   Steps:
+    1. Get domain enumerator from domain-name
+    2. Get param enumerator from domain enumerator (got from step 1)
+    3. Loop to Get the params using param enumerator (got from step 2)
+ */
+
+int
+SeosConfigLib_parameterGetValueFromDomainName(
+    SeosConfigLib* instance,
+    const char* domain_name,
+    const char* param_name,
+    void* buffer,
+    size_t bufferLength,
+    size_t* bytesCopied)
+{
+
+    SeosConfigLib_DomainEnumerator domain_enumerator;
+    SeosConfigLib_Domain domain;
+
+    SeosConfigLib_domainEnumeratorInit(instance,&domain_enumerator);
+
+    int intResult;
+    do
+    {
+        intResult = SeosConfigLib_domainEnumeratorGetElement(instance,
+                                                                  &domain_enumerator,
+                                                                  &domain);
+        if (0 == intResult)
+        {
+            SeosConfigLib_DomainName domainName;
+
+            SeosConfigLib_domainGetName(&domain, &domainName);
+
+            if (memcmp(domainName.name, domain_name, strlen(domain_name)) != 0)
+            {
+                intResult = SeosConfigLib_domainEnumeratorIncrement(instance,
+                                                                         &domain_enumerator);
+                continue;
+            }
+            break;
+        }
+
+    }
+    while (0 == intResult);
+
+    // at this point we have the domain enumerator which can be used for steps 2 and 3
+    // done using below function
+
+   Debug_LOG_TRACE("domain name: %s and domain enumerator:%d \n", domainName.name,domain_enumerator.index);
+   return (SeosConfigLib_get_param_FromDomainEnumerator(
+                                                      instance,
+                                                      domain_enumerator,
+                                                      param_name,
+                                                      buffer,
+                                                      bufferLength,
+                                                      bytesCopied)
+                                                      );
+}

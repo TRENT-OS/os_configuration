@@ -7,14 +7,14 @@
 #include "seos_config_library.h"
 
 // The library implementation does not have an instance store.
-SeosConfigInstanceStore* 
+SeosConfigInstanceStore*
 library_seos_configuration_getInstances()
 {
     return NULL;
 }
 
 
-seos_err_t 
+seos_err_t
 library_seos_configuration_createHandle(
     SeosConfigLib_HandleKind handleKind,
     unsigned int id,
@@ -459,4 +459,29 @@ library_seos_configuration_parameterSetValueAsBlob(
     {
         return SEOS_ERROR_INVALID_PARAMETER;
     }
+}
+
+
+
+seos_err_t
+library_seos_configuration_parameterGetValueFromDomainName(
+    SeosConfigHandle handle,
+    const char* domain_name,
+    const char* param_name,
+    void* buffer,
+    size_t bufferLength,
+    size_t* bytesCopied)
+{
+
+    if (SEOS_CONFIG_HANDLE_KIND_LOCAL == seos_configuration_handle_getHandleKind(handle))
+    {
+        SeosConfigLib* instance = (SeosConfigLib*)seos_configuration_handle_getLocalInstance(handle);
+        return SeosConfigLib_parameterGetValueFromDomainName(instance, domain_name, param_name, buffer, bufferLength, bytesCopied);
+    }
+    else
+    {
+        return SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+
 }

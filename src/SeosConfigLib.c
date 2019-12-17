@@ -585,8 +585,8 @@ SeosConfigLib_domainCreateParameterEnumerator(
                          &searchParameter);
             if (result == 0)
             {
-                if (SeosConfigLib_compareParameterName(parameterName,
-                                                       &searchParameter.parameterName))
+                if (0 == SeosConfigLib_compareParameterName(parameterName,
+                                                            &searchParameter.parameterName))
                 {
                     *parameterEnumerator = searchEnumerator;
                     return 0;

@@ -1095,7 +1095,7 @@ SeosConfigLib_get_param_FromDomainEnumerator(
             intResult = SeosConfigLib_parameterEnumeratorIncrement(instance,
                                                                        &param_enumerator);
         } // end of if
-    }while((0 == intResult) || (true == flag));
+    }while((0 == intResult) && (true == flag));
 
  return (bytesCopied > 0) ? 0 : -1;
 

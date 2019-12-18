@@ -201,3 +201,12 @@ SeosConfigLib_parameterSetValueAsBlob(
     SeosConfigLib_ParameterType parameterType,
     void const* buffer,
     size_t bufferLength);
+
+int
+SeosConfigLib_parameterGetValueFromDomainName(
+    SeosConfigLib* instance,
+    const char* domain_name,
+    const char* param_name,
+    void* buffer,
+    size_t bufferLength,
+    size_t* bytesCopied);

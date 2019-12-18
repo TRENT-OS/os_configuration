@@ -21,7 +21,7 @@ static SeosConfigServer server;
 static
 seos_err_t
 server_seos_configuration_transformRemoteHandleToLocalHandle(
-    SeosConfigHandle remoteHandle,    
+    SeosConfigHandle remoteHandle,
     SeosConfigHandle* localHandle)
 {
     if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(remoteHandle))
@@ -35,7 +35,7 @@ server_seos_configuration_transformRemoteHandleToLocalHandle(
             seos_configuration_handle_initLocalHandle(
                 (void*)instance,
                 localHandle);
-        
+
             return SEOS_SUCCESS;
         }
         else
@@ -50,14 +50,14 @@ server_seos_configuration_transformRemoteHandleToLocalHandle(
 }
 
 
-SeosConfigInstanceStore* 
+SeosConfigInstanceStore*
 server_seos_configuration_getInstances()
 {
     return &server.instanceStore;
 }
 
 
-seos_err_t 
+seos_err_t
 server_seos_configuration_createHandle(
     SeosConfigLib_HandleKind handleKind,
     unsigned int id,
@@ -895,6 +895,32 @@ server_seos_configuration_parameterSetValueAsBlob(
     {
         return result;
     }
+}
+
+
+seos_err_t
+server_seos_configuration_parameterGetValueFromDomainName(
+SeosConfigHandle handle,
+const char* domain_name,
+const char* param_name,
+dataport_ptr_t buffer,
+size_t bufferLength,
+size_t* bytesCopied)
+{
+    SeosConfigHandle localHandle;
+
+    if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
+    {
+        void *tmpBuf = dataport_unwrap_ptr(buffer);
+        return library_seos_configuration_parameterGetValueFromDomainName(localHandle, domain_name, param_name, tmpBuf, bufferLength, bytesCopied);
+    }
+
+    else
+    {
+        return SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+
 }
 
 #endif

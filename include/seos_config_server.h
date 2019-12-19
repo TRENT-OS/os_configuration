@@ -180,3 +180,11 @@ server_seos_configuration_parameterGetValueFromDomainName(
     dataport_ptr_t buffer,
     size_t bufferLength,
     size_t* bytesCopied);
+
+seos_err_t
+server_seos_configuration_parameterSetValueFromDomainName(
+    SeosConfigHandle handle,
+    const char* domain_name,
+    const char* param_name,
+    dataport_ptr_t buffer,
+    size_t bufferLength);

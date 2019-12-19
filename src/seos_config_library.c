@@ -485,3 +485,26 @@ library_seos_configuration_parameterGetValueFromDomainName(
 
 
 }
+
+
+seos_err_t
+library_seos_configuration_parameterSetValueFromDomainName(
+    SeosConfigHandle handle,
+    const char* domain_name,
+    const char* param_name,
+    void* buffer,
+    size_t bufferLength)
+{
+
+    if (SEOS_CONFIG_HANDLE_KIND_LOCAL == seos_configuration_handle_getHandleKind(handle))
+    {
+        SeosConfigLib* instance = (SeosConfigLib*)seos_configuration_handle_getLocalInstance(handle);
+        return SeosConfigLib_parameterSetValueFromDomainName(instance, domain_name, param_name, buffer, bufferLength);
+    }
+    else
+    {
+        return SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+
+}

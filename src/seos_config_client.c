@@ -651,3 +651,38 @@ seos_configuration_parameterGetValueFromDomainName(
 
 
 }
+
+seos_err_t
+seos_configuration_parameterSetValueFromDomainName(
+    SeosConfigHandle handle,
+    const char* domain_name,
+    const char* param_name,
+    void* buffer,
+    size_t bufferLength)
+{
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    {
+#if defined(SEOS_CONFIG_CAMKES_CLIENT)
+        static dataport_ptr_t bufferSend;
+
+        memcpy((void *)cfg_dataport_buf, buffer, bufferLength);
+        bufferSend = dataport_wrap_ptr((void *)cfg_dataport_buf);
+
+        return server_seos_configuration_parameterSetValueFromDomainName(
+                                                                handle,
+                                                                domain_name,
+                                                                param_name,
+                                                                bufferSend,
+                                                                bufferLength);
+
+#else
+        return SEOS_ERROR_INVALID_PARAMETER;
+#endif
+    }
+    else
+    {
+        return library_seos_configuration_parameterSetValueFromDomainName(handle, domain_name, param_name, buffer, bufferLength);
+    }
+
+
+}

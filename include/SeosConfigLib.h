@@ -210,3 +210,11 @@ SeosConfigLib_parameterGetValueFromDomainName(
     void* buffer,
     size_t bufferLength,
     size_t* bytesCopied);
+
+int
+SeosConfigLib_parameterSetValueFromDomainName(
+    SeosConfigLib* instance,
+    const char* domain_name,
+    const char* param_name,
+    void* buffer,
+    size_t bufferLength);

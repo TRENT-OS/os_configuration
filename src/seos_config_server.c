@@ -2,7 +2,7 @@
  * Copyright (C) 2019, Hensoldt Cyber GmbH
  */
 
-#if defined (SEOS_CONFIG_CAMKES_SERVER) || !defined(SEOS_CONFIG_CAMKES_CLIENT)
+#if defined (SEOS_CONFIG_CAMKES_SERVER)
 
 #include "seos_config_server.h"
 #include "seos_config_library.h"

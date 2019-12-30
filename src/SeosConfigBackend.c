@@ -31,6 +31,25 @@ SeosConfigBackend_BackendFsLayout;
 
 //------------------------------------------------------------------------------
 static
+bool is_valid_file_handle(
+    hFile_t fhandle)
+{
+
+#if defined (SEOS_FS_BUILD_AS_LIB)
+
+    return (fhandle != NULL);
+
+#else // not SEOS_FS_BUILD_AS_LIB
+
+    return (fhandle >= 0); // ToDo: is 0 really a valid handle?
+
+#endif // [not] SEOS_FS_BUILD_AS_LIB
+
+}
+
+
+//------------------------------------------------------------------------------
+static
 bool SeosConfigBackend_writeToFile(
     hPartition_t  phandle,
     const char *  name,
@@ -43,13 +62,10 @@ bool SeosConfigBackend_writeToFile(
 
     // Open file
     fhandle = file_open(phandle, name, FA_WRITE);
-
-#if defined (SEOS_FS_BUILD_AS_LIB)
-    if (fhandle == NULL)
-#else
-    if (fhandle < 0)
-#endif
+    if (!is_valid_file_handle(fhandle))
+    {
         return EOF;
+    }
 
     Debug_LOG_DEBUG("file_write name:%s\n", name);
     Debug_LOG_DEBUG("file_write offset:%u\n", offset);
@@ -89,13 +105,10 @@ bool SeosConfigBackend_readFromFile(
 
     // Open file
     fhandle = file_open(phandle, name, FA_READ);
-
-#if defined (SEOS_FS_BUILD_AS_LIB)
-    if (fhandle == NULL)
-#else
-    if (fhandle < 0)
-#endif
+    if (!is_valid_file_handle(fhandle))
+    {
         return EOF;
+    }
 
     Debug_LOG_DEBUG("file_read name:%s\n", name);
     Debug_LOG_DEBUG("file_read offset:%u\n", offset);
@@ -135,12 +148,10 @@ bool SeosConfigBackend_createFile(
 
     // Open file
     fhandle = file_open(phandle, name, FA_CREATE_ALWAYS | FA_WRITE);
-#if defined (SEOS_FS_BUILD_AS_LIB)
-    if (fhandle == NULL)
-#else
-    if (fhandle < 0)
-#endif
+    if (!is_valid_file_handle(fhandle))
+    {
         return EOF;
+    }
 
     Debug_LOG_DEBUG("file_create: size: %d\n", length);
 

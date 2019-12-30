@@ -7,24 +7,19 @@
 #include "SeosError.h"
 #include "SeosConfigBackend.h"
 
-#if defined(CONFIG_SERVER_FILESYSTEM_BACKEND)
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 #include "seos_fs.h"
 
-#endif // CONFIG_SERVER_FILESYSTEM_BACKEND
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM
 
 #include <string.h>
 
+//------------------------------------------------------------------------------
+// Filesystem Backend API
+//------------------------------------------------------------------------------
 
-typedef struct SeosConfigBackend_BackendMemLayout
-{
-    unsigned int  numberOfRecords;
-    size_t        sizeOfRecord;
-    size_t        bufferSize;
-    char          buffer;
-}
-SeosConfigBackend_BackendMemLayout;
-
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 typedef struct SeosConfigBackend_BackendFsLayout
 {
@@ -33,12 +28,6 @@ typedef struct SeosConfigBackend_BackendFsLayout
 }
 SeosConfigBackend_BackendFsLayout;
 
-
-//------------------------------------------------------------------------------
-// Filesystem Backend API
-//------------------------------------------------------------------------------
-
-#if defined(CONFIG_SERVER_FILESYSTEM_BACKEND)
 
 //------------------------------------------------------------------------------
 static
@@ -315,7 +304,7 @@ SeosConfigBackend_initializeFileBackend(
     return SEOS_SUCCESS;
 }
 
-#endif // CONFIG_SERVER_FILESYSTEM_BACKEND
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM
 
 
 //------------------------------------------------------------------------------
@@ -323,6 +312,16 @@ SeosConfigBackend_initializeFileBackend(
 //------------------------------------------------------------------------------
 
 #if defined(CONFIG_SERVER_BACKEND_MEMORY)
+
+typedef struct SeosConfigBackend_BackendMemLayout
+{
+    unsigned int  numberOfRecords;
+    size_t        sizeOfRecord;
+    size_t        bufferSize;
+    char          buffer;
+}
+SeosConfigBackend_BackendMemLayout;
+
 
 //------------------------------------------------------------------------------
 static seos_err_t
@@ -470,16 +469,16 @@ SeosConfigBackend_readRecord(
     switch (instance->backendType)
     {
 
-#if defined(CONFIG_SERVER_FILESYSTEM_BACKEND)
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
-    case CONFIG_SERVER_FILESYSTEM_BACKEND:
+    case CONFIG_SERVER_BACKEND_FILESYSTEM:
         return readRecord_backend_filesystem(
                    instance,
                    recordIndex,
                    buf,
                    bufLen);
 
-#endif // CONFIG_SERVER_FILESYSTEM_BACKEND)
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 #if defined(CONFIG_SERVER_BACKEND_MEMORY)
 
@@ -526,16 +525,16 @@ SeosConfigBackend_writeRecord(
     switch (instance->backendType)
     {
 
-#if defined(CONFIG_SERVER_FILESYSTEM_BACKEND)
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
-    case CONFIG_SERVER_FILESYSTEM_BACKEND:
+    case SEOS_CONFIG_BACKEND_BACKEND_TYPE_FS:
         return writeRecord_backend_filesystem(
                    instance,
                    recordIndex,
                    buf,
                    bufLen);
 
-#endif // CONFIG_SERVER_FILESYSTEM_BACKEND)
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 #if defined(CONFIG_SERVER_BACKEND_MEMORY)
 

@@ -130,7 +130,7 @@ SeosConfigBackend_initializeMemBackend(
     void*                buffer,
     size_t               bufferSize);
 
-#endif //CONFIG_SERVER_BACKEND_MEMORY
+#endif // CONFIG_SERVER_BACKEND_MEMORY
 
 
 //------------------------------------------------------------------------------

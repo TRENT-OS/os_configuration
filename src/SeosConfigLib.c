@@ -16,7 +16,7 @@ SeosConfigLib_enumeratorRawIncrement(unsigned int maxIndex, unsigned int* index)
     if (*index + 1 == maxIndex)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        Debug_LOG_DEBUG("Error: index: %d - maxIndex: %d\n", *index, maxIndex);
+        Debug_LOG_DEBUG("Error: index: %u - maxIndex: %u\n", *index, maxIndex);
         return -1;
     }
     else

@@ -7,14 +7,14 @@
 #include "seos_config_library.h"
 
 // The library implementation does not have an instance store.
-SeosConfigInstanceStore* 
+SeosConfigInstanceStore*
 library_seos_configuration_getInstances()
 {
     return NULL;
 }
 
 
-seos_err_t 
+seos_err_t
 library_seos_configuration_createHandle(
     SeosConfigLib_HandleKind handleKind,
     unsigned int id,

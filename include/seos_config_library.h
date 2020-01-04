@@ -9,10 +9,10 @@
 #include "seos_config_data_types.h"
 #include "seos_config_instance_store.h"
 
-SeosConfigInstanceStore* 
+SeosConfigInstanceStore*
 library_seos_configuration_getInstances();
 
-seos_err_t 
+seos_err_t
 library_seos_configuration_createHandle(
     SeosConfigLib_HandleKind handleKind,
     unsigned int id,
@@ -22,7 +22,7 @@ seos_err_t
 library_seos_configuration_domainEnumeratorInit(
     SeosConfigHandle handle,
     SeosConfigLib_DomainEnumerator* enumerator);
-                                    
+
 seos_err_t
 library_seos_configuration_domainEnumeratorClose(SeosConfigHandle handle,
                                     SeosConfigLib_DomainEnumerator* enumerator);

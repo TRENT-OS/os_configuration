@@ -23,13 +23,13 @@ SeosConfigClient;
 static SeosConfigClient client;
 
 
-SeosConfigInstanceStore* 
+SeosConfigInstanceStore*
 seos_configuration_getInstances()
 {
     return &client.instanceStore;
 }
 
-seos_err_t 
+seos_err_t
 seos_configuration_createHandle(
     SeosConfigLib_HandleKind handleKind,
     unsigned int id,
@@ -41,7 +41,7 @@ seos_configuration_createHandle(
         return server_seos_configuration_createHandle(handleKind, id, handle);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -54,7 +54,7 @@ seos_configuration_createHandle(
             seos_configuration_handle_initLocalHandle(
                 (void*)instance,
                 handle);
-        
+
             return SEOS_SUCCESS;
         }
         else
@@ -76,7 +76,7 @@ seos_configuration_domainEnumeratorInit(
         return server_seos_configuration_domainEnumeratorInit(handle, enumerator);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -95,7 +95,7 @@ seos_configuration_domainEnumeratorClose(SeosConfigHandle handle,
         return server_seos_configuration_domainEnumeratorClose(handle, enumerator);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -114,7 +114,7 @@ seos_configuration_domainEnumeratorReset(SeosConfigHandle handle,
         return server_seos_configuration_domainEnumeratorReset(handle, enumerator);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -133,7 +133,7 @@ seos_configuration_domainEnumeratorIncrement(SeosConfigHandle handle,
         return server_seos_configuration_domainEnumeratorIncrement(handle, enumerator);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -154,7 +154,7 @@ seos_configuration_domainEnumeratorGetElement(
         return server_seos_configuration_domainEnumeratorGetElement(handle, enumerator, domain);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -175,7 +175,7 @@ seos_configuration_parameterEnumeratorInit(
         return server_seos_configuration_parameterEnumeratorInit(handle, domainEnumerator, enumerator);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -194,7 +194,7 @@ seos_configuration_parameterEnumeratorClose(SeosConfigHandle handle,
         return server_seos_configuration_parameterEnumeratorClose(handle, enumerator);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -213,7 +213,7 @@ seos_configuration_parameterEnumeratorReset(SeosConfigHandle handle,
         return server_seos_configuration_parameterEnumeratorReset(handle, enumerator);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -232,7 +232,7 @@ seos_configuration_parameterEnumeratorIncrement(SeosConfigHandle handle,
         return server_seos_configuration_parameterEnumeratorIncrement(handle, enumerator);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -253,7 +253,7 @@ seos_configuration_parameterEnumeratorGetElement(
         return server_seos_configuration_parameterEnumeratorGetElement(handle, enumerator, parameter);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -284,7 +284,7 @@ seos_configuration_domainCreateParameterEnumerator(
         return server_seos_configuration_domainCreateParameterEnumerator(handle, domain, parameterName, parameterEnumerator);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -306,7 +306,7 @@ seos_configuration_domainGetElement(
         return server_seos_configuration_domainGetElement(handle, domain, parameterName, parameter);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -368,7 +368,7 @@ seos_configuration_parameterGetValue(
         return result;
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -389,7 +389,7 @@ seos_configuration_parameterGetValueAsU32(
         return server_seos_configuration_parameterGetValueAsU32(handle, parameter, value);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -410,7 +410,7 @@ seos_configuration_parameterGetValueAsU64(
         return server_seos_configuration_parameterGetValueAsU64(handle, parameter, value);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -445,7 +445,7 @@ seos_configuration_parameterGetValueAsString(
         return result;
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -480,7 +480,7 @@ seos_configuration_parameterGetValueAsBlob(
         return result;
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -508,7 +508,7 @@ seos_configuration_parameterSetValue(
         return server_seos_configuration_parameterSetValue(handle, enumerator, parameterType, bufferSend, bufferLength);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -529,7 +529,7 @@ seos_configuration_parameterSetValueAsU32(
         return server_seos_configuration_parameterSetValueAsU32(handle, enumerator, value);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -550,7 +550,7 @@ seos_configuration_parameterSetValueAsU64(
         return server_seos_configuration_parameterSetValueAsU64(handle, enumerator, value);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -578,7 +578,7 @@ seos_configuration_parameterSetValueAsString(
         return server_seos_configuration_parameterSetValueAsString(handle, enumerator, parameterType, bufferSend, bufferLength);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {
@@ -606,7 +606,7 @@ seos_configuration_parameterSetValueAsBlob(
         return server_seos_configuration_parameterSetValueAsBlob(handle, enumerator, parameterType, bufferSend, bufferLength);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
-#endif        
+#endif
     }
     else
     {

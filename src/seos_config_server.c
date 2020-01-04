@@ -21,7 +21,7 @@ static SeosConfigServer server;
 static
 seos_err_t
 server_seos_configuration_transformRemoteHandleToLocalHandle(
-    SeosConfigHandle remoteHandle,    
+    SeosConfigHandle remoteHandle,
     SeosConfigHandle* localHandle)
 {
     if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(remoteHandle))
@@ -35,7 +35,7 @@ server_seos_configuration_transformRemoteHandleToLocalHandle(
             seos_configuration_handle_initLocalHandle(
                 (void*)instance,
                 localHandle);
-        
+
             return SEOS_SUCCESS;
         }
         else
@@ -50,14 +50,14 @@ server_seos_configuration_transformRemoteHandleToLocalHandle(
 }
 
 
-SeosConfigInstanceStore* 
+SeosConfigInstanceStore*
 server_seos_configuration_getInstances()
 {
     return &server.instanceStore;
 }
 
 
-seos_err_t 
+seos_err_t
 server_seos_configuration_createHandle(
     SeosConfigLib_HandleKind handleKind,
     unsigned int id,

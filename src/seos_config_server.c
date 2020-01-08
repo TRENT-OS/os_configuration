@@ -81,8 +81,8 @@ server_seos_configuration_createHandle(
             seos_configuration_handle_initRemoteHandle(
                 id,
                 handle);
-        
-            result = SEOS_SUCCESS;
+
+            return SEOS_SUCCESS;
         }
         else
         {

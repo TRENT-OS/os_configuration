@@ -7,12 +7,12 @@
 #include "SeosError.h"
 #include "SeosConfigBackend.h"
 
-#if defined(CONFIG_SERVER_FIELSYSTEM_BACKEND)
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 #include "seos_fs.h"
 #include "seos_pm.h"
 
-#endif // CONFIG_SERVER_FIELSYSTEM_BACKEND
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM
 
 #include <string.h>
 
@@ -39,7 +39,7 @@ SeosConfigBackend_BackendFsLayout;
 // Filesystem Backend API
 //------------------------------------------------------------------------------
 
-#if defined(CONFIG_SERVER_FIELSYSTEM_BACKEND)
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 //------------------------------------------------------------------------------
 static
@@ -238,7 +238,7 @@ static seos_err_t
 readRecord_backend_filesystem(
     SeosConfigBackend *  instance,
     unsigned int         recordIndex,
-    const void *         buf,
+    void *               buf,
     size_t               bufLen)
 {
     unsigned int offset = sizeof(SeosConfigBackend_BackendFsLayout) + recordIndex *
@@ -289,7 +289,7 @@ SeosConfigBackend_createFileBackend(
     return SEOS_SUCCESS;
 }
 
-#endif // CONFIG_SERVER_FIELSYSTEM_BACKEND
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM
 
 
 //------------------------------------------------------------------------------
@@ -444,16 +444,16 @@ SeosConfigBackend_readRecord(
     switch (instance->backendType)
     {
 
-#if defined(CONFIG_SERVER_FIELSYSTEM_BACKEND)
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
-        case CONFIG_SERVER_FIELSYSTEM_BACKEND:
+        case CONFIG_SERVER_BACKEND_FILESYSTEM:
             return readRecord_backend_filesystem(
                         instance,
                         recordIndex,
                         buf,
                         bufLen);
 
-#endif // CONFIG_SERVER_FIELSYSTEM_BACKEND)
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 #if defined(CONFIG_SERVER_BACKEND_MEMORY)
 
@@ -499,16 +499,16 @@ SeosConfigBackend_writeRecord(
     switch (instance->backendType)
     {
 
-#if defined(CONFIG_SERVER_FIELSYSTEM_BACKEND)
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
-        case CONFIG_SERVER_FIELSYSTEM_BACKEND:
+        case CONFIG_SERVER_BACKEND_FILESYSTEM:
             return writeRecord_backend_filesystem(
                         instance,
                         recordIndex,
                         buf,
                         bufLen);
 
-#endif // CONFIG_SERVER_FIELSYSTEM_BACKEND)
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 #if defined(CONFIG_SERVER_BACKEND_MEMORY)
 

@@ -10,7 +10,7 @@
 #include "seos_config_instance_store.h"
 
 SeosConfigInstanceStore*
-seos_configuration_getInstances();
+seos_configuration_getInstances(void);
 
 seos_err_t
 seos_configuration_createHandle(

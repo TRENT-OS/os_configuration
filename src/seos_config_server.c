@@ -52,7 +52,7 @@ server_seos_configuration_transformRemoteHandleToLocalHandle(
 
 
 SeosConfigInstanceStore*
-server_seos_configuration_getInstances()
+server_seos_configuration_getInstances(void)
 {
     return &server.instanceStore;
 }

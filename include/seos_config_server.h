@@ -12,7 +12,7 @@
 #include "seos_config_instance_store.h"
 
 SeosConfigInstanceStore*
-server_seos_configuration_getInstances();
+server_seos_configuration_getInstances(void);
 
 seos_err_t
 server_seos_configuration_createHandle(

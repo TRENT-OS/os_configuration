@@ -8,7 +8,7 @@
 
 // The library implementation does not have an instance store.
 SeosConfigInstanceStore*
-library_seos_configuration_getInstances()
+library_seos_configuration_getInstances(void)
 {
     return NULL;
 }

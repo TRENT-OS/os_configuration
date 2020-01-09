@@ -24,7 +24,7 @@ static SeosConfigClient client;
 
 
 SeosConfigInstanceStore*
-seos_configuration_getInstances()
+seos_configuration_getInstances(void)
 {
     return &client.instanceStore;
 }

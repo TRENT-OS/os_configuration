@@ -7,12 +7,11 @@
 #include "SeosError.h"
 #include "SeosConfigBackend.h"
 
-#if defined(CONFIG_SERVER_FIELSYSTEM_BACKEND)
+#if defined(CONFIG_SERVER_FILESYSTEM_BACKEND)
 
 #include "seos_fs.h"
-#include "seos_pm.h"
 
-#endif // CONFIG_SERVER_FIELSYSTEM_BACKEND
+#endif // CONFIG_SERVER_FILESYSTEM_BACKEND
 
 #include <string.h>
 
@@ -39,7 +38,7 @@ SeosConfigBackend_BackendFsLayout;
 // Filesystem Backend API
 //------------------------------------------------------------------------------
 
-#if defined(CONFIG_SERVER_FIELSYSTEM_BACKEND)
+#if defined(CONFIG_SERVER_FILESYSTEM_BACKEND)
 
 //------------------------------------------------------------------------------
 static
@@ -319,7 +318,7 @@ SeosConfigBackend_initializeFileBackend(
     return SEOS_SUCCESS;
 }
 
-#endif // CONFIG_SERVER_FIELSYSTEM_BACKEND
+#endif // CONFIG_SERVER_FILESYSTEM_BACKEND
 
 
 //------------------------------------------------------------------------------
@@ -474,16 +473,16 @@ SeosConfigBackend_readRecord(
     switch (instance->backendType)
     {
 
-#if defined(CONFIG_SERVER_FIELSYSTEM_BACKEND)
+#if defined(CONFIG_SERVER_FILESYSTEM_BACKEND)
 
-        case CONFIG_SERVER_FIELSYSTEM_BACKEND:
+        case CONFIG_SERVER_FILESYSTEM_BACKEND:
             return readRecord_backend_filesystem(
                         instance,
                         recordIndex,
                         buf,
                         bufLen);
 
-#endif // CONFIG_SERVER_FIELSYSTEM_BACKEND)
+#endif // CONFIG_SERVER_FILESYSTEM_BACKEND)
 
 #if defined(CONFIG_SERVER_BACKEND_MEMORY)
 
@@ -529,16 +528,16 @@ SeosConfigBackend_writeRecord(
     switch (instance->backendType)
     {
 
-#if defined(CONFIG_SERVER_FIELSYSTEM_BACKEND)
+#if defined(CONFIG_SERVER_FILESYSTEM_BACKEND)
 
-        case CONFIG_SERVER_FIELSYSTEM_BACKEND:
+        case CONFIG_SERVER_FILESYSTEM_BACKEND:
             return writeRecord_backend_filesystem(
                         instance,
                         recordIndex,
                         buf,
                         bufLen);
 
-#endif // CONFIG_SERVER_FIELSYSTEM_BACKEND)
+#endif // CONFIG_SERVER_FILESYSTEM_BACKEND)
 
 #if defined(CONFIG_SERVER_BACKEND_MEMORY)
 

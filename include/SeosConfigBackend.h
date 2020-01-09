@@ -6,14 +6,14 @@
 
 #include "SeosError.h"
 
-#if defined(CONFIG_SERVER_BACKEND_FIELSYSTEM)
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 #include "seos_fs_datatypes.h"
 
-#endif // CONFIG_SERVER_BACKEND_FIELSYSTEM
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM
 
 
-#if defined(CONFIG_SERVER_BACKEND_FIELSYSTEM)
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 enum
 {
@@ -26,7 +26,7 @@ typedef struct SeosConfigBackend_FileName
 }
 SeosConfigBackend_FileName;
 
-#endif // CONFIG_SERVER_BACKEND_FIELSYSTEM
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM
 
 
 typedef enum
@@ -43,7 +43,7 @@ typedef struct SeosConfigBackend
     union
     {
 
-#if defined(CONFIG_SERVER_BACKEND_FIELSYSTEM)
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
         struct
         {
@@ -51,7 +51,7 @@ typedef struct SeosConfigBackend
             hPartition_t                phandle;
         } fileSystem;
 
-#endif // CONFIG_SERVER_BACKEND_FIELSYSTEM
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM
 
 #if defined(CONFIG_SERVER_BACKEND_MEMORY)
 
@@ -75,7 +75,7 @@ SeosConfigBackend;
 // Filesystem Backend API
 //------------------------------------------------------------------------------
 
-#if defined(CONFIG_SERVER_BACKEND_FIELSYSTEM)
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 // Management function: creates the given file to contain the specified backend
 // layout.
@@ -94,7 +94,7 @@ SeosConfigBackend_initializeFileBackend(
     SeosConfigBackend_FileName  name,
     hPartition_t                phandle);
 
-#endif // CONFIG_SERVER_BACKEND_FIELSYSTEM
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM
 
 
 //------------------------------------------------------------------------------

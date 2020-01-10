@@ -6,18 +6,18 @@
 
 void SeosConfigAccessRights_ClearAll(SeosConfigAccessRights* accessRights)
 {
-    for (unsigned int k = 0; k < SEOS_CONFIG_ACCESS_RIGHTS_VECTOR_SIZE; ++k)
+    for (unsigned int k = 0; k < SEOS_CONFIG_ACCESS_RIGHTS_MAX_ENTRY; ++k)
     {
-        accessRights->rights[k] = 0;
+        SeosConfigAccessRights_Clear(accessRights, k);
     }
 }
 
 
 void SeosConfigAccessRights_SetAll(SeosConfigAccessRights* accessRights)
 {
-    for (unsigned int k = 0; k < SEOS_CONFIG_ACCESS_RIGHTS_VECTOR_SIZE; ++k)
+    for (unsigned int k = 0; k < SEOS_CONFIG_ACCESS_RIGHTS_MAX_ENTRY; ++k)
     {
-        accessRights->rights[k] = 255;
+        SeosConfigAccessRights_Set(accessRights, k);
     }
 }
 

@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <stdlib.h>
-
 #include "SeosConfigLib.h"
 
 // The maximum number of configuration libraries the store can maintain.
@@ -22,19 +20,6 @@ typedef struct
 SeosConfigInstanceStore;
 
 
-#include "seos_config_data_types.h"
-
-inline
-static SeosConfigLib*
+SeosConfigLib*
 seos_configuration_instance_store_getInstance(SeosConfigInstanceStore* self,
-                                              unsigned int instanceIndex)
-{
-    if (instanceIndex < SEOS_CONFIG_INSTANCE_STORE_MAX_INSTANCES)
-    {
-        return self->instances + instanceIndex;
-    }
-    else
-    {
-        return NULL;
-    }
-}
+                                              unsigned int instanceIndex);

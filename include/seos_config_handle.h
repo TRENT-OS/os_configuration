@@ -32,51 +32,28 @@ typedef struct
 }
 SeosConfigHandle;
 
-
-inline
-static void
+void
 seos_configuration_handle_initRemoteHandle(
     unsigned int instanceId,
-    SeosConfigHandle* handle)
-{
-    handle->handleKind = SEOS_CONFIG_HANDLE_KIND_RPC;
-    handle->handle.rpc.id = instanceId;
-}
+    SeosConfigHandle* handle);
 
 
-inline
-static void
+void
 seos_configuration_handle_initLocalHandle(
     void* instance,
-    SeosConfigHandle* handle)
-{
-    handle->handleKind = SEOS_CONFIG_HANDLE_KIND_LOCAL;
-    handle->handle.local.instance = instance;
-}
+    SeosConfigHandle* handle);
 
 
-inline
-static SeosConfigLib_HandleKind
+SeosConfigLib_HandleKind
 seos_configuration_handle_getHandleKind(
-    SeosConfigHandle handle)
-{
-    return handle.handleKind;
-}
+    SeosConfigHandle handle);
 
 
-inline
-static unsigned int
+unsigned int
 seos_configuration_handle_getRemoteInstance(
-    SeosConfigHandle handle)
-{
-    return handle.handle.rpc.id;
-}
+    SeosConfigHandle handle);
 
 
-inline
-static void*
+void*
 seos_configuration_handle_getLocalInstance(
-    SeosConfigHandle handle)
-{
-    return handle.handle.local.instance;
-}
+    SeosConfigHandle handle);

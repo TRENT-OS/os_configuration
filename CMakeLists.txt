@@ -31,8 +31,10 @@ target_sources(${PROJECT_NAME}
         src/SeosConfigAccessRights.c
         src/SeosConfigAppIdentifier.c
         src/SeosConfigBackend.c
-        src/SeosConfigLib.c
         src/seos_config_client.c
+        src/seos_config_handle.c
+        src/seos_config_instance_store.c
+        src/SeosConfigLib.c
         src/seos_config_library.c
         src/seos_config_server.c
 )

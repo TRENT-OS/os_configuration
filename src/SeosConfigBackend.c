@@ -61,7 +61,7 @@ bool is_valid_file_handle(
 
 //------------------------------------------------------------------------------
 static
-bool SeosConfigBackend_writeToFile(
+seos_err_t SeosConfigBackend_writeToFile(
     hPartition_t  phandle,
     const char*   name,
     unsigned int  offset,
@@ -75,7 +75,7 @@ bool SeosConfigBackend_writeToFile(
     fhandle = file_open(phandle, name, FA_WRITE);
     if (!is_valid_file_handle(fhandle))
     {
-        return EOF;
+        return SEOS_ERROR_GENERIC;
     }
 
     Debug_LOG_DEBUG("file_write name:%s\n", name);
@@ -87,7 +87,7 @@ bool SeosConfigBackend_writeToFile(
     Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
-        return false;
+        return SEOS_ERROR_GENERIC;
     }
 
     // Close this file
@@ -95,16 +95,16 @@ bool SeosConfigBackend_writeToFile(
     Debug_LOG_DEBUG("file_close:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
-        return false;
+        return SEOS_ERROR_GENERIC;
     }
 
-    return true;
+    return SEOS_SUCCESS;
 }
 
 
 //------------------------------------------------------------------------------
 static
-bool SeosConfigBackend_readFromFile(
+seos_err_t SeosConfigBackend_readFromFile(
     hPartition_t  phandle,
     const char*   name,
     unsigned int  offset,
@@ -118,7 +118,7 @@ bool SeosConfigBackend_readFromFile(
     fhandle = file_open(phandle, name, FA_READ);
     if (!is_valid_file_handle(fhandle))
     {
-        return EOF;
+        return SEOS_ERROR_GENERIC;
     }
 
     Debug_LOG_DEBUG("file_read name:%s\n", name);
@@ -130,7 +130,7 @@ bool SeosConfigBackend_readFromFile(
     Debug_LOG_DEBUG("file_read:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
-        return false;
+        return SEOS_ERROR_GENERIC;
     }
 
     // Close this file
@@ -138,16 +138,16 @@ bool SeosConfigBackend_readFromFile(
     Debug_LOG_DEBUG("file_close:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
-        return false;
+        return SEOS_ERROR_GENERIC;
     }
 
-    return true;
+    return SEOS_SUCCESS;
 }
 
 
 //------------------------------------------------------------------------------
 static
-bool SeosConfigBackend_createFile(
+seos_err_t SeosConfigBackend_createFile(
     hPartition_t  phandle,
     const char*   name,
     int           length)
@@ -161,7 +161,7 @@ bool SeosConfigBackend_createFile(
     fhandle = file_open(phandle, name, FA_CREATE_ALWAYS | FA_WRITE);
     if (!is_valid_file_handle(fhandle))
     {
-        return EOF;
+        return SEOS_ERROR_GENERIC;
     }
 
     Debug_LOG_DEBUG("file_create: size: %d\n", length);
@@ -180,7 +180,7 @@ bool SeosConfigBackend_createFile(
         Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
         if (file_stat > 0)
         {
-            return false;
+            return SEOS_ERROR_GENERIC;
         }
 
         fileSize += BLOCK_SIZE;
@@ -190,7 +190,7 @@ bool SeosConfigBackend_createFile(
     Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
-        return false;
+        return SEOS_ERROR_GENERIC;
     }
 
     // Close this file
@@ -198,10 +198,10 @@ bool SeosConfigBackend_createFile(
     Debug_LOG_DEBUG("file_close:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
-        return false;
+        return SEOS_ERROR_GENERIC;
     }
 
-    return true;
+    return SEOS_SUCCESS;
 }
 
 
@@ -216,19 +216,19 @@ writeRecord_backend_filesystem(
     unsigned int offset = sizeof(SeosConfigBackend_BackendFsLayout) + recordIndex *
                           instance->sizeOfRecord;
 
-    bool writeResult = SeosConfigBackend_writeToFile(
-                           instance->backend.fileSystem.phandle,
-                           instance->backend.fileSystem.name.buffer,
-                           offset,
-                           (void*)buf,
-                           bufLen);
+    seos_err_t writeResult = SeosConfigBackend_writeToFile(
+                                 instance->backend.fileSystem.phandle,
+                                 instance->backend.fileSystem.name.buffer,
+                                 offset,
+                                 (void*)buf,
+                                 bufLen);
 
-    if (!writeResult)
+    if (SEOS_SUCCESS != writeResult)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
     }
 
-    return writeResult ? SEOS_SUCCESS : SEOS_ERROR_GENERIC;
+    return writeResult;
 }
 
 
@@ -243,19 +243,19 @@ readRecord_backend_filesystem(
     unsigned int offset = sizeof(SeosConfigBackend_BackendFsLayout) + recordIndex *
                           instance->sizeOfRecord;
 
-    bool readResult = SeosConfigBackend_readFromFile(
-                          instance->backend.fileSystem.phandle,
-                          instance->backend.fileSystem.name.buffer,
-                          offset,
-                          buf,
-                          bufLen);
+    seos_err_t readResult = SeosConfigBackend_readFromFile(
+                                instance->backend.fileSystem.phandle,
+                                instance->backend.fileSystem.name.buffer,
+                                offset,
+                                buf,
+                                bufLen);
 
-    if (!readResult)
+    if (SEOS_SUCCESS != readResult)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
     }
 
-    return readResult ? SEOS_SUCCESS : SEOS_ERROR_GENERIC;
+    return readResult;
 }
 
 
@@ -274,18 +274,15 @@ SeosConfigBackend_createFileBackend(
     backendFsLayout.numberOfRecords = numberOfRecords;
     backendFsLayout.sizeOfRecord = sizeOfRecord;
 
-    if (!SeosConfigBackend_createFile(phandle, name.buffer, fileSize))
+    seos_err_t result = SeosConfigBackend_createFile(phandle, name.buffer,
+                                                     fileSize);
+    if (SEOS_SUCCESS != result)
     {
-        return SEOS_ERROR_GENERIC;
+        return result;
     }
 
-    if (!SeosConfigBackend_writeToFile(phandle, name.buffer, 0, &backendFsLayout,
-                                       sizeof(SeosConfigBackend_BackendFsLayout)))
-    {
-        return SEOS_ERROR_GENERIC;
-    }
-
-    return SEOS_SUCCESS;
+    return SeosConfigBackend_writeToFile(phandle, name.buffer, 0, &backendFsLayout,
+                                         sizeof(SeosConfigBackend_BackendFsLayout)))
 }
 
 //------------------------------------------------------------------------------

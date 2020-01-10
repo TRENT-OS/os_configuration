@@ -86,13 +86,13 @@ SeosConfigLib_findParamter(SeosConfigLib* instance,
     {
         SeosConfigLib_Parameter parameter;
 
-        int fetchResult = SeosConfigBackend_readRecord(
-                              &instance->parameterBackend,
-                              searchEnumerator.index,
-                              &parameter,
-                              sizeof(SeosConfigLib_Parameter));
+        seos_err_t fetchResult = SeosConfigBackend_readRecord(
+                                     &instance->parameterBackend,
+                                     searchEnumerator.index,
+                                     &parameter,
+                                     sizeof(SeosConfigLib_Parameter));
 
-        if (fetchResult == 0)
+        if (SEOS_SUCCESS == fetchResult)
         {
             if ((parameter.domain.index == searchEnumerator.domainEnumerator.index) &&
                 (SeosConfigLib_ParameterIsVisibleForMe(&parameter)))
@@ -173,22 +173,22 @@ SeosConfigLib_fetchVariableLengthString(
 
     if (stringSize <= bufferLength)
     {
-        int fetchResult = SeosConfigBackend_readRecord(
-                              backend,
-                              index,
-                              tmpBuf,
-                              sizeof(tmpBuf));
+        seos_err_t fetchResult = SeosConfigBackend_readRecord(
+                                     backend,
+                                     index,
+                                     tmpBuf,
+                                     sizeof(tmpBuf));
 
-        if (fetchResult == 0)
+        if (SEOS_SUCCESS == fetchResult)
         {
             memcpy(buffer, tmpBuf, stringSize);
-            return SEOS_SUCCESS;
         }
         else
         {
             Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-            return SEOS_ERROR_GENERIC;
         }
+
+        return fetchResult;
     }
     else
     {
@@ -217,13 +217,13 @@ SeosConfigLib_fetchVariableLengthBlob(
 
         while (bytesCopied < blobSize)
         {
-            int fetchResult = SeosConfigBackend_readRecord(
-                                  backend,
-                                  index,
-                                  tmpBuf,
-                                  sizeof(tmpBuf));
+            seos_err_t fetchResult = SeosConfigBackend_readRecord(
+                                         backend,
+                                         index,
+                                         tmpBuf,
+                                         sizeof(tmpBuf));
 
-            if (fetchResult == 0)
+            if (SEOS_SUCCESS == fetchResult)
             {
                 size_t bytesToCopy;
 
@@ -276,13 +276,13 @@ SeosConfigLib_writeVariableLengthString(
         memset(tmpBuf, 0, SEOS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH);
         memcpy(tmpBuf, buffer, bufferLength);
 
-        int writeResult = SeosConfigBackend_writeRecord(
-                              backend,
-                              index,
-                              tmpBuf,
-                              sizeof(tmpBuf));
+        seos_err_t writeResult = SeosConfigBackend_writeRecord(
+                                     backend,
+                                     index,
+                                     tmpBuf,
+                                     sizeof(tmpBuf));
 
-        return writeResult == 0 ? SEOS_SUCCESS : SEOS_ERROR_GENERIC;
+        return writeResult;
     }
     else
     {
@@ -325,13 +325,13 @@ SeosConfigLib_writeVariableLengthBlob(
 
             memcpy(tmpBuf, (char*)buffer + bytesCopied, bytesToCopy);
 
-            int fetchResult = SeosConfigBackend_writeRecord(
-                                  backend,
-                                  index,
-                                  tmpBuf,
-                                  sizeof(tmpBuf));
+            seos_err_t fetchResult = SeosConfigBackend_writeRecord(
+                                         backend,
+                                         index,
+                                         tmpBuf,
+                                         sizeof(tmpBuf));
 
-            if (fetchResult == 0)
+            if (SEOS_SUCCESS == fetchResult)
             {
                 bytesCopied += bytesToCopy;
                 index++;
@@ -441,13 +441,13 @@ SeosConfigLib_domainEnumeratorGetElement(
     SeosConfigLib_DomainEnumerator const* enumerator,
     SeosConfigLib_Domain* domain)
 {
-    int fetchResult = SeosConfigBackend_readRecord(
-                          &instance->domainBackend,
-                          enumerator->index,
-                          domain,
-                          sizeof(SeosConfigLib_Domain));
+    seos_err_t fetchResult = SeosConfigBackend_readRecord(
+                                 &instance->domainBackend,
+                                 enumerator->index,
+                                 domain,
+                                 sizeof(SeosConfigLib_Domain));
 
-    if (fetchResult == 0)
+    if (SEOS_SUCCESS == fetchResult)
     {
         domain->enumerator = *enumerator;
         return 0;
@@ -540,13 +540,13 @@ SeosConfigLib_parameterEnumeratorGetElement(
 {
     SeosConfigLib_Parameter retrievedParameter;
 
-    int fetchResult = SeosConfigBackend_readRecord(
-                          &instance->parameterBackend,
-                          enumerator->index,
-                          &retrievedParameter,
-                          sizeof(SeosConfigLib_Parameter));
+    seos_err_t fetchResult = SeosConfigBackend_readRecord(
+                                 &instance->parameterBackend,
+                                 enumerator->index,
+                                 &retrievedParameter,
+                                 sizeof(SeosConfigLib_Parameter));
 
-    if (fetchResult == 0)
+    if (SEOS_SUCCESS == fetchResult)
     {
         *parameter = retrievedParameter;
         return 0;
@@ -933,11 +933,12 @@ SeosConfigLib_parameterSetValue(
 
     if (result == 0)
     {
-        result = SeosConfigBackend_writeRecord(
-                     &instance->parameterBackend,
-                     enumerator->index,
-                     &parameter,
-                     sizeof(parameter));
+        seos_err_t resultTmp = SeosConfigBackend_writeRecord(
+                                   &instance->parameterBackend,
+                                   enumerator->index,
+                                   &parameter,
+                                   sizeof(parameter));
+        result = resultTmp == SEOS_SUCCESS ? 0 : -1;
     }
     else
     {

@@ -93,6 +93,12 @@ SeosConfigLib_findParamter(SeosConfigLib* instance,
             return -1;
         }
 
+        Debug_LOG_INFO("parameter.domain.index %u", parameter.domain.index);
+        Debug_LOG_INFO("searchEnumerator.domainEnumerator.index %u",
+                       searchEnumerator.domainEnumerator.index);
+        Debug_LOG_INFO("isVisibleForMe %d",
+                       SeosConfigLib_ParameterIsVisibleForMe(&parameter));
+
         if ((parameter.domain.index == searchEnumerator.domainEnumerator.index) &&
             (SeosConfigLib_ParameterIsVisibleForMe(&parameter)))
         {
@@ -1015,6 +1021,7 @@ find_parameter(
 {
     int ret;
     SeosConfigLib_ParameterEnumerator param_enumerator = {0};
+    Debug_LOG_INFO("SeosConfigLib_parameterEnumeratorInit() ....");
 
     ret = SeosConfigLib_parameterEnumeratorInit(instance,
                                                 domain_enumerator,
@@ -1028,6 +1035,7 @@ find_parameter(
 
     for (;;)
     {
+        Debug_LOG_INFO("SeosConfigLib_parameterEnumeratorGetElement() ....");
         ret = SeosConfigLib_parameterEnumeratorGetElement(instance,
                                                           &param_enumerator,
                                                           parameter);
@@ -1046,6 +1054,7 @@ find_parameter(
             return SEOS_SUCCESS;
         }
 
+        Debug_LOG_INFO("SeosConfigLib_parameterEnumeratorIncrement() ....");
         ret = SeosConfigLib_parameterEnumeratorIncrement(instance,
                                                          &param_enumerator);
         if (0 != ret)
@@ -1072,6 +1081,7 @@ find_domain(
     for (;;)
     {
         SeosConfigLib_Domain domain;
+        Debug_LOG_INFO("SeosConfigLib_domainEnumeratorGetElement() ....");
         ret = SeosConfigLib_domainEnumeratorGetElement(
                   instance,
                   enumerator,
@@ -1091,6 +1101,7 @@ find_domain(
             return SEOS_SUCCESS;
         }
 
+        Debug_LOG_INFO("SeosConfigLib_domainEnumeratorIncrement() ....");
         ret = SeosConfigLib_domainEnumeratorIncrement(instance, enumerator);
         if (0 != ret)
         {
@@ -1115,6 +1126,7 @@ SeosConfigLib_parameterGetValueFromDomainName(
     seos_err_t ret;
 
     SeosConfigLib_DomainEnumerator domain_enumerator = {0};
+    Debug_LOG_INFO("find_domain('%s') ....", domain_name);
     ret = find_domain(instance, &domain_enumerator, domain_name);
     if (SEOS_SUCCESS != ret)
     {
@@ -1123,6 +1135,7 @@ SeosConfigLib_parameterGetValueFromDomainName(
     }
 
     SeosConfigLib_Parameter parameter = {0};
+    Debug_LOG_INFO("find_parameter('%s') ....", param_name);
     ret = find_parameter(instance, &domain_enumerator, param_name, &parameter);
     if (SEOS_SUCCESS != ret)
     {
@@ -1130,6 +1143,7 @@ SeosConfigLib_parameterGetValueFromDomainName(
         return SEOS_ERROR_CONFIG_PARAMETER_NOT_FOUND;
     }
 
+    Debug_LOG_INFO("check type ....");
     if (param_type != parameter.parameterType)
     {
         Debug_LOG_ERROR("parameter tpye mismatch, requested %d found %d",
@@ -1137,6 +1151,7 @@ SeosConfigLib_parameterGetValueFromDomainName(
         return SEOS_ERROR_CONFIG_TYPE_MISMATCH;
     }
 
+    Debug_LOG_INFO("SeosConfigLib_parameterGetValue() ....");
     size_t size_in = *size;
     int err = SeosConfigLib_parameterGetValue(
                   instance,

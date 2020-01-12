@@ -961,4 +961,36 @@ server_seos_configuration_parameterSetValueAsBlob(
     }
 }
 
+
+seos_err_t
+server_seos_configuration_parameterGetValueFromDomainName(
+    SeosConfigHandle handle,
+    SeosConfigLib_DomainName const* domainName,
+    SeosConfigLib_ParameterName const* parameterName,
+    SeosConfigLib_ParameterType parameterType,
+    dataport_ptr_t buffer,
+    size_t bufferLength,
+    size_t* bytesCopied)
+{
+
+    SeosConfigHandle localHandle;
+    seos_err_t ret = server_seos_configuration_transformRemoteHandleToLocalHandle(
+                         handle,
+                         &localHandle);
+    if (SEOS_SUCCESS != ret)
+    {
+        return SEOS_ERROR_INVALID_PARAMETER;
+    }
+
+    void* tmpBuf = dataport_unwrap_ptr(buffer);
+    return library_seos_configuration_parameterGetValueFromDomainName(
+               localHandle,
+               domainName,
+               parameterName,
+               parameterType,
+               tmpBuf,
+               bufferLength,
+               bytesCopied);
+}
+
 #endif

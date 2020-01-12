@@ -667,3 +667,58 @@ seos_configuration_parameterSetValueAsBlob(
                                                                   parameterType, buffer, bufferLength);
     }
 }
+
+
+seos_err_t
+seos_configuration_parameterGetValueFromDomainName(
+    SeosConfigHandle handle,
+    SeosConfigLib_DomainName const* domainName,
+    SeosConfigLib_ParameterName const* parameterName,
+    SeosConfigLib_ParameterType parameterType,
+    void* buffer,
+    size_t bufferLength,
+    size_t* bytesCopied)
+{
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
+    {
+
+#if defined(SEOS_CONFIG_CAMKES_CLIENT)
+
+        static dataport_ptr_t bufferReceive;
+        bufferReceive = dataport_wrap_ptr((void*)cfg_dataport_buf);
+        int result = server_seos_configuration_parameterGetValueFromDomainName(
+                         handle,
+                         domainName,
+                         parameterName,
+                         parameterType,
+                         bufferReceive,
+                         bufferLength,
+                         bytesCopied);
+
+        if (result == SEOS_SUCCESS)
+        {
+            const void* buf = dataport_unwrap_ptr(bufferReceive);
+            memcpy(buffer, buf, *bytesCopied);
+        }
+
+        return result;
+
+#else
+        return SEOS_ERROR_INVALID_PARAMETER;
+
+#endif
+
+    }
+    else
+    {
+        return library_seos_configuration_parameterGetValueFromDomainName(
+                   handle,
+                   domainName,
+                   parameterName,
+                   parameterType,
+                   buffer,
+                   bufferLength,
+                   bytesCopied);
+    }
+}

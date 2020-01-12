@@ -169,3 +169,13 @@ library_seos_configuration_parameterSetValueAsBlob(
     SeosConfigLib_ParameterType parameterType,
     void const* buffer,
     size_t bufferLength);
+
+seos_err_t
+library_seos_configuration_parameterGetValueFromDomainName(
+    SeosConfigHandle handle,
+    SeosConfigLib_DomainName const* domainName,
+    SeosConfigLib_ParameterName const* parameterName,
+    SeosConfigLib_ParameterType parameterType,
+    void* buffer,
+    size_t bufferLength,
+    size_t* bytesCopied);

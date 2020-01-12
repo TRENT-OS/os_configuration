@@ -53,9 +53,9 @@ bool is_valid_file_handle(
 static
 bool SeosConfigBackend_writeToFile(
     hPartition_t  phandle,
-    const char *  name,
+    const char*   name,
     unsigned int  offset,
-    void *        buffer,
+    void*         buffer,
     int           length)
 {
     hFile_t fhandle;
@@ -96,9 +96,9 @@ bool SeosConfigBackend_writeToFile(
 static
 bool SeosConfigBackend_readFromFile(
     hPartition_t  phandle,
-    const char *  name,
+    const char*   name,
     unsigned int  offset,
-    void *        buffer,
+    void*         buffer,
     int           length)
 {
     hFile_t fhandle;
@@ -139,7 +139,7 @@ bool SeosConfigBackend_readFromFile(
 static
 bool SeosConfigBackend_createFile(
     hPartition_t  phandle,
-    const char *  name,
+    const char*   name,
     int           length)
 {
     enum {BLOCK_SIZE = 256};
@@ -198,9 +198,9 @@ bool SeosConfigBackend_createFile(
 //------------------------------------------------------------------------------
 static seos_err_t
 writeRecord_backend_filesystem(
-    SeosConfigBackend *  instance,
+    SeosConfigBackend*   instance,
     unsigned int         recordIndex,
-    const void *         buf,
+    const void*          buf,
     size_t               bufLen)
 {
     unsigned int offset = sizeof(SeosConfigBackend_BackendFsLayout) + recordIndex *
@@ -225,7 +225,7 @@ writeRecord_backend_filesystem(
 //------------------------------------------------------------------------------
 static seos_err_t
 readRecord_backend_filesystem(
-    SeosConfigBackend *  instance,
+    SeosConfigBackend*   instance,
     unsigned int         recordIndex,
     void*                buf,
     size_t               bufLen)
@@ -255,7 +255,7 @@ SeosConfigBackend_createFileBackend(
     SeosConfigBackend_FileName  name,
     hPartition_t                phandle,
     unsigned int                numberOfRecords,
-     size_t                     sizeOfRecord)
+    size_t                     sizeOfRecord)
 {
     size_t fileSize = sizeof(SeosConfigBackend_BackendFsLayout) + numberOfRecords *
                       sizeOfRecord;
@@ -300,9 +300,9 @@ SeosConfigBackend_BackendMemLayout;
 //------------------------------------------------------------------------------
 static seos_err_t
 writeRecord_backend_memory(
-    SeosConfigBackend *  instance,
+    SeosConfigBackend*   instance,
     unsigned int         recordIndex,
-    const void *         buf,
+    const void*          buf,
     size_t               bufLen)
 {
     SeosConfigBackend_BackendMemLayout* memLayout =
@@ -317,9 +317,9 @@ writeRecord_backend_memory(
 //------------------------------------------------------------------------------
 static seos_err_t
 readRecord_backend_memory(
-    SeosConfigBackend *  instance,
+    SeosConfigBackend*   instance,
     unsigned int         recordIndex,
-    void *               buf,
+    void*                buf,
     size_t               bufLen)
 {
     SeosConfigBackend_BackendMemLayout* memLayout =
@@ -334,7 +334,7 @@ readRecord_backend_memory(
 //------------------------------------------------------------------------------
 seos_err_t
 SeosConfigBackend_createMemBackend(
-    void *        buffer,
+    void*         buffer,
     size_t        bufferSize,
     unsigned int  numberOfRecords,
     size_t        sizeOfRecord)
@@ -361,7 +361,7 @@ SeosConfigBackend_createMemBackend(
 //------------------------------------------------------------------------------
 seos_err_t
 SeosConfigBackend_createMemBackendAutoSized(
-    void *  buffer,
+    void*   buffer,
     size_t  bufferSize,
     size_t  sizeOfRecord)
 {
@@ -378,8 +378,8 @@ SeosConfigBackend_createMemBackendAutoSized(
 //------------------------------------------------------------------------------
 seos_err_t
 SeosConfigBackend_initializeMemBackend(
-    SeosConfigBackend *  instance,
-    void *               buffer,
+    SeosConfigBackend*   instance,
+    void*                buffer,
     size_t               bufferSize)
 {
     instance->backendType = SEOS_CONFIG_BACKEND_BACKEND_TYPE_MEM;
@@ -405,7 +405,7 @@ SeosConfigBackend_initializeMemBackend(
 //------------------------------------------------------------------------------
 unsigned int
 SeosConfigBackend_getNumberOfRecords(
-    SeosConfigBackend const *  instance)
+    SeosConfigBackend const*   instance)
 {
     return instance->numberOfRecords;
 }
@@ -414,7 +414,7 @@ SeosConfigBackend_getNumberOfRecords(
 //------------------------------------------------------------------------------
 size_t
 SeosConfigBackend_getSizeOfRecords(
-    SeosConfigBackend const *  instance)
+    SeosConfigBackend const*   instance)
 {
     return instance->sizeOfRecord;
 }
@@ -423,9 +423,9 @@ SeosConfigBackend_getSizeOfRecords(
 //------------------------------------------------------------------------------
 seos_err_t
 SeosConfigBackend_readRecord(
-    SeosConfigBackend *  instance,
+    SeosConfigBackend*   instance,
     unsigned int         recordIndex,
-    void *               buf,
+    void*                buf,
     size_t               bufLen)
 {
     if (recordIndex >= instance->numberOfRecords)
@@ -445,28 +445,28 @@ SeosConfigBackend_readRecord(
 
 #if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
-        case CONFIG_SERVER_BACKEND_FILESYSTEM:
-            return readRecord_backend_filesystem(
-                        instance,
-                        recordIndex,
-                        buf,
-                        bufLen);
+    case CONFIG_SERVER_BACKEND_FILESYSTEM:
+        return readRecord_backend_filesystem(
+                   instance,
+                   recordIndex,
+                   buf,
+                   bufLen);
 
 #endif // CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 #if defined(CONFIG_SERVER_BACKEND_MEMORY)
 
-        case SEOS_CONFIG_BACKEND_BACKEND_TYPE_MEM:
-            return readRecord_backend_memory(
-                        instance,
-                        recordIndex,
-                        buf,
-                        bufLen);
+    case SEOS_CONFIG_BACKEND_BACKEND_TYPE_MEM:
+        return readRecord_backend_memory(
+                   instance,
+                   recordIndex,
+                   buf,
+                   bufLen);
 
 #endif // CONFIG_SERVER_BACKEND_MEMORY)
 
-        default:
-            break;
+    default:
+        break;
     } // end switch (instance->backendType)
 
     Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
@@ -477,9 +477,9 @@ SeosConfigBackend_readRecord(
 //------------------------------------------------------------------------------
 seos_err_t
 SeosConfigBackend_writeRecord(
-    SeosConfigBackend *  instance,
+    SeosConfigBackend*   instance,
     unsigned int         recordIndex,
-    const void *         buf,
+    const void*          buf,
     size_t               bufLen)
 {
     if (recordIndex >= instance->numberOfRecords)
@@ -491,7 +491,8 @@ SeosConfigBackend_writeRecord(
     if (bufLen != instance->sizeOfRecord)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        Debug_LOG_DEBUG("Error: bufLen: %d - instance->sizeOfRecord: %d\n", bufLen, instance->sizeOfRecord);
+        Debug_LOG_DEBUG("Error: bufLen: %d - instance->sizeOfRecord: %d\n", bufLen,
+                        instance->sizeOfRecord);
         return SEOS_ERROR_INVALID_PARAMETER;
     }
 
@@ -500,28 +501,28 @@ SeosConfigBackend_writeRecord(
 
 #if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
-        case SEOS_CONFIG_BACKEND_BACKEND_TYPE_FS:
-            return writeRecord_backend_filesystem(
-                        instance,
-                        recordIndex,
-                        buf,
-                        bufLen);
+    case SEOS_CONFIG_BACKEND_BACKEND_TYPE_FS:
+        return writeRecord_backend_filesystem(
+                   instance,
+                   recordIndex,
+                   buf,
+                   bufLen);
 
 #endif // CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 #if defined(CONFIG_SERVER_BACKEND_MEMORY)
 
-        case SEOS_CONFIG_BACKEND_BACKEND_TYPE_MEM:
-            return writeRecord_backend_memory(
-                        instance,
-                        recordIndex,
-                        buf,
-                        bufLen);
+    case SEOS_CONFIG_BACKEND_BACKEND_TYPE_MEM:
+        return writeRecord_backend_memory(
+                   instance,
+                   recordIndex,
+                   buf,
+                   bufLen);
 
 #endif // CONFIG_SERVER_BACKEND_MEMORY)
 
-        default:
-            break;
+    default:
+        break;
     } // end switch (instance->backendType)
 
     Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);

@@ -5,8 +5,15 @@
 #pragma once
 
 #include "SeosError.h"
+
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
+
 #include "seos_fs_datatypes.h"
 
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM
+
+
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 enum
 {
@@ -18,6 +25,8 @@ typedef struct SeosConfigBackend_FileName
     char buffer[SEOS_CONFIG_BACKEND_MAX_FILE_NAME_LEN];
 }
 SeosConfigBackend_FileName;
+
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM
 
 
 typedef enum
@@ -33,17 +42,27 @@ typedef struct SeosConfigBackend
     SeosConfigBackend_BackendType  backendType;
     union
     {
+
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
+
         struct
         {
             SeosConfigBackend_FileName  name;
             hPartition_t                phandle;
         } fileSystem;
 
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM
+
+#if defined(CONFIG_SERVER_BACKEND_MEMORY)
+
         struct
         {
             void *  buffer;
             size_t  bufferSize;
         } memory;
+
+#endif // CONFIG_SERVER_BACKEND_MEMORY
+
     } backend;
 
     unsigned int  numberOfRecords;
@@ -55,6 +74,8 @@ SeosConfigBackend;
 //------------------------------------------------------------------------------
 // Filesystem Backend API
 //------------------------------------------------------------------------------
+
+#if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 // Management function: creates the given file to contain the specified backend
 // layout.
@@ -72,6 +93,8 @@ SeosConfigBackend_initializeFileBackend(
     SeosConfigBackend *         instance,
     SeosConfigBackend_FileName  name,
     hPartition_t                phandle);
+
+#endif // CONFIG_SERVER_BACKEND_FILESYSTEM
 
 
 //------------------------------------------------------------------------------
@@ -106,6 +129,8 @@ SeosConfigBackend_initializeMemBackend(
     SeosConfigBackend *  instance,
     void *               buffer,
     size_t               bufferSize);
+
+#endif // CONFIG_SERVER_BACKEND_MEMORY
 
 
 //------------------------------------------------------------------------------

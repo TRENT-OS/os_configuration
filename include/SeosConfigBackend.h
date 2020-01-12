@@ -19,71 +19,120 @@ typedef struct SeosConfigBackend_FileName
 }
 SeosConfigBackend_FileName;
 
+
 typedef enum
 {
-    SEOS_CONFIG_BACKEND_BACKEND_TYPE_FS,
-    SEOS_CONFIG_BACKEND_BACKEND_TYPE_MEM,
+    SEOS_CONFIG_BACKEND_BACKEND_TYPE_FS   = 1,
+    SEOS_CONFIG_BACKEND_BACKEND_TYPE_MEM  = 2,
 }
 SeosConfigBackend_BackendType;
 
+
 typedef struct SeosConfigBackend
 {
-    SeosConfigBackend_BackendType backendType;
+    SeosConfigBackend_BackendType  backendType;
     union
     {
         struct
         {
-            SeosConfigBackend_FileName name;
-            hPartition_t phandle;
+            SeosConfigBackend_FileName  name;
+            hPartition_t                phandle;
         } fileSystem;
 
         struct
         {
-            void* buffer;
-            size_t bufferSize;
+            void *  buffer;
+            size_t  bufferSize;
         } memory;
     } backend;
 
-    unsigned int numberOfRecords;
-    size_t sizeOfRecord;
+    unsigned int  numberOfRecords;
+    size_t        sizeOfRecord;
 }
 SeosConfigBackend;
 
-// Management function: creates the given file to contain the specified backend layout.
-seos_err_t
-SeosConfigBackend_createFileBackend(SeosConfigBackend_FileName name,
-                                    hPartition_t phandle, unsigned int numberOfRecords, size_t sizeOfRecord);
 
-// Management function: initializes the given buffer to contain the specified backend layout.
-seos_err_t
-SeosConfigBackend_createMemBackend(void* buffer, size_t bufferSize,
-                                   unsigned int numberOfRecords, size_t sizeOfRecord);
+//------------------------------------------------------------------------------
+// Filesystem Backend API
+//------------------------------------------------------------------------------
 
-// Management function: initializes the given buffer to contain the specified backend layout.
+// Management function: creates the given file to contain the specified backend
+// layout.
 seos_err_t
-SeosConfigBackend_createMemBackendAutoSized(void* buffer, size_t bufferSize,
-                                            size_t sizeOfRecord);
+SeosConfigBackend_createFileBackend(
+    SeosConfigBackend_FileName  name,
+    hPartition_t                phandle,
+    unsigned int                numberOfRecords,
+    size_t                      sizeOfRecord);
 
-// Initialize the given backend object with the backend layout retrieved from the given file.
+// Initialize the given backend object with the backend layout retrieved from
+// the given file.
 seos_err_t
-SeosConfigBackend_initializeFileBackend(SeosConfigBackend* instance,
-                                        SeosConfigBackend_FileName name, hPartition_t phandle);
+SeosConfigBackend_initializeFileBackend(
+    SeosConfigBackend *         instance,
+    SeosConfigBackend_FileName  name,
+    hPartition_t                phandle);
 
-// Initialize the given backend object with the backend layout retrieved from the given buffer.
+
+//------------------------------------------------------------------------------
+// Memory Backend API
+//------------------------------------------------------------------------------
+
+#if defined(CONFIG_SERVER_BACKEND_MEMORY)
+
+// Management function: initializes the given buffer to contain the specified
+// backend layout.
 seos_err_t
-SeosConfigBackend_initializeMemBackend(SeosConfigBackend* instance,
-                                       void* buffer, size_t bufferSize);
+SeosConfigBackend_createMemBackend(
+    void *        buffer,
+    size_t        bufferSize,
+    unsigned int  numberOfRecords,
+    size_t        sizeOfRecord);
+
+
+// Management function: initializes the given buffer to contain the specified
+// backend layout.
+seos_err_t
+SeosConfigBackend_createMemBackendAutoSized(
+    void *  buffer,
+    size_t  bufferSize,
+    size_t  sizeOfRecord);
+
+
+// Initialize the given backend object with the backend layout retrieved from
+// the given buffer.
+seos_err_t
+SeosConfigBackend_initializeMemBackend(
+    SeosConfigBackend *  instance,
+    void *               buffer,
+    size_t               bufferSize);
+
+
+//------------------------------------------------------------------------------
+// Generic Function API
+//------------------------------------------------------------------------------
 
 unsigned int
-SeosConfigBackend_getNumberOfRecords(SeosConfigBackend const* instance);
+SeosConfigBackend_getNumberOfRecords(
+    SeosConfigBackend const *  instance);
+
 
 size_t
-SeosConfigBackend_getSizeOfRecords(SeosConfigBackend const* instance);
+SeosConfigBackend_getSizeOfRecords(
+    SeosConfigBackend const *  instance);
+
 
 seos_err_t
-SeosConfigBackend_readRecord(SeosConfigBackend* instance,
-                             unsigned int recordIndex, void* buf, size_t bufLen);
+SeosConfigBackend_readRecord(
+    SeosConfigBackend *  instance,
+    unsigned int         recordIndex,
+    void *               buf,
+    size_t               bufLen);
+
 
 seos_err_t
-SeosConfigBackend_writeRecord(SeosConfigBackend* instance,
-                              unsigned int recordIndex, const void* buf, size_t bufLen);
+SeosConfigBackend_writeRecord(
+    SeosConfigBackend *  instance,
+    unsigned int         recordIndex,
+    const void  *        buf,
+    size_t               bufLen);

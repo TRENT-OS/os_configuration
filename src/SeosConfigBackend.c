@@ -2,11 +2,13 @@
  * Copyright (C) 2019, Hensoldt Cyber GmbH
  */
 
-#include <string.h>
 
-#include "seos.h"
-#include "SeosConfigBackend.h"
 #include "LibDebug/Debug.h"
+#include "SeosError.h"
+#include "SeosConfigBackend.h"
+#include "seos_fs.h"
+#include "seos_pm.h"
+#include <string.h>
 
 
 typedef struct SeosConfigBackend_BackendMemLayout

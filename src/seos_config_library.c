@@ -514,3 +514,33 @@ library_seos_configuration_parameterSetValueAsBlob(
         return SEOS_ERROR_INVALID_PARAMETER;
     }
 }
+
+
+//------------------------------------------------------------------------------
+seos_err_t
+library_seos_configuration_parameterGetValueFromDomainName(
+    SeosConfigHandle                   handle,
+    const char*                        domain_name,
+    const char*                        param_name,
+    const SeosConfigLib_ParameterType  param_type,
+    void*                              buffer,
+    size_t*                            len)
+{
+    if (SEOS_CONFIG_HANDLE_KIND_LOCAL == seos_configuration_handle_getHandleKind(
+            handle))
+    {
+        SeosConfigLib* instance = (SeosConfigLib*)
+                                  seos_configuration_handle_getLocalInstance(handle);
+        return SeosConfigLib_parameterGetValueFromDomainName(
+                   instance,
+                   domain_name,
+                   param_name,
+                   param_type,
+                   buffer,
+                   len);
+    }
+    else
+    {
+        return SEOS_ERROR_INVALID_PARAMETER;
+    }
+}

@@ -15,11 +15,28 @@ target_include_directories(${PROJECT_NAME}
         include
 )
 
+# target_compile_options(${PROJECT_NAME}
+#     INTERFACE
+#         -DSEOS_CONFIG_CAMKES_CLIENT
+# )
+
+target_sources(${PROJECT_NAME}
+    INTERFACE
+        # ToDo: shouldn't we provide the client lib?
+        #src/seos_config_client.c
+)
+
+
 #------------------------------------------------------------------------------
 
 project(seos_configuration C)
 
 add_library(${PROJECT_NAME} INTERFACE)
+
+# target_compile_options(${PROJECT_NAME}
+#     INTERFACE
+#         -DSEOS_CONFIG_CAMKES_SERVER
+# )
 
 target_include_directories(${PROJECT_NAME}
     INTERFACE
@@ -32,9 +49,11 @@ target_sources(${PROJECT_NAME}
         src/SeosConfigAppIdentifier.c
         src/SeosConfigBackend.c
         src/SeosConfigLib.c
-        src/seos_config_client.c
         src/seos_config_library.c
         src/seos_config_server.c
+        # ToDo: why include this when we are a server?
+        src/seos_config_client.c
+
 )
 
 target_link_libraries(${PROJECT_NAME}

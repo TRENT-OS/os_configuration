@@ -25,8 +25,9 @@ SeosConfigInstanceStore;
 #include "seos_config_data_types.h"
 
 inline
-static SeosConfigLib* 
-seos_configuration_instance_store_getInstance(SeosConfigInstanceStore* self, unsigned int instanceIndex)
+static SeosConfigLib*
+seos_configuration_instance_store_getInstance(SeosConfigInstanceStore* self,
+                                              unsigned int instanceIndex)
 {
     if (instanceIndex < SEOS_CONFIG_INSTANCE_STORE_MAX_INSTANCES)
     {

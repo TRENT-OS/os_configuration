@@ -25,16 +25,16 @@ library_seos_configuration_domainEnumeratorInit(
 
 seos_err_t
 library_seos_configuration_domainEnumeratorClose(SeosConfigHandle handle,
-                                    SeosConfigLib_DomainEnumerator* enumerator);
+                                                 SeosConfigLib_DomainEnumerator* enumerator);
 
 seos_err_t
 library_seos_configuration_domainEnumeratorReset(SeosConfigHandle handle,
-                                    SeosConfigLib_DomainEnumerator* enumerator);
+                                                 SeosConfigLib_DomainEnumerator* enumerator);
 
 
 seos_err_t
 library_seos_configuration_domainEnumeratorIncrement(SeosConfigHandle handle,
-                                        SeosConfigLib_DomainEnumerator* enumerator);
+                                                     SeosConfigLib_DomainEnumerator* enumerator);
 
 seos_err_t
 library_seos_configuration_domainEnumeratorGetElement(
@@ -51,15 +51,15 @@ library_seos_configuration_parameterEnumeratorInit(
 
 seos_err_t
 library_seos_configuration_parameterEnumeratorClose(SeosConfigHandle handle,
-                                       SeosConfigLib_ParameterEnumerator* enumerator);
+                                                    SeosConfigLib_ParameterEnumerator* enumerator);
 
 seos_err_t
 library_seos_configuration_parameterEnumeratorReset(SeosConfigHandle handle,
-                                       SeosConfigLib_ParameterEnumerator* enumerator);
+                                                    SeosConfigLib_ParameterEnumerator* enumerator);
 
 seos_err_t
 library_seos_configuration_parameterEnumeratorIncrement(SeosConfigHandle handle,
-                                               SeosConfigLib_ParameterEnumerator* enumerator);
+                                                        SeosConfigLib_ParameterEnumerator* enumerator);
 
 seos_err_t
 library_seos_configuration_parameterEnumeratorGetElement(

@@ -57,7 +57,7 @@ typedef struct SeosConfigBackend
 
         struct
         {
-            void *  buffer;
+            void*   buffer;
             size_t  bufferSize;
         } memory;
 
@@ -90,7 +90,7 @@ SeosConfigBackend_createFileBackend(
 // the given file.
 seos_err_t
 SeosConfigBackend_initializeFileBackend(
-    SeosConfigBackend *         instance,
+    SeosConfigBackend*          instance,
     SeosConfigBackend_FileName  name,
     hPartition_t                phandle);
 
@@ -107,7 +107,7 @@ SeosConfigBackend_initializeFileBackend(
 // backend layout.
 seos_err_t
 SeosConfigBackend_createMemBackend(
-    void *        buffer,
+    void*         buffer,
     size_t        bufferSize,
     unsigned int  numberOfRecords,
     size_t        sizeOfRecord);
@@ -117,7 +117,7 @@ SeosConfigBackend_createMemBackend(
 // backend layout.
 seos_err_t
 SeosConfigBackend_createMemBackendAutoSized(
-    void *  buffer,
+    void*   buffer,
     size_t  bufferSize,
     size_t  sizeOfRecord);
 
@@ -126,8 +126,8 @@ SeosConfigBackend_createMemBackendAutoSized(
 // the given buffer.
 seos_err_t
 SeosConfigBackend_initializeMemBackend(
-    SeosConfigBackend *  instance,
-    void *               buffer,
+    SeosConfigBackend*   instance,
+    void*                buffer,
     size_t               bufferSize);
 
 #endif //CONFIG_SERVER_BACKEND_MEMORY
@@ -139,25 +139,25 @@ SeosConfigBackend_initializeMemBackend(
 
 unsigned int
 SeosConfigBackend_getNumberOfRecords(
-    SeosConfigBackend const *  instance);
+    SeosConfigBackend const*   instance);
 
 
 size_t
 SeosConfigBackend_getSizeOfRecords(
-    SeosConfigBackend const *  instance);
+    SeosConfigBackend const*   instance);
 
 
 seos_err_t
 SeosConfigBackend_readRecord(
-    SeosConfigBackend *  instance,
+    SeosConfigBackend*   instance,
     unsigned int         recordIndex,
-    void *               buf,
+    void*                buf,
     size_t               bufLen);
 
 
 seos_err_t
 SeosConfigBackend_writeRecord(
-    SeosConfigBackend *  instance,
+    SeosConfigBackend*   instance,
     unsigned int         recordIndex,
-    const void  *        buf,
+    const void*          buf,
     size_t               bufLen);

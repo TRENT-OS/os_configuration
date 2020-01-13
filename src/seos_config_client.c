@@ -46,8 +46,8 @@ seos_configuration_createHandle(
     else
     {
         SeosConfigLib* instance = seos_configuration_instance_store_getInstance(
-            &client.instanceStore,
-            id);
+                                      &client.instanceStore,
+                                      id);
 
         if (instance != NULL)
         {
@@ -70,7 +70,8 @@ seos_configuration_domainEnumeratorInit(
     SeosConfigHandle handle,
     SeosConfigLib_DomainEnumerator* enumerator)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
         return server_seos_configuration_domainEnumeratorInit(handle, enumerator);
@@ -87,9 +88,10 @@ seos_configuration_domainEnumeratorInit(
 
 seos_err_t
 seos_configuration_domainEnumeratorClose(SeosConfigHandle handle,
-                                    SeosConfigLib_DomainEnumerator* enumerator)
+                                         SeosConfigLib_DomainEnumerator* enumerator)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
         return server_seos_configuration_domainEnumeratorClose(handle, enumerator);
@@ -106,9 +108,10 @@ seos_configuration_domainEnumeratorClose(SeosConfigHandle handle,
 
 seos_err_t
 seos_configuration_domainEnumeratorReset(SeosConfigHandle handle,
-                                    SeosConfigLib_DomainEnumerator* enumerator)
+                                         SeosConfigLib_DomainEnumerator* enumerator)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
         return server_seos_configuration_domainEnumeratorReset(handle, enumerator);
@@ -125,9 +128,10 @@ seos_configuration_domainEnumeratorReset(SeosConfigHandle handle,
 
 seos_err_t
 seos_configuration_domainEnumeratorIncrement(SeosConfigHandle handle,
-                                        SeosConfigLib_DomainEnumerator* enumerator)
+                                             SeosConfigLib_DomainEnumerator* enumerator)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
         return server_seos_configuration_domainEnumeratorIncrement(handle, enumerator);
@@ -148,17 +152,20 @@ seos_configuration_domainEnumeratorGetElement(
     SeosConfigLib_DomainEnumerator const* enumerator,
     SeosConfigLib_Domain* domain)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
-        return server_seos_configuration_domainEnumeratorGetElement(handle, enumerator, domain);
+        return server_seos_configuration_domainEnumeratorGetElement(handle, enumerator,
+                                                                    domain);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
     {
-        return library_seos_configuration_domainEnumeratorGetElement(handle, enumerator, domain);
+        return library_seos_configuration_domainEnumeratorGetElement(handle, enumerator,
+                domain);
     }
 }
 
@@ -169,26 +176,30 @@ seos_configuration_parameterEnumeratorInit(
     SeosConfigLib_DomainEnumerator const* domainEnumerator,
     SeosConfigLib_ParameterEnumerator* enumerator)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
-        return server_seos_configuration_parameterEnumeratorInit(handle, domainEnumerator, enumerator);
+        return server_seos_configuration_parameterEnumeratorInit(handle,
+                                                                 domainEnumerator, enumerator);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
     {
-        return library_seos_configuration_parameterEnumeratorInit(handle, domainEnumerator, enumerator);
+        return library_seos_configuration_parameterEnumeratorInit(handle,
+                                                                  domainEnumerator, enumerator);
     }
 }
 
 
 seos_err_t
 seos_configuration_parameterEnumeratorClose(SeosConfigHandle handle,
-                                       SeosConfigLib_ParameterEnumerator* enumerator)
+                                            SeosConfigLib_ParameterEnumerator* enumerator)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
         return server_seos_configuration_parameterEnumeratorClose(handle, enumerator);
@@ -205,9 +216,10 @@ seos_configuration_parameterEnumeratorClose(SeosConfigHandle handle,
 
 seos_err_t
 seos_configuration_parameterEnumeratorReset(SeosConfigHandle handle,
-                                       SeosConfigLib_ParameterEnumerator* enumerator)
+                                            SeosConfigLib_ParameterEnumerator* enumerator)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
         return server_seos_configuration_parameterEnumeratorReset(handle, enumerator);
@@ -224,19 +236,22 @@ seos_configuration_parameterEnumeratorReset(SeosConfigHandle handle,
 
 seos_err_t
 seos_configuration_parameterEnumeratorIncrement(SeosConfigHandle handle,
-                                               SeosConfigLib_ParameterEnumerator* enumerator)
+                                                SeosConfigLib_ParameterEnumerator* enumerator)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
-        return server_seos_configuration_parameterEnumeratorIncrement(handle, enumerator);
+        return server_seos_configuration_parameterEnumeratorIncrement(handle,
+                enumerator);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
     {
-        return library_seos_configuration_parameterEnumeratorIncrement(handle, enumerator);
+        return library_seos_configuration_parameterEnumeratorIncrement(handle,
+                enumerator);
     }
 }
 
@@ -247,17 +262,20 @@ seos_configuration_parameterEnumeratorGetElement(
     SeosConfigLib_ParameterEnumerator const* enumerator,
     SeosConfigLib_Parameter* parameter)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
-        return server_seos_configuration_parameterEnumeratorGetElement(handle, enumerator, parameter);
+        return server_seos_configuration_parameterEnumeratorGetElement(handle,
+                enumerator, parameter);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
     {
-        return library_seos_configuration_parameterEnumeratorGetElement(handle, enumerator, parameter);
+        return library_seos_configuration_parameterEnumeratorGetElement(handle,
+                enumerator, parameter);
     }
 }
 
@@ -278,17 +296,20 @@ seos_configuration_domainCreateParameterEnumerator(
     SeosConfigLib_ParameterName const* parameterName,
     SeosConfigLib_ParameterEnumerator* parameterEnumerator)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
-        return server_seos_configuration_domainCreateParameterEnumerator(handle, domain, parameterName, parameterEnumerator);
+        return server_seos_configuration_domainCreateParameterEnumerator(handle, domain,
+                parameterName, parameterEnumerator);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
     {
-        return library_seos_configuration_domainCreateParameterEnumerator(handle, domain, parameterName, parameterEnumerator);
+        return library_seos_configuration_domainCreateParameterEnumerator(handle,
+                domain, parameterName, parameterEnumerator);
     }
 }
 
@@ -300,17 +321,20 @@ seos_configuration_domainGetElement(
     SeosConfigLib_ParameterName const* parameterName,
     SeosConfigLib_Parameter* parameter)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
-        return server_seos_configuration_domainGetElement(handle, domain, parameterName, parameter);
+        return server_seos_configuration_domainGetElement(handle, domain, parameterName,
+                                                          parameter);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
     {
-        return library_seos_configuration_domainGetElement(handle, domain, parameterName, parameter);
+        return library_seos_configuration_domainGetElement(handle, domain,
+                                                           parameterName, parameter);
     }
 }
 
@@ -349,19 +373,21 @@ seos_configuration_parameterGetValue(
     size_t bufferLength,
     size_t* bytesCopied)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
         static dataport_ptr_t bufferReceive;
 
-        bufferReceive = dataport_wrap_ptr((void *)cfg_dataport_buf);
+        bufferReceive = dataport_wrap_ptr((void*)cfg_dataport_buf);
 
         int result =
-        server_seos_configuration_parameterGetValue(handle, parameter, bufferReceive, bufferLength, bytesCopied);
+            server_seos_configuration_parameterGetValue(handle, parameter, bufferReceive,
+                                                        bufferLength, bytesCopied);
 
         if (result == SEOS_SUCCESS)
         {
-            const void *buf = dataport_unwrap_ptr(bufferReceive);
+            const void* buf = dataport_unwrap_ptr(bufferReceive);
             memcpy(buffer, buf, *bytesCopied);
         }
 
@@ -372,7 +398,8 @@ seos_configuration_parameterGetValue(
     }
     else
     {
-        return library_seos_configuration_parameterGetValue(handle, parameter, buffer, bufferLength, bytesCopied);
+        return library_seos_configuration_parameterGetValue(handle, parameter, buffer,
+                                                            bufferLength, bytesCopied);
     }
 }
 
@@ -383,17 +410,20 @@ seos_configuration_parameterGetValueAsU32(
     SeosConfigLib_Parameter const* parameter,
     uint32_t* value)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
-        return server_seos_configuration_parameterGetValueAsU32(handle, parameter, value);
+        return server_seos_configuration_parameterGetValueAsU32(handle, parameter,
+                                                                value);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
     {
-        return library_seos_configuration_parameterGetValueAsU32(handle, parameter, value);
+        return library_seos_configuration_parameterGetValueAsU32(handle, parameter,
+                                                                 value);
     }
 }
 
@@ -404,17 +434,20 @@ seos_configuration_parameterGetValueAsU64(
     SeosConfigLib_Parameter const* parameter,
     uint64_t* value)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
-        return server_seos_configuration_parameterGetValueAsU64(handle, parameter, value);
+        return server_seos_configuration_parameterGetValueAsU64(handle, parameter,
+                                                                value);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
     {
-        return library_seos_configuration_parameterGetValueAsU64(handle, parameter, value);
+        return library_seos_configuration_parameterGetValueAsU64(handle, parameter,
+                                                                 value);
     }
 }
 
@@ -426,19 +459,21 @@ seos_configuration_parameterGetValueAsString(
     char* buffer,
     size_t bufferLength)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
         static dataport_ptr_t bufferReceive;
 
-        bufferReceive = dataport_wrap_ptr((void *)cfg_dataport_buf);
+        bufferReceive = dataport_wrap_ptr((void*)cfg_dataport_buf);
 
         int result =
-        server_seos_configuration_parameterGetValueAsString(handle, parameter, bufferReceive, bufferLength);
+            server_seos_configuration_parameterGetValueAsString(handle, parameter,
+                                                                bufferReceive, bufferLength);
 
         if (result == SEOS_SUCCESS)
         {
-            const void *buf = dataport_unwrap_ptr(bufferReceive);
+            const void* buf = dataport_unwrap_ptr(bufferReceive);
             memcpy(buffer, buf, bufferLength);
         }
 
@@ -449,7 +484,8 @@ seos_configuration_parameterGetValueAsString(
     }
     else
     {
-        return library_seos_configuration_parameterGetValueAsString(handle, parameter, buffer, bufferLength);
+        return library_seos_configuration_parameterGetValueAsString(handle, parameter,
+                                                                    buffer, bufferLength);
     }
 }
 
@@ -461,19 +497,21 @@ seos_configuration_parameterGetValueAsBlob(
     void* buffer,
     size_t bufferLength)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
         static dataport_ptr_t bufferReceive;
 
-        bufferReceive = dataport_wrap_ptr((void *)cfg_dataport_buf);
+        bufferReceive = dataport_wrap_ptr((void*)cfg_dataport_buf);
 
         int result =
-        server_seos_configuration_parameterGetValueAsBlob(handle, parameter, bufferReceive, bufferLength);
+            server_seos_configuration_parameterGetValueAsBlob(handle, parameter,
+                                                              bufferReceive, bufferLength);
 
         if (result == SEOS_SUCCESS)
         {
-            const void *buf = dataport_unwrap_ptr(bufferReceive);
+            const void* buf = dataport_unwrap_ptr(bufferReceive);
             memcpy(buffer, buf, bufferLength);
         }
 
@@ -484,7 +522,8 @@ seos_configuration_parameterGetValueAsBlob(
     }
     else
     {
-        return library_seos_configuration_parameterGetValueAsBlob(handle, parameter, buffer, bufferLength);
+        return library_seos_configuration_parameterGetValueAsBlob(handle, parameter,
+                                                                  buffer, bufferLength);
     }
 }
 
@@ -497,22 +536,25 @@ seos_configuration_parameterSetValue(
     void const* buffer,
     size_t bufferLength)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
         static dataport_ptr_t bufferSend;
 
-        memcpy((void *)cfg_dataport_buf, buffer, bufferLength);
-        bufferSend = dataport_wrap_ptr((void *)cfg_dataport_buf);
+        memcpy((void*)cfg_dataport_buf, buffer, bufferLength);
+        bufferSend = dataport_wrap_ptr((void*)cfg_dataport_buf);
 
-        return server_seos_configuration_parameterSetValue(handle, enumerator, parameterType, bufferSend, bufferLength);
+        return server_seos_configuration_parameterSetValue(handle, enumerator,
+                                                           parameterType, bufferSend, bufferLength);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
     {
-        return library_seos_configuration_parameterSetValue(handle, enumerator, parameterType, buffer, bufferLength);
+        return library_seos_configuration_parameterSetValue(handle, enumerator,
+                                                            parameterType, buffer, bufferLength);
     }
 }
 
@@ -523,17 +565,20 @@ seos_configuration_parameterSetValueAsU32(
     SeosConfigLib_ParameterEnumerator const* enumerator,
     uint32_t value)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
-        return server_seos_configuration_parameterSetValueAsU32(handle, enumerator, value);
+        return server_seos_configuration_parameterSetValueAsU32(handle, enumerator,
+                                                                value);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
     {
-        return library_seos_configuration_parameterSetValueAsU32(handle, enumerator, value);
+        return library_seos_configuration_parameterSetValueAsU32(handle, enumerator,
+                                                                 value);
     }
 }
 
@@ -544,17 +589,20 @@ seos_configuration_parameterSetValueAsU64(
     SeosConfigLib_ParameterEnumerator const* enumerator,
     uint64_t value)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
-        return server_seos_configuration_parameterSetValueAsU64(handle, enumerator, value);
+        return server_seos_configuration_parameterSetValueAsU64(handle, enumerator,
+                                                                value);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
     {
-        return library_seos_configuration_parameterSetValueAsU64(handle, enumerator, value);
+        return library_seos_configuration_parameterSetValueAsU64(handle, enumerator,
+                                                                 value);
     }
 }
 
@@ -567,22 +615,25 @@ seos_configuration_parameterSetValueAsString(
     char const* buffer,
     size_t bufferLength)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
         static dataport_ptr_t bufferSend;
 
-        memcpy((void *)cfg_dataport_buf, buffer, bufferLength);
-        bufferSend = dataport_wrap_ptr((void *)cfg_dataport_buf);
+        memcpy((void*)cfg_dataport_buf, buffer, bufferLength);
+        bufferSend = dataport_wrap_ptr((void*)cfg_dataport_buf);
 
-        return server_seos_configuration_parameterSetValueAsString(handle, enumerator, parameterType, bufferSend, bufferLength);
+        return server_seos_configuration_parameterSetValueAsString(handle, enumerator,
+                                                                   parameterType, bufferSend, bufferLength);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
     {
-        return library_seos_configuration_parameterSetValueAsString(handle, enumerator, parameterType, buffer, bufferLength);
+        return library_seos_configuration_parameterSetValueAsString(handle, enumerator,
+                                                                    parameterType, buffer, bufferLength);
     }
 }
 
@@ -595,21 +646,24 @@ seos_configuration_parameterSetValueAsBlob(
     void const* buffer,
     size_t bufferLength)
 {
-    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(handle))
+    if (SEOS_CONFIG_HANDLE_KIND_RPC == seos_configuration_handle_getHandleKind(
+            handle))
     {
 #if defined(SEOS_CONFIG_CAMKES_CLIENT)
         static dataport_ptr_t bufferSend;
 
-        memcpy((void *)cfg_dataport_buf, buffer, bufferLength);
-        bufferSend = dataport_wrap_ptr((void *)cfg_dataport_buf);
+        memcpy((void*)cfg_dataport_buf, buffer, bufferLength);
+        bufferSend = dataport_wrap_ptr((void*)cfg_dataport_buf);
 
-        return server_seos_configuration_parameterSetValueAsBlob(handle, enumerator, parameterType, bufferSend, bufferLength);
+        return server_seos_configuration_parameterSetValueAsBlob(handle, enumerator,
+                                                                 parameterType, bufferSend, bufferLength);
 #else
         return SEOS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
     {
-        return library_seos_configuration_parameterSetValueAsBlob(handle, enumerator, parameterType, buffer, bufferLength);
+        return library_seos_configuration_parameterSetValueAsBlob(handle, enumerator,
+                                                                  parameterType, buffer, bufferLength);
     }
 }

@@ -23,7 +23,7 @@ typedef struct
         {
             unsigned int id;
         } rpc;
-        
+
         struct
         {
             void* instance;

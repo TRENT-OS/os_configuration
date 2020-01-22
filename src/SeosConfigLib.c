@@ -429,18 +429,18 @@ SeosConfigLib_domainEnumeratorReset(SeosConfigLib const* instance,
 }
 
 
-int
+seos_err_t
 SeosConfigLib_domainEnumeratorIncrement(SeosConfigLib const* instance,
                                         SeosConfigLib_DomainEnumerator* enumerator)
 {
     seos_err_t result = SeosConfigLib_enumeratorRawIncrement(
                             SeosConfigBackend_getNumberOfRecords(&instance->domainBackend),
                             &enumerator->index);
-    return result == SEOS_SUCCESS ? 0 : -1;
+    return result;
 }
 
 
-int
+seos_err_t
 SeosConfigLib_domainEnumeratorGetElement(
     SeosConfigLib* instance,
     SeosConfigLib_DomainEnumerator const* enumerator,
@@ -455,28 +455,28 @@ SeosConfigLib_domainEnumeratorGetElement(
     if (SEOS_SUCCESS == fetchResult)
     {
         domain->enumerator = *enumerator;
-        return 0;
+        return SEOS_SUCCESS;
     }
     else
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return -1;
+        return SEOS_ERROR_GENERIC;
     }
 }
 
 
-int
+seos_err_t
 SeosConfigLib_parameterEnumeratorInit(
     SeosConfigLib*  instance,
     SeosConfigLib_DomainEnumerator const* domainEnumerator,
     SeosConfigLib_ParameterEnumerator* enumerator)
 {
     SeosConfigLib_ParameterEnumerator initEnumerator;
-    int result;
+    seos_err_t result;
 
     initEnumerator.domainEnumerator = *domainEnumerator;
     result = SeosConfigLib_parameterEnumeratorReset(instance, &initEnumerator);
-    if (0 == result)
+    if (SEOS_SUCCESS == result)
     {
         *enumerator = initEnumerator;
     }
@@ -494,7 +494,7 @@ SeosConfigLib_parameterEnumeratorClose(SeosConfigLib const* instance,
 
 
 // We start at the first parameter and starting from there try to find the first paramter of the given domain.
-int
+seos_err_t
 SeosConfigLib_parameterEnumeratorReset(SeosConfigLib* instance,
                                        SeosConfigLib_ParameterEnumerator* enumerator)
 {
@@ -510,14 +510,14 @@ SeosConfigLib_parameterEnumeratorReset(SeosConfigLib* instance,
         *enumerator = searchEnumerator;
     }
 
-    return result == SEOS_SUCCESS ? 0 : -1;
+    return result;
 }
 
 
 // We try to increment the given enumerator and start the search from there.
 // If no parameter was found the given enumerator is not changed.
-int SeosConfigLib_parameterEnumeratorIncrement(SeosConfigLib* instance,
-                                               SeosConfigLib_ParameterEnumerator* enumerator)
+seos_err_t SeosConfigLib_parameterEnumeratorIncrement(SeosConfigLib* instance,
+                                                      SeosConfigLib_ParameterEnumerator* enumerator)
 {
     SeosConfigLib_ParameterEnumerator searchEnumerator = *enumerator;
 
@@ -527,17 +527,17 @@ int SeosConfigLib_parameterEnumeratorIncrement(SeosConfigLib* instance,
         seos_err_t result = SeosConfigLib_advanceParameterEnumerator(instance,
                             &searchEnumerator,
                             enumerator);
-        return result == SEOS_SUCCESS ? 0 : -1;
+        return result;
     }
     else
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return -1;
+        return SEOS_ERROR_GENERIC;
     }
 }
 
 
-int
+seos_err_t
 SeosConfigLib_parameterEnumeratorGetElement(
     SeosConfigLib* instance,
     SeosConfigLib_ParameterEnumerator const* enumerator,
@@ -554,12 +554,12 @@ SeosConfigLib_parameterEnumeratorGetElement(
     if (SEOS_SUCCESS == fetchResult)
     {
         *parameter = retrievedParameter;
-        return 0;
+        return SEOS_SUCCESS;
     }
     else
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return -1;
+        return SEOS_ERROR_GENERIC;
     }
 }
 
@@ -574,7 +574,7 @@ SeosConfigLib_domainGetName(
 }
 
 
-int
+seos_err_t
 SeosConfigLib_domainCreateParameterEnumerator(
     SeosConfigLib* instance,
     SeosConfigLib_Domain const* domain,
@@ -584,14 +584,14 @@ SeosConfigLib_domainCreateParameterEnumerator(
     SeosConfigLib_ParameterEnumerator searchEnumerator;
     SeosConfigLib_Parameter searchParameter;
 
-    int result = SeosConfigLib_parameterEnumeratorInit(
-                     instance,
-                     &domain->enumerator,
-                     &searchEnumerator);
-    if (result != 0)
+    seos_err_t result = SeosConfigLib_parameterEnumeratorInit(
+                            instance,
+                            &domain->enumerator,
+                            &searchEnumerator);
+    if (SEOS_SUCCESS != result)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return -1;
+        return SEOS_ERROR_GENERIC;
     }
 
     bool parametersLeftToTry = true;
@@ -601,17 +601,17 @@ SeosConfigLib_domainCreateParameterEnumerator(
                      instance,
                      &searchEnumerator,
                      &searchParameter);
-        if (result != 0)
+        if (SEOS_SUCCESS != result)
         {
             Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-            return -1;
+            return SEOS_ERROR_GENERIC;
         }
 
         if (SEOS_SUCCESS == SeosConfigLib_compareParameterName(parameterName,
                                                                &searchParameter.parameterName))
         {
             *parameterEnumerator = searchEnumerator;
-            return 0;
+            return SEOS_SUCCESS;
         }
         else
         {
@@ -622,11 +622,11 @@ SeosConfigLib_domainCreateParameterEnumerator(
     }
 
     Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-    return -1;
+    return SEOS_ERROR_GENERIC;
 }
 
 
-int
+seos_err_t
 SeosConfigLib_domainGetElement(
     SeosConfigLib* instance,
     SeosConfigLib_Domain const* domain,
@@ -636,31 +636,31 @@ SeosConfigLib_domainGetElement(
     SeosConfigLib_ParameterEnumerator parameterEnumerator;
     SeosConfigLib_Parameter searchParameter;
 
-    int result = SeosConfigLib_domainCreateParameterEnumerator(
-                     instance,
-                     domain,
-                     parameterName,
-                     &parameterEnumerator);
+    seos_err_t result = SeosConfigLib_domainCreateParameterEnumerator(
+                            instance,
+                            domain,
+                            parameterName,
+                            &parameterEnumerator);
 
-    if (result != 0)
+    if (SEOS_SUCCESS != result)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return -1;
+        return SEOS_ERROR_GENERIC;
     }
 
     result = SeosConfigLib_parameterEnumeratorGetElement(
                  instance,
                  &parameterEnumerator,
                  &searchParameter);
-    if (result == 0)
+    if (SEOS_SUCCESS == result)
     {
         *parameter = searchParameter;
-        return 0;
+        return SEOS_SUCCESS;
     }
     else
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return -1;
+        return SEOS_ERROR_GENERIC;
     }
 }
 
@@ -712,7 +712,7 @@ SeosConfigLib_parameterGetSize(
 }
 
 
-int
+seos_err_t
 SeosConfigLib_parameterGetValue(
     SeosConfigLib* instance,
     SeosConfigLib_Parameter const* parameter,
@@ -772,12 +772,12 @@ SeosConfigLib_parameterGetValue(
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
     }
 
-    return (bytesCopied > 0) ? 0 : -1;
+    return (bytesCopied > 0) ? SEOS_SUCCESS : SEOS_ERROR_GENERIC;
 }
 
 
 // Get the parameter value - specific format.
-int
+seos_err_t
 SeosConfigLib_parameterGetValueAsU32(
     SeosConfigLib* instance,
     SeosConfigLib_Parameter const* parameter,
@@ -785,12 +785,12 @@ SeosConfigLib_parameterGetValueAsU32(
 {
     *value = parameter->parameterValue.valueInteger32;
 
-    return 0;
+    return SEOS_SUCCESS;
 }
 
 
 // Get the parameter value - specific format.
-int
+seos_err_t
 SeosConfigLib_parameterGetValueAsU64(
     SeosConfigLib* instance,
     SeosConfigLib_Parameter const* parameter,
@@ -798,12 +798,12 @@ SeosConfigLib_parameterGetValueAsU64(
 {
     *value = parameter->parameterValue.valueInteger64;
 
-    return 0;
+    return SEOS_SUCCESS;
 }
 
 
 // Get the parameter value - specific format.
-int
+seos_err_t
 SeosConfigLib_parameterGetValueAsString(
     SeosConfigLib* instance,
     SeosConfigLib_Parameter const* parameter,
@@ -822,7 +822,7 @@ SeosConfigLib_parameterGetValueAsString(
 
 
 // Get the parameter value - specific format.
-int
+seos_err_t
 SeosConfigLib_parameterGetValueAsBlob(
     SeosConfigLib* instance,
     SeosConfigLib_Parameter const* parameter,
@@ -841,7 +841,7 @@ SeosConfigLib_parameterGetValueAsBlob(
 
 
 // Set the parameter value - raw format.
-int
+seos_err_t
 SeosConfigLib_parameterSetValue(
     SeosConfigLib* instance,
     SeosConfigLib_ParameterEnumerator const* enumerator,
@@ -861,27 +861,26 @@ SeosConfigLib_parameterSetValue(
                      instance,
                      enumerator,
                      &parameter);
-    if (result != 0)
+    if (SEOS_SUCCESS != result)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return -1;
+        return SEOS_ERROR_GENERIC;
     }
 
     result = SeosConfigLib_ParameterIsWriteableForMe(&parameter) ? 0 : -1;
-    if (result != 0)
+    if (SEOS_SUCCESS != result)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return -1;
+        return SEOS_ERROR_GENERIC;
     }
 
     if (parameterType != parameter.parameterType)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return -1;
+        return SEOS_ERROR_GENERIC;
     }
 
     size_t parameterSize = SeosConfigLib_parameterGetSize(&parameter);
-    seos_err_t resultTmp;
 
     switch (parameter.parameterType)
     {
@@ -890,57 +889,54 @@ SeosConfigLib_parameterSetValue(
         if (parameterSize == bufferLength)
         {
             memcpy(&parameter.parameterValue, buffer, parameterSize);
-            result = 0;
+            result = SEOS_SUCCESS;
         }
         else
         {
             Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-            result = -1;
+            result = SEOS_ERROR_GENERIC;
         }
         break;
 
     case SEOS_CONFIG_LIB_PARAMETER_TYPE_STRING:
         parameter.parameterValue.valueString.size = bufferLength;
 
-        resultTmp = SeosConfigLib_writeVariableLengthString(
-                        &instance->stringBackend,
-                        parameter.parameterValue.valueString.index,
-                        buffer,
-                        bufferLength);
-        result = resultTmp == SEOS_SUCCESS ? 0 : -1;
+        result = SeosConfigLib_writeVariableLengthString(
+                     &instance->stringBackend,
+                     parameter.parameterValue.valueString.index,
+                     buffer,
+                     bufferLength);
         break;
 
     case SEOS_CONFIG_LIB_PARAMETER_TYPE_BLOB:
         parameter.parameterValue.valueBlob.size = bufferLength;
 
-        resultTmp = SeosConfigLib_writeVariableLengthBlob(
-                        &instance->blobBackend,
-                        parameter.parameterValue.valueBlob.index,
-                        parameter.parameterValue.valueBlob.numberOfBlocks,
-                        buffer,
-                        bufferLength);
-        result = resultTmp == SEOS_SUCCESS ? 0 : -1;
+        result = SeosConfigLib_writeVariableLengthBlob(
+                     &instance->blobBackend,
+                     parameter.parameterValue.valueBlob.index,
+                     parameter.parameterValue.valueBlob.numberOfBlocks,
+                     buffer,
+                     bufferLength);
         break;
 
     default:
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        result = -1;
+        result = SEOS_ERROR_GENERIC;
         break;
     }
 
-    if (result == 0)
+    if (SEOS_SUCCESS == result)
     {
-        seos_err_t resultTmp = SeosConfigBackend_writeRecord(
-                                   &instance->parameterBackend,
-                                   enumerator->index,
-                                   &parameter,
-                                   sizeof(parameter));
-        result = resultTmp == SEOS_SUCCESS ? 0 : -1;
+        result = SeosConfigBackend_writeRecord(
+                     &instance->parameterBackend,
+                     enumerator->index,
+                     &parameter,
+                     sizeof(parameter));
     }
     else
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        result = -1;
+        result = SEOS_ERROR_GENERIC;
     }
 
     return result;
@@ -948,7 +944,7 @@ SeosConfigLib_parameterSetValue(
 
 
 // Set the parameter value - specific format.
-int
+seos_err_t
 SeosConfigLib_parameterSetValueAsU32(
     SeosConfigLib* instance,
     SeosConfigLib_ParameterEnumerator const* enumerator,
@@ -964,7 +960,7 @@ SeosConfigLib_parameterSetValueAsU32(
 
 
 // Set the parameter value - specific format.
-int
+seos_err_t
 SeosConfigLib_parameterSetValueAsU64(
     SeosConfigLib* instance,
     SeosConfigLib_ParameterEnumerator const* enumerator,
@@ -980,7 +976,7 @@ SeosConfigLib_parameterSetValueAsU64(
 
 
 // Set the parameter value - specific format.
-int
+seos_err_t
 SeosConfigLib_parameterSetValueAsString(
     SeosConfigLib* instance,
     SeosConfigLib_ParameterEnumerator const* enumerator,
@@ -998,7 +994,7 @@ SeosConfigLib_parameterSetValueAsString(
 
 
 // Set the parameter value - specific format.
-int
+seos_err_t
 SeosConfigLib_parameterSetValueAsBlob(
     SeosConfigLib* instance,
     SeosConfigLib_ParameterEnumerator const* enumerator,
@@ -1116,7 +1112,7 @@ find_domain(
 
 //------------------------------------------------------------------------------
 
-int
+seos_err_t
 SeosConfigLib_parameterGetValueFromDomainName(
     SeosConfigLib* instance,
     SeosConfigLib_DomainName const* domainName,

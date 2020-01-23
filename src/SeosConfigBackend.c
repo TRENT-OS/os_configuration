@@ -226,7 +226,7 @@ static seos_err_t
 readRecord_backend_filesystem(
     SeosConfigBackend*   instance,
     unsigned int         recordIndex,
-    const void*          buf,
+    void*                buf,
     size_t               bufLen)
 {
     unsigned int offset = sizeof(SeosConfigBackend_BackendFsLayout) + recordIndex *
@@ -271,7 +271,7 @@ SeosConfigBackend_createFileBackend(
     }
 
     return SeosConfigBackend_writeToFile(phandle, name.buffer, 0, &backendFsLayout,
-                                         sizeof(SeosConfigBackend_BackendFsLayout)))
+                                         sizeof(SeosConfigBackend_BackendFsLayout));
 }
 
 //------------------------------------------------------------------------------
@@ -283,8 +283,9 @@ SeosConfigBackend_initializeFileBackend(
 {
     SeosConfigBackend_BackendFsLayout backendFsLayout;
 
-    if (!SeosConfigBackend_readFromFile(phandle, name.buffer, 0, &backendFsLayout,
-                                        sizeof(SeosConfigBackend_BackendFsLayout)))
+    if (SEOS_SUCCESS != SeosConfigBackend_readFromFile(phandle, name.buffer, 0,
+                                                       &backendFsLayout,
+                                                       sizeof(SeosConfigBackend_BackendFsLayout)))
     {
         return SEOS_ERROR_GENERIC;
     }

@@ -7,6 +7,20 @@
 #include "seos_config_server.h"
 #include "seos_config_library.h"
 
+static
+int new_m_lock()
+{
+    return 0;
+}
+
+static
+int new_m_unlock()
+{
+    return 0;
+}
+
+#define m_lock new_m_lock
+#define m_unlock new_m_unlock
 
 typedef struct
 {
@@ -908,19 +922,39 @@ size_t bufferLength,
 size_t* bytesCopied)
 {
     SeosConfigHandle localHandle;
-
+    seos_err_t result;
+#if 0
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+#endif
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
         void *tmpBuf = dataport_unwrap_ptr(buffer);
         return library_seos_configuration_parameterGetValueFromDomainName(localHandle, domain_name, param_name, tmpBuf, bufferLength, bytesCopied);
+        result = library_seos_configuration_parameterGetValueFromDomainName(localHandle, domain_name, param_name, tmpBuf, bufferLength, bytesCopied);
     }
-
+    else
+    {
+        result = SEOS_ERROR_INVALID_PARAMETER;
+    }
+#if 0
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
     else
     {
         return SEOS_ERROR_INVALID_PARAMETER;
+        return result;
     }
-
-
+#endif
+    return result;
 }
 
 
@@ -933,19 +967,31 @@ dataport_ptr_t buffer,
 size_t bufferLength)
 {
     SeosConfigHandle localHandle;
+    seos_err_t result;
+
+    if (0 != m_lock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
 
     if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
     {
         void *tmpBuf = dataport_unwrap_ptr(buffer);
-        return library_seos_configuration_parameterSetValueFromDomainName(localHandle, domain_name, param_name, tmpBuf, bufferLength);
+        result = library_seos_configuration_parameterSetValueFromDomainName(localHandle, domain_name, param_name, tmpBuf, bufferLength);
     }
-
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        result = SEOS_ERROR_INVALID_PARAMETER;
     }
 
-
+    if (0 != m_unlock())
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+    else
+    {
+        return result;
+    }
 }
 
 #endif

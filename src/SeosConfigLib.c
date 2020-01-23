@@ -363,21 +363,21 @@ SeosConfigLib_Init(
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return SEOS_ERROR_INVALID_PARAMETER;
     }
-
+    Debug_LOG_DEBUG("Checked param function: %s - line: %d\n", __FUNCTION__, __LINE__);
     if (SeosConfigBackend_getSizeOfRecords(domainBackend) != sizeof(
             SeosConfigLib_Domain))
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return SEOS_ERROR_INVALID_PARAMETER;
     }
-
+    Debug_LOG_DEBUG("Checked domain function: %s - line: %d\n", __FUNCTION__, __LINE__);
     if (SeosConfigBackend_getSizeOfRecords(stringBackend) !=
         SEOS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return SEOS_ERROR_INVALID_PARAMETER;
     }
-
+    Debug_LOG_DEBUG("Checked string function: %s - line: %d\n", __FUNCTION__, __LINE__);
     if (SeosConfigBackend_getSizeOfRecords(blobBackend) !=
         SEOS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_LENGTH)
     {
@@ -1151,7 +1151,7 @@ SeosConfigLib_parameterGetValueFromDomainName(
 
     SeosConfigLib_DomainEnumerator domain_enumerator;
     SeosConfigLib_Domain domain;
-
+    SeosConfigLib_DomainName domainName;
     SeosConfigLib_domainEnumeratorInit(instance,&domain_enumerator);
 
     int intResult;
@@ -1162,8 +1162,6 @@ SeosConfigLib_parameterGetValueFromDomainName(
                                                                   &domain);
         if (0 == intResult)
         {
-            SeosConfigLib_DomainName domainName;
-
             SeosConfigLib_domainGetName(&domain, &domainName);
 
             if (memcmp(domainName.name, domain_name, strlen(domain_name)) != 0)
@@ -1178,16 +1176,26 @@ SeosConfigLib_parameterGetValueFromDomainName(
     }
     while (0 == intResult);
 
-    // at this point we have the domain enumerator which can be used for steps 2 and 3
-    // done using below function
+    if(intResult == 0)
+    {
+        // at this point we have the domain enumerator which can be used for steps 2 and 3
+        // done using below function
 
-   Debug_LOG_TRACE("domain name: %s and domain enumerator:%d \n", domainName.name,domain_enumerator.index);
-   return SeosConfigLib_get_param_FromDomainEnumerator(instance,
+        Debug_LOG_TRACE("domain name: %s and domain enumerator:%d", domainName.name,domain_enumerator.index);
+        return SeosConfigLib_get_param_FromDomainEnumerator(instance,
                                                       domain_enumerator,
                                                       param_name,
                                                       buffer,
                                                       bufferLength,
                                                       bytesCopied);
+    }
+
+    else
+    {
+        Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
+    }
+
+    return intResult;
 }
 
 
@@ -1202,6 +1210,7 @@ SeosConfigLib_parameterSetValueFromDomainName(
 
     SeosConfigLib_DomainEnumerator domain_enumerator;
     SeosConfigLib_Domain domain;
+    SeosConfigLib_DomainName domainName;
 
     SeosConfigLib_domainEnumeratorInit(instance,&domain_enumerator);
 
@@ -1213,7 +1222,6 @@ SeosConfigLib_parameterSetValueFromDomainName(
                                                                   &domain);
         if (0 == intResult)
         {
-            SeosConfigLib_DomainName domainName;
 
             SeosConfigLib_domainGetName(&domain, &domainName);
 

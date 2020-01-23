@@ -279,12 +279,41 @@ SeosConfigBackend_createFileBackend(
     {
         return SEOS_ERROR_GENERIC;
     }
-
     if (!SeosConfigBackend_writeToFile(phandle, name.buffer, 0, &backendFsLayout,
                                        sizeof(SeosConfigBackend_BackendFsLayout)))
     {
         return SEOS_ERROR_GENERIC;
     }
+
+    return SEOS_SUCCESS;
+}
+
+
+//------------------------------------------------------------------------------
+seos_err_t
+SeosConfigBackend_initializeFileBackend(
+    SeosConfigBackend *         instance,
+    SeosConfigBackend_FileName  name,
+    hPartition_t                phandle)
+{
+    SeosConfigBackend_BackendFsLayout backendFsLayout;
+    if (!SeosConfigBackend_readFromFile(phandle, name.buffer, 0, &backendFsLayout,
+                                        sizeof(SeosConfigBackend_BackendFsLayout)))
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+
+    Debug_LOG_DEBUG("header of file backend read ok\n");
+    Debug_LOG_DEBUG("number of records: %u\n", backendFsLayout.numberOfRecords);
+    Debug_LOG_DEBUG("size of records: %d\n", backendFsLayout.sizeOfRecord);
+
+    instance->backendType = SEOS_CONFIG_BACKEND_BACKEND_TYPE_FS;
+
+    instance->backend.fileSystem.phandle = phandle;
+    instance->backend.fileSystem.name = name;
+
+    instance->numberOfRecords = backendFsLayout.numberOfRecords;
+    instance->sizeOfRecord = backendFsLayout.sizeOfRecord;
 
     return SEOS_SUCCESS;
 }

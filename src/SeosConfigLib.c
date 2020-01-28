@@ -1117,7 +1117,6 @@ SeosConfigLib_parameterGetValueFromDomainName(
     SeosConfigLib* instance,
     SeosConfigLib_DomainName const* domainName,
     SeosConfigLib_ParameterName const* parameterName,
-    SeosConfigLib_ParameterType parameterType,
     void* buffer,
     size_t bufferLength,
     size_t* bytesCopied)
@@ -1139,14 +1138,14 @@ SeosConfigLib_parameterGetValueFromDomainName(
         Debug_LOG_ERROR("find_parameter() failed, ret %d", ret);
         return SEOS_ERROR_CONFIG_PARAMETER_NOT_FOUND;
     }
-
+#if 0
     if (parameterType != parameter.parameterType)
     {
         Debug_LOG_ERROR("parameter tpye mismatch, requested %d found %d",
                         parameterType, parameter.parameterType);
         return SEOS_ERROR_CONFIG_TYPE_MISMATCH;
     }
-
+#endif
     int err = SeosConfigLib_parameterGetValue(
                   instance,
                   &parameter,

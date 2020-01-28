@@ -179,4 +179,12 @@ seos_configuration_parameterGetValueFromDomainName(
     size_t bufferLength,
     size_t* bytesCopied);
 
+seos_err_t
+seos_configuration_parameterSetValueFromDomainName(
+    SeosConfigHandle configLib,
+    SeosConfigLib_DomainName const* domainName,
+    SeosConfigLib_ParameterName const* parameterName,
+    void* buffer,
+    size_t bufferLength);
+
 

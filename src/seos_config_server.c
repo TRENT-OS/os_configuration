@@ -991,4 +991,27 @@ server_seos_configuration_parameterGetValueFromDomainName(
                bytesCopied);
 }
 
+
+seos_err_t
+server_seos_configuration_parameterSetValueFromDomainName(
+    SeosConfigHandle handle,
+    SeosConfigLib_DomainName const* domainName,
+    SeosConfigLib_ParameterName const* parameterName,
+    dataport_ptr_t buffer,
+    size_t bufferLength)
+{
+    SeosConfigHandle localHandle;
+
+    if (SEOS_SUCCESS == server_seos_configuration_transformRemoteHandleToLocalHandle(handle, &localHandle))
+    {
+        void *tmpBuf = dataport_unwrap_ptr(buffer);
+        return library_seos_configuration_parameterSetValueFromDomainName(localHandle, domainName, parameterName, tmpBuf, bufferLength);
+    }
+
+    else
+    {
+        return SEOS_ERROR_INVALID_PARAMETER;
+    }
+}
+
 #endif

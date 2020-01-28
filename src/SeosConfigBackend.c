@@ -31,25 +31,6 @@ SeosConfigBackend_BackendFsLayout;
 
 //------------------------------------------------------------------------------
 static
-bool is_valid_file_handle(
-    hFile_t fhandle)
-{
-
-#if defined (SEOS_FS_BUILD_AS_LIB)
-
-    return (fhandle != NULL);
-
-#else // not SEOS_FS_BUILD_AS_LIB
-
-    return (fhandle >= 0); // ToDo: is 0 really a valid handle?
-
-#endif // [not] SEOS_FS_BUILD_AS_LIB
-
-}
-
-
-//------------------------------------------------------------------------------
-static
 seos_err_t SeosConfigBackend_writeToFile(
     hPartition_t  phandle,
     const char*   name,

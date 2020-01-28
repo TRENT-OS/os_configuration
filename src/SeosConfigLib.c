@@ -1162,3 +1162,62 @@ SeosConfigLib_parameterGetValueFromDomainName(
 
     return SEOS_SUCCESS;
 }
+
+
+//------------------------------------------------------------------------------
+
+seos_err_t
+SeosConfigLib_parameterSetValueFromDomainName(
+    SeosConfigLib* instance,
+    SeosConfigLib_DomainName const* domainName,
+    SeosConfigLib_ParameterName const* parameterName,
+    void* buffer,
+    size_t bufferLength)
+{
+    seos_err_t ret;
+
+    SeosConfigLib_DomainEnumerator domain_enumerator = {0};
+    ret = find_domain(instance, &domain_enumerator, domainName);
+    if (SEOS_SUCCESS != ret)
+    {
+        Debug_LOG_ERROR("find_domain() failed, ret %d", ret);
+        return SEOS_ERROR_CONFIG_DOMAIN_NOT_FOUND;
+    }
+
+    SeosConfigLib_Domain domain = {0};
+    ret = SeosConfigLib_domainEnumeratorGetElement(instance, &domain_enumerator, &domain);
+    if (SEOS_SUCCESS != ret)
+    {
+        Debug_LOG_ERROR("SeosConfigLib_domainEnumeratorGetElement() failed, ret %d", ret);
+        return SEOS_ERROR_GENERIC;
+    }
+
+    SeosConfigLib_ParameterEnumerator parameter_enumerator = {0};
+    ret = SeosConfigLib_domainCreateParameterEnumerator(instance, &domain, parameterName, &parameter_enumerator);
+    if (SEOS_SUCCESS != ret)
+    {
+        Debug_LOG_ERROR("SeosConfigLib_domainCreateParameterEnumerator() failed, ret %d", ret);
+        return SEOS_ERROR_GENERIC;
+    }
+
+    SeosConfigLib_Parameter parameter = {0};
+    ret = find_parameter(instance, &domain_enumerator, parameterName, &parameter);
+    if (SEOS_SUCCESS != ret)
+    {
+        Debug_LOG_ERROR("find_parameter() failed, ret %d", ret);
+        return SEOS_ERROR_CONFIG_PARAMETER_NOT_FOUND;
+    }
+
+    int err = SeosConfigLib_parameterSetValue(instance, &parameter_enumerator,
+                                              parameter.parameterType,
+                                              buffer, bufferLength);
+    if (err <= 0)
+    {
+        Debug_LOG_ERROR("SeosConfigLib_parameterSetValue() failed, ret %d", ret);
+        // ToDo: SeosConfigLib_parameterSetValue() should return error codes
+        //       about the actual problem, so we can return them
+        return SEOS_ERROR_GENERIC;
+    }
+
+    return SEOS_SUCCESS;
+}

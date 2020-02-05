@@ -263,8 +263,6 @@ SeosConfigLib_fetchVariableLengthBlob(
 
         bytesCopied += bytesToCopy;
         index++;
-
-        return SEOS_SUCCESS;
     }
 
     return SEOS_SUCCESS;
@@ -352,8 +350,6 @@ SeosConfigLib_writeVariableLengthBlob(
 
         bytesCopied += bytesToCopy;
         index++;
-
-        return SEOS_SUCCESS;
     }
 
     return SEOS_SUCCESS;

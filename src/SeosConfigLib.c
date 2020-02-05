@@ -1153,7 +1153,7 @@ SeosConfigLib_parameterGetValueFromDomainName(
                   buffer,
                   bufferLength,
                   bytesCopied);
-    if (err <= 0)
+    if (err < 0)
     {
         Debug_LOG_ERROR("SeosConfigLib_parameterGetValue() failed, ret %d", ret);
         // ToDo: SeosConfigLib_parameterGetValue() should return error codes

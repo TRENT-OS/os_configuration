@@ -564,7 +564,7 @@ SeosConfigLib_parameterEnumeratorGetElement(
 }
 
 
-// Extracts the domain name fromt he given domain.
+// Extracts the domain name from the given domain.
 void
 SeosConfigLib_domainGetName(
     SeosConfigLib_Domain const* domain,

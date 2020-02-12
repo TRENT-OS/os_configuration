@@ -43,7 +43,7 @@ seos_configuration_createHandle(
         return SEOS_ERROR_INVALID_PARAMETER;
 #endif
     }
-    else
+    else if ((handleKind == SEOS_CONFIG_HANDLE_KIND_LOCAL))
     {
         SeosConfigLib* instance = seos_configuration_instance_store_getInstance(
                                       &client.instanceStore,
@@ -61,6 +61,10 @@ seos_configuration_createHandle(
         {
             return SEOS_ERROR_INVALID_PARAMETER;
         }
+    }
+    else
+    {
+        return SEOS_ERROR_INVALID_PARAMETER;
     }
 }
 

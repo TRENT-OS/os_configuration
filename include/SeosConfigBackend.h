@@ -9,6 +9,8 @@
 #if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
 #include "seos_fs_datatypes.h"
+#include "seos_pm.h"
+#include "seos_fs.h"
 
 #endif // CONFIG_SERVER_BACKEND_FILESYSTEM
 

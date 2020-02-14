@@ -1013,7 +1013,7 @@ find_parameter(
     SeosConfigLib_ParameterName const* parameterName,
     SeosConfigLib_Parameter* parameter)
 {
-    int ret;
+    seos_err_t ret;
     SeosConfigLib_ParameterEnumerator paramEnumerator = {0};
 
     ret = SeosConfigLib_parameterEnumeratorInit(instance,

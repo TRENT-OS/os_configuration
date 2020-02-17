@@ -105,6 +105,11 @@ SeosConfigLib_findParamter(SeosConfigLib* instance,
             return SEOS_SUCCESS;
         }
 
+        if (!SeosConfigLib_ParameterIsVisibleForMe(&parameter))
+        {
+            return SEOS_ERROR_ACCESS_DENIED;
+        }
+
         ret = SeosConfigLib_parameterEnumeratorRawIncrement(
                   instance,
                   &searchEnumerator);
@@ -613,7 +618,7 @@ SeosConfigLib_domainCreateParameterEnumerator(
         if (SEOS_SUCCESS != result)
         {
             Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-            return SEOS_ERROR_GENERIC;
+            return result;
         }
     } // end for(;;)
 }
@@ -638,7 +643,7 @@ SeosConfigLib_domainGetElement(
     if (SEOS_SUCCESS != result)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_GENERIC;
+        return result;
     }
 
     result = SeosConfigLib_parameterEnumeratorGetElement(

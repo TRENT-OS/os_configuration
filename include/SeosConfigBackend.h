@@ -14,6 +14,10 @@
 
 #endif // CONFIG_SERVER_BACKEND_FILESYSTEM
 
+#define PARAMETER_FILE "PARAM.BIN"
+#define DOMAIN_FILE "DOMAIN.BIN"
+#define STRING_FILE "STRING.BIN"
+#define BLOB_FILE "BLOB.BIN"
 
 #if defined(CONFIG_SERVER_BACKEND_FILESYSTEM)
 
@@ -30,6 +34,13 @@ SeosConfigBackend_FileName;
 
 #endif // CONFIG_SERVER_BACKEND_FILESYSTEM
 
+typedef enum
+{
+    SEOS_CONFIG_FILE_TYPE_DOMAIN,
+    SEOS_CONFIG_FILE_TYPE_PARAMETER,
+    SEOS_CONFIG_FILE_TYPE_STRING,
+    SEOS_CONFIG_FILE_TYPE_BLOB,
+} SeosConfigBackend_FileType;
 
 typedef enum
 {
@@ -93,7 +104,7 @@ SeosConfigBackend_createFileBackend(
 seos_err_t
 SeosConfigBackend_initializeFileBackend(
     SeosConfigBackend*          instance,
-    SeosConfigBackend_FileName  name,
+    SeosConfigBackend_FileType  fileType,
     hPartition_t                phandle);
 
 #endif // CONFIG_SERVER_BACKEND_FILESYSTEM

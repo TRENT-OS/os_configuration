@@ -22,6 +22,58 @@ typedef struct SeosConfigBackend_BackendFsLayout
 }
 SeosConfigBackend_BackendFsLayout;
 
+//------------------------------------------------------------------------------
+static
+void initializeName(
+    char* buf,
+    size_t bufLen,
+    char const* name)
+{
+    memset(buf, 0, bufLen);
+    strncpy(buf, name, bufLen - 1);
+}
+
+//------------------------------------------------------------------------------
+static seos_err_t
+initialize_fileName(
+    SeosConfigBackend*   instance,
+    SeosConfigBackend_FileType  fileType,
+    char*                       buf,
+    size_t                      bufLen)
+{
+
+    switch (fileType)
+    {
+    case SEOS_CONFIG_FILE_TYPE_DOMAIN:
+        initializeName(instance->backend.fileSystem.name.buffer,
+                       SEOS_CONFIG_BACKEND_MAX_FILE_NAME_LEN,
+                       DOMAIN_FILE);
+        break;
+
+    case SEOS_CONFIG_FILE_TYPE_PARAMETER:
+        initializeName(instance->backend.fileSystem.name.buffer,
+                       SEOS_CONFIG_BACKEND_MAX_FILE_NAME_LEN,
+                       PARAMETER_FILE);
+        break;
+
+    case SEOS_CONFIG_FILE_TYPE_STRING:
+        initializeName(instance->backend.fileSystem.name.buffer,
+                       SEOS_CONFIG_BACKEND_MAX_FILE_NAME_LEN,
+                       STRING_FILE);
+        break;
+
+    case SEOS_CONFIG_FILE_TYPE_BLOB:
+        initializeName(instance->backend.fileSystem.name.buffer,
+                       SEOS_CONFIG_BACKEND_MAX_FILE_NAME_LEN,
+                       BLOB_FILE);
+        break;
+
+    default:
+        return SEOS_ERROR_GENERIC;
+    } // end switch (fileType)
+
+    return SEOS_SUCCESS;
+}
 
 //------------------------------------------------------------------------------
 static
@@ -253,15 +305,29 @@ SeosConfigBackend_createFileBackend(
 seos_err_t
 SeosConfigBackend_initializeFileBackend(
     SeosConfigBackend*          instance,
-    SeosConfigBackend_FileName  name,
+    SeosConfigBackend_FileType  fileType,
     hPartition_t                phandle)
 {
     SeosConfigBackend_BackendFsLayout backendFsLayout;
 
-    if (SEOS_SUCCESS != SeosConfigBackend_readFromFile(phandle, name.buffer, 0,
+    if (SEOS_SUCCESS != initialize_fileName(instance,
+                                            fileType,
+                                            instance->backend.fileSystem.name.buffer,
+                                            sizeof(SEOS_CONFIG_BACKEND_MAX_FILE_NAME_LEN)))
+    {
+        return SEOS_ERROR_GENERIC;
+    }
+
+
+    if (SEOS_SUCCESS != SeosConfigBackend_readFromFile(phandle,
+                                                       instance->backend.fileSystem.name.buffer, 0,
                                                        &backendFsLayout,
                                                        sizeof(SeosConfigBackend_BackendFsLayout)))
     {
+        //clear the filled buffer
+        memset(instance->backend.fileSystem.name.buffer, 0,
+               sizeof(SEOS_CONFIG_BACKEND_MAX_FILE_NAME_LEN));
+
         return SEOS_ERROR_GENERIC;
     }
 
@@ -272,7 +338,6 @@ SeosConfigBackend_initializeFileBackend(
     instance->backendType = SEOS_CONFIG_BACKEND_BACKEND_TYPE_FS;
 
     instance->backend.fileSystem.phandle = phandle;
-    instance->backend.fileSystem.name = name;
 
     instance->numberOfRecords = backendFsLayout.numberOfRecords;
     instance->sizeOfRecord = backendFsLayout.sizeOfRecord;

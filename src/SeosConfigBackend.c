@@ -33,7 +33,7 @@ seos_err_t SeosConfigBackend_writeToFile(
     int           length)
 {
     hFile_t fhandle;
-    seos_fs_result_t file_stat = SEOS_FS_SUCCESS;
+    seos_err_t file_stat = SEOS_SUCCESS;
 
     // Open file
     fhandle = file_open(phandle, name, FA_WRITE);
@@ -76,7 +76,7 @@ seos_err_t SeosConfigBackend_readFromFile(
     int           length)
 {
     hFile_t fhandle;
-    seos_fs_result_t file_stat = SEOS_FS_SUCCESS;
+    seos_err_t file_stat = SEOS_SUCCESS;
 
     // Open file
     fhandle = file_open(phandle, name, FA_READ);
@@ -119,7 +119,7 @@ seos_err_t SeosConfigBackend_createFile(
     enum {BLOCK_SIZE = 256};
     static char buf[256];
     hFile_t fhandle;
-    seos_fs_result_t file_stat = SEOS_FS_SUCCESS;
+    seos_err_t file_stat = SEOS_SUCCESS;
 
     // Open file
     fhandle = file_open(phandle, name, FA_CREATE_ALWAYS | FA_WRITE);

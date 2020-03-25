@@ -26,6 +26,9 @@ static SeosConfigClient client;
 SeosConfigInstanceStore*
 seos_configuration_getInstances(void)
 {
+#if defined(SEOS_CONFIG_CAMKES_SERVER)
+    return server_seos_configuration_getInstances();
+#endif
     return &client.instanceStore;
 }
 

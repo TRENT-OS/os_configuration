@@ -189,7 +189,7 @@ Finally initialize the backend in the config library instance with the different
 The described initialization process refers to components building the TRENTOS Configuration as a library or a server. The initialization for components
 acting as clients and connecting to a remote ConfigServer component only require:
 
-    #include "seos_config_client.h"
+    #include "seos_config.h"
 
     SeosConfigHandle remoteHandle;
 

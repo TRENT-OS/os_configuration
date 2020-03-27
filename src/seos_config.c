@@ -1,3 +1,4 @@
+
 /**
  * Copyright (C) 2019, Hensoldt Cyber GmbH
  */
@@ -8,7 +9,7 @@
 
 #include "string.h"
 
-#include "seos_config_client.h"
+#include "seos_config.h"
 #include "seos_config_server.h"
 #include "seos_config_library.h"
 
@@ -28,8 +29,9 @@ seos_configuration_getInstances(void)
 {
 #if defined(SEOS_CONFIG_CAMKES_SERVER)
     return server_seos_configuration_getInstances();
-#endif
+#else
     return &client.instanceStore;
+#endif
 }
 
 seos_err_t

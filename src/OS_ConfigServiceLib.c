@@ -4,14 +4,16 @@
 
 #include <memory.h>
 
-#include "SeosConfigLib.h"
-#include "SeosConfigAppIdentifier.h"
+#include "OS_ConfigServiceLib.h"
+#include "OS_ConfigServiceAppIdentifier.h"
 #include "LibDebug/Debug.h"
 
 
 static
 seos_err_t
-SeosConfigLib_enumeratorRawIncrement(unsigned int maxIndex, unsigned int* index)
+OS_ConfigServiceLib_enumeratorRawIncrement(
+    unsigned int maxIndex,
+    unsigned int* index)
 {
     seos_err_t result;
 
@@ -34,24 +36,26 @@ SeosConfigLib_enumeratorRawIncrement(unsigned int maxIndex, unsigned int* index)
 
 static
 seos_err_t
-SeosConfigLib_parameterEnumeratorRawIncrement(SeosConfigLib const* instance,
-                                              SeosConfigLib_ParameterEnumerator* enumerator)
+OS_ConfigServiceLib_parameterEnumeratorRawIncrement(
+    OS_ConfigServiceLib_t const* instance,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
-    return SeosConfigLib_enumeratorRawIncrement(
-               SeosConfigBackend_getNumberOfRecords(&instance->parameterBackend),
+    return OS_ConfigServiceLib_enumeratorRawIncrement(
+               OS_ConfigServiceBackend_getNumberOfRecords(&instance->parameterBackend),
                &enumerator->index);
 }
 
 
 static
 bool
-SeosConfigLib_ParameterIsVisibleForMe(SeosConfigLib_Parameter const* parameter)
+OS_ConfigServiceLib_ParameterIsVisibleForMe(
+    OS_ConfigServiceLibTypes_Parameter_t const* parameter)
 {
     unsigned int id;
     unsigned int maxId;
 
-    SeosConfigAppIdentifier_WhoAmI(&id, &maxId);
-    return (SeosConfigAccessRights_IsSet(
+    OS_ConfigServiceAppIdentifier_WhoAmI(&id, &maxId);
+    return (OS_ConfigServiceAccessRights_IsSet(
                 &parameter->readAccess,
                 id));
 }
@@ -59,14 +63,14 @@ SeosConfigLib_ParameterIsVisibleForMe(SeosConfigLib_Parameter const* parameter)
 
 static
 bool
-SeosConfigLib_ParameterIsWriteableForMe(SeosConfigLib_Parameter const*
-                                        parameter)
+OS_ConfigServiceLib_ParameterIsWriteableForMe(
+    OS_ConfigServiceLibTypes_Parameter_t const* parameter)
 {
     unsigned int id;
     unsigned int maxId;
 
-    SeosConfigAppIdentifier_WhoAmI(&id, &maxId);
-    return (SeosConfigAccessRights_IsSet(
+    OS_ConfigServiceAppIdentifier_WhoAmI(&id, &maxId);
+    return (OS_ConfigServiceAccessRights_IsSet(
                 &parameter->writeAccess,
                 id));
 }
@@ -76,41 +80,42 @@ SeosConfigLib_ParameterIsWriteableForMe(SeosConfigLib_Parameter const*
 // If the enumerator already points to a parameter of the given domain: do nothing.
 static
 seos_err_t
-SeosConfigLib_findParamter(SeosConfigLib* instance,
-                           SeosConfigLib_ParameterEnumerator* enumerator)
+OS_ConfigServiceLib_findParamter(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
-    SeosConfigLib_ParameterEnumerator searchEnumerator = *enumerator;
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t searchEnumerator = *enumerator;
 
     for (;;)
     {
         seos_err_t ret;
 
-        SeosConfigLib_Parameter parameter = {0};
-        ret = SeosConfigBackend_readRecord(
+        OS_ConfigServiceLibTypes_Parameter_t parameter = {0};
+        ret = OS_ConfigServiceBackend_readRecord(
                   &instance->parameterBackend,
                   searchEnumerator.index,
                   &parameter,
-                  sizeof(SeosConfigLib_Parameter));
+                  sizeof(OS_ConfigServiceLibTypes_Parameter_t));
 
         if (SEOS_SUCCESS != ret)
         {
-            Debug_LOG_ERROR("SeosConfigBackend_readRecord() failed, error %d", ret);
+            Debug_LOG_ERROR("OS_ConfigServiceBackend_readRecord() failed, error %d", ret);
             return SEOS_ERROR_GENERIC;
         }
 
         if ((parameter.domain.index == searchEnumerator.domainEnumerator.index) &&
-            (SeosConfigLib_ParameterIsVisibleForMe(&parameter)))
+            (OS_ConfigServiceLib_ParameterIsVisibleForMe(&parameter)))
         {
             *enumerator = searchEnumerator;
             return SEOS_SUCCESS;
         }
 
-        ret = SeosConfigLib_parameterEnumeratorRawIncrement(
+        ret = OS_ConfigServiceLib_parameterEnumeratorRawIncrement(
                   instance,
                   &searchEnumerator);
         if (SEOS_SUCCESS != ret)
         {
-            Debug_LOG_ERROR("SeosConfigLib_parameterEnumeratorRawIncrement() failed, error %d",
+            Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorRawIncrement() failed, error %d",
                             ret);
             return SEOS_ERROR_GENERIC;
         }
@@ -120,12 +125,14 @@ SeosConfigLib_findParamter(SeosConfigLib* instance,
 
 static
 seos_err_t
-SeosConfigLib_advanceParameterEnumerator(
-    SeosConfigLib* instance,
-    SeosConfigLib_ParameterEnumerator* searchEnumerator,
-    SeosConfigLib_ParameterEnumerator* resultEnumerator)
+OS_ConfigServiceLib_advanceParameterEnumerator(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t* searchEnumerator,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t* resultEnumerator)
 {
-    seos_err_t findResult = SeosConfigLib_findParamter(instance, searchEnumerator);
+    seos_err_t findResult = OS_ConfigServiceLib_findParamter(
+                                instance,
+                                searchEnumerator);
 
     if (SEOS_SUCCESS == findResult)
     {
@@ -142,10 +149,11 @@ SeosConfigLib_advanceParameterEnumerator(
 
 static
 seos_err_t
-SeosConfigLib_compareParameterName(SeosConfigLib_ParameterName const* a,
-                                   SeosConfigLib_ParameterName const* b)
+OS_ConfigServiceLib_compareParameterName(
+    OS_ConfigServiceLibTypes_ParameterName_t const* a,
+    OS_ConfigServiceLibTypes_ParameterName_t const* b)
 {
-    for (unsigned int k = 0; k < SEOS_CONFIG_LIB_PARAMETER_NAME_LEN; ++k)
+    for (unsigned int k = 0; k < OS_CONFIG_LIB_PARAMETER_NAME_LEN; ++k)
     {
         if (a->name[k] != b->name[k])
         {
@@ -160,10 +168,11 @@ SeosConfigLib_compareParameterName(SeosConfigLib_ParameterName const* a,
 
 static
 seos_err_t
-SeosConfigLib_compareDomainName(SeosConfigLib_DomainName const* a,
-                                SeosConfigLib_DomainName const* b)
+OS_ConfigServiceLib_compareDomainName(
+    OS_ConfigServiceLibTypes_DomainName_t const* a,
+    OS_ConfigServiceLibTypes_DomainName_t const* b)
 {
-    for (unsigned int k = 0; k < SEOS_CONFIG_LIB_DOMAIN_NAME_LEN; ++k)
+    for (unsigned int k = 0; k < OS_CONFIG_LIB_DOMAIN_NAME_LEN; ++k)
     {
         if (a->name[k] != b->name[k])
         {
@@ -178,15 +187,15 @@ SeosConfigLib_compareDomainName(SeosConfigLib_DomainName const* a,
 
 static
 seos_err_t
-SeosConfigLib_fetchVariableLengthString(
-    SeosConfigBackend* backend,
+OS_ConfigServiceLib_fetchVariableLengthString(
+    OS_ConfigServiceBackend_t* backend,
     uint32_t index,
     size_t stringSize,
     void* buffer,
     size_t bufferLength)
 {
     // We anticipate a maximum size here which should be ok to place on the stack.
-    char tmpBuf[SEOS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH];
+    char tmpBuf[OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH];
 
     if (stringSize > bufferLength)
     {
@@ -194,7 +203,7 @@ SeosConfigLib_fetchVariableLengthString(
         return SEOS_ERROR_GENERIC;
     }
 
-    seos_err_t fetchResult = SeosConfigBackend_readRecord(
+    seos_err_t fetchResult = OS_ConfigServiceBackend_readRecord(
                                  backend,
                                  index,
                                  tmpBuf,
@@ -215,8 +224,8 @@ SeosConfigLib_fetchVariableLengthString(
 
 static
 seos_err_t
-SeosConfigLib_fetchVariableLengthBlob(
-    SeosConfigBackend* backend,
+OS_ConfigServiceLib_fetchVariableLengthBlob(
+    OS_ConfigServiceBackend_t* backend,
     size_t blobSize,
     uint32_t index,
     uint32_t numberOfBlocks,
@@ -230,13 +239,13 @@ SeosConfigLib_fetchVariableLengthBlob(
     }
 
     // We anticipate a maximum size here which should be ok to place on the stack.
-    char tmpBuf[SEOS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_LENGTH];
-    size_t blobBlockSize = SeosConfigBackend_getSizeOfRecords(backend);
+    char tmpBuf[OS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_LENGTH];
+    size_t blobBlockSize = OS_ConfigServiceBackend_getSizeOfRecords(backend);
     size_t bytesCopied = 0;
 
     while (bytesCopied < blobSize)
     {
-        seos_err_t fetchResult = SeosConfigBackend_readRecord(
+        seos_err_t fetchResult = OS_ConfigServiceBackend_readRecord(
                                      backend,
                                      index,
                                      tmpBuf,
@@ -271,25 +280,25 @@ SeosConfigLib_fetchVariableLengthBlob(
 
 static
 seos_err_t
-SeosConfigLib_writeVariableLengthString(
-    SeosConfigBackend* backend,
+OS_ConfigServiceLib_writeVariableLengthString(
+    OS_ConfigServiceBackend_t* backend,
     uint32_t index,
     void const* buffer,
     size_t bufferLength)
 {
     // We anticipate a maximum size here which should be ok to place on the stack.
-    char tmpBuf[SEOS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH];
+    char tmpBuf[OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH];
 
-    if (bufferLength > SEOS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH)
+    if (bufferLength > OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return SEOS_ERROR_GENERIC;
     }
 
-    memset(tmpBuf, 0, SEOS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH);
+    memset(tmpBuf, 0, OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH);
     memcpy(tmpBuf, buffer, bufferLength);
 
-    seos_err_t writeResult = SeosConfigBackend_writeRecord(
+    seos_err_t writeResult = OS_ConfigServiceBackend_writeRecord(
                                  backend,
                                  index,
                                  tmpBuf,
@@ -301,14 +310,14 @@ SeosConfigLib_writeVariableLengthString(
 
 static
 seos_err_t
-SeosConfigLib_writeVariableLengthBlob(
-    SeosConfigBackend* backend,
+OS_ConfigServiceLib_writeVariableLengthBlob(
+    OS_ConfigServiceBackend_t* backend,
     uint32_t index,
     uint32_t numberOfBlocks,
     void const* buffer,
     size_t bufferLength)
 {
-    size_t blobBlockSize = SeosConfigBackend_getSizeOfRecords(backend);
+    size_t blobBlockSize = OS_ConfigServiceBackend_getSizeOfRecords(backend);
     size_t blobCapacity = blobBlockSize * numberOfBlocks;
 
     if (bufferLength > blobCapacity)
@@ -318,7 +327,7 @@ SeosConfigLib_writeVariableLengthBlob(
     }
 
     // We anticipate a maximum size here which should be ok to place on the stack.
-    char tmpBuf[SEOS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_LENGTH];
+    char tmpBuf[OS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_LENGTH];
     size_t bytesCopied = 0;
 
     while (bytesCopied < bufferLength)
@@ -336,7 +345,7 @@ SeosConfigLib_writeVariableLengthBlob(
 
         memcpy(tmpBuf, (char*)buffer + bytesCopied, bytesToCopy);
 
-        seos_err_t fetchResult = SeosConfigBackend_writeRecord(
+        seos_err_t fetchResult = OS_ConfigServiceBackend_writeRecord(
                                      backend,
                                      index,
                                      tmpBuf,
@@ -357,36 +366,36 @@ SeosConfigLib_writeVariableLengthBlob(
 
 
 int
-SeosConfigLib_Init(
-    SeosConfigLib* instance,
-    SeosConfigBackend const* parameterBackend,
-    SeosConfigBackend const* domainBackend,
-    SeosConfigBackend const* stringBackend,
-    SeosConfigBackend const* blobBackend)
+OS_ConfigServiceLib_Init(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceBackend_t const* parameterBackend,
+    OS_ConfigServiceBackend_t const* domainBackend,
+    OS_ConfigServiceBackend_t const* stringBackend,
+    OS_ConfigServiceBackend_t const* blobBackend)
 {
-    if (SeosConfigBackend_getSizeOfRecords(parameterBackend) != sizeof(
-            SeosConfigLib_Parameter))
+    if (OS_ConfigServiceBackend_getSizeOfRecords(parameterBackend) != sizeof(
+            OS_ConfigServiceLibTypes_Parameter_t))
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return SEOS_ERROR_INVALID_PARAMETER;
     }
 
-    if (SeosConfigBackend_getSizeOfRecords(domainBackend) != sizeof(
-            SeosConfigLib_Domain))
+    if (OS_ConfigServiceBackend_getSizeOfRecords(domainBackend) != sizeof(
+            OS_ConfigServiceLibTypes_Domain_t))
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return SEOS_ERROR_INVALID_PARAMETER;
     }
 
-    if (SeosConfigBackend_getSizeOfRecords(stringBackend) !=
-        SEOS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH)
+    if (OS_ConfigServiceBackend_getSizeOfRecords(stringBackend) !=
+        OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return SEOS_ERROR_INVALID_PARAMETER;
     }
 
-    if (SeosConfigBackend_getSizeOfRecords(blobBackend) !=
-        SEOS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_LENGTH)
+    if (OS_ConfigServiceBackend_getSizeOfRecords(blobBackend) !=
+        OS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_LENGTH)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return SEOS_ERROR_INVALID_PARAMETER;
@@ -402,51 +411,55 @@ SeosConfigLib_Init(
 
 
 void
-SeosConfigLib_domainEnumeratorInit(SeosConfigLib const* instance,
-                                   SeosConfigLib_DomainEnumerator* enumerator)
+OS_ConfigServiceLib_domainEnumeratorInit(
+    OS_ConfigServiceLib_t const* instance,
+    OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
-    SeosConfigLib_domainEnumeratorReset(instance, enumerator);
+    OS_ConfigServiceLib_domainEnumeratorReset(instance, enumerator);
 }
 
 
 void
-SeosConfigLib_domainEnumeratorClose(SeosConfigLib const* instance,
-                                    SeosConfigLib_DomainEnumerator* enumerator)
+OS_ConfigServiceLib_domainEnumeratorClose(
+    OS_ConfigServiceLib_t const* instance,
+    OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
     // No action required.
 }
 
 
 void
-SeosConfigLib_domainEnumeratorReset(SeosConfigLib const* instance,
-                                    SeosConfigLib_DomainEnumerator* enumerator)
+OS_ConfigServiceLib_domainEnumeratorReset(
+    OS_ConfigServiceLib_t const* instance,
+    OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
     enumerator->index = 0;
 }
 
 
 seos_err_t
-SeosConfigLib_domainEnumeratorIncrement(SeosConfigLib const* instance,
-                                        SeosConfigLib_DomainEnumerator* enumerator)
+OS_ConfigServiceLib_domainEnumeratorIncrement(
+    OS_ConfigServiceLib_t const* instance,
+    OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
-    seos_err_t result = SeosConfigLib_enumeratorRawIncrement(
-                            SeosConfigBackend_getNumberOfRecords(&instance->domainBackend),
+    seos_err_t result = OS_ConfigServiceLib_enumeratorRawIncrement(
+                            OS_ConfigServiceBackend_getNumberOfRecords(&instance->domainBackend),
                             &enumerator->index);
     return result;
 }
 
 
 seos_err_t
-SeosConfigLib_domainEnumeratorGetElement(
-    SeosConfigLib* instance,
-    SeosConfigLib_DomainEnumerator const* enumerator,
-    SeosConfigLib_Domain* domain)
+OS_ConfigServiceLib_domainEnumeratorGetElement(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_DomainEnumerator_t const* enumerator,
+    OS_ConfigServiceLibTypes_Domain_t* domain)
 {
-    seos_err_t fetchResult = SeosConfigBackend_readRecord(
+    seos_err_t fetchResult = OS_ConfigServiceBackend_readRecord(
                                  &instance->domainBackend,
                                  enumerator->index,
                                  domain,
-                                 sizeof(SeosConfigLib_Domain));
+                                 sizeof(OS_ConfigServiceLibTypes_Domain_t));
 
     if (SEOS_SUCCESS == fetchResult)
     {
@@ -462,16 +475,18 @@ SeosConfigLib_domainEnumeratorGetElement(
 
 
 seos_err_t
-SeosConfigLib_parameterEnumeratorInit(
-    SeosConfigLib*  instance,
-    SeosConfigLib_DomainEnumerator const* domainEnumerator,
-    SeosConfigLib_ParameterEnumerator* enumerator)
+OS_ConfigServiceLib_parameterEnumeratorInit(
+    OS_ConfigServiceLib_t*  instance,
+    OS_ConfigServiceLibTypes_DomainEnumerator_t const* domainEnumerator,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
-    SeosConfigLib_ParameterEnumerator initEnumerator;
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t initEnumerator;
     seos_err_t result;
 
     initEnumerator.domainEnumerator = *domainEnumerator;
-    result = SeosConfigLib_parameterEnumeratorReset(instance, &initEnumerator);
+    result = OS_ConfigServiceLib_parameterEnumeratorReset(
+                 instance,
+                 &initEnumerator);
     if (SEOS_SUCCESS == result)
     {
         *enumerator = initEnumerator;
@@ -482,8 +497,9 @@ SeosConfigLib_parameterEnumeratorInit(
 
 
 void
-SeosConfigLib_parameterEnumeratorClose(SeosConfigLib const* instance,
-                                       SeosConfigLib_ParameterEnumerator* enumerator)
+OS_ConfigServiceLib_parameterEnumeratorClose(
+    OS_ConfigServiceLib_t const* instance,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
     // No action required.
 }
@@ -491,16 +507,19 @@ SeosConfigLib_parameterEnumeratorClose(SeosConfigLib const* instance,
 
 // We start at the first parameter and starting from there try to find the first paramter of the given domain.
 seos_err_t
-SeosConfigLib_parameterEnumeratorReset(SeosConfigLib* instance,
-                                       SeosConfigLib_ParameterEnumerator* enumerator)
+OS_ConfigServiceLib_parameterEnumeratorReset(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
-    SeosConfigLib_ParameterEnumerator searchEnumerator;
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t searchEnumerator;
     seos_err_t result;
 
     searchEnumerator.index = 0;
     searchEnumerator.domainEnumerator = enumerator->domainEnumerator;
-    result = SeosConfigLib_advanceParameterEnumerator(instance, &searchEnumerator,
-                                                      enumerator);
+    result = OS_ConfigServiceLib_advanceParameterEnumerator(
+                 instance,
+                 &searchEnumerator,
+                 enumerator);
     if (SEOS_SUCCESS == result)
     {
         *enumerator = searchEnumerator;
@@ -512,17 +531,20 @@ SeosConfigLib_parameterEnumeratorReset(SeosConfigLib* instance,
 
 // We try to increment the given enumerator and start the search from there.
 // If no parameter was found the given enumerator is not changed.
-seos_err_t SeosConfigLib_parameterEnumeratorIncrement(SeosConfigLib* instance,
-                                                      SeosConfigLib_ParameterEnumerator* enumerator)
+seos_err_t OS_ConfigServiceLib_parameterEnumeratorIncrement(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
-    SeosConfigLib_ParameterEnumerator searchEnumerator = *enumerator;
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t searchEnumerator = *enumerator;
 
-    if (SEOS_SUCCESS == SeosConfigLib_parameterEnumeratorRawIncrement(instance,
+    if (SEOS_SUCCESS == OS_ConfigServiceLib_parameterEnumeratorRawIncrement(
+            instance,
             &searchEnumerator))
     {
-        seos_err_t result = SeosConfigLib_advanceParameterEnumerator(instance,
-                            &searchEnumerator,
-                            enumerator);
+        seos_err_t result = OS_ConfigServiceLib_advanceParameterEnumerator(
+                                instance,
+                                &searchEnumerator,
+                                enumerator);
         return result;
     }
     else
@@ -534,18 +556,18 @@ seos_err_t SeosConfigLib_parameterEnumeratorIncrement(SeosConfigLib* instance,
 
 
 seos_err_t
-SeosConfigLib_parameterEnumeratorGetElement(
-    SeosConfigLib* instance,
-    SeosConfigLib_ParameterEnumerator const* enumerator,
-    SeosConfigLib_Parameter* parameter)
+OS_ConfigServiceLib_parameterEnumeratorGetElement(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
+    OS_ConfigServiceLibTypes_Parameter_t* parameter)
 {
-    SeosConfigLib_Parameter retrievedParameter;
+    OS_ConfigServiceLibTypes_Parameter_t retrievedParameter;
 
-    seos_err_t fetchResult = SeosConfigBackend_readRecord(
+    seos_err_t fetchResult = OS_ConfigServiceBackend_readRecord(
                                  &instance->parameterBackend,
                                  enumerator->index,
                                  &retrievedParameter,
-                                 sizeof(SeosConfigLib_Parameter));
+                                 sizeof(OS_ConfigServiceLibTypes_Parameter_t));
 
     if (SEOS_SUCCESS == fetchResult)
     {
@@ -562,25 +584,25 @@ SeosConfigLib_parameterEnumeratorGetElement(
 
 // Extracts the domain name from the given domain.
 void
-SeosConfigLib_domainGetName(
-    SeosConfigLib_Domain const* domain,
-    SeosConfigLib_DomainName* domainName)
+OS_ConfigServiceLib_domainGetName(
+    OS_ConfigServiceLibTypes_Domain_t const* domain,
+    OS_ConfigServiceLibTypes_DomainName_t* domainName)
 {
     *domainName = domain->name;
 }
 
 
 seos_err_t
-SeosConfigLib_domainCreateParameterEnumerator(
-    SeosConfigLib* instance,
-    SeosConfigLib_Domain const* domain,
-    SeosConfigLib_ParameterName const* parameterName,
-    SeosConfigLib_ParameterEnumerator* parameterEnumerator)
+OS_ConfigServiceLib_domainCreateParameterEnumerator(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_Domain_t const* domain,
+    OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t* parameterEnumerator)
 {
-    SeosConfigLib_ParameterEnumerator searchEnumerator;
-    SeosConfigLib_Parameter searchParameter;
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t searchEnumerator;
+    OS_ConfigServiceLibTypes_Parameter_t searchParameter;
 
-    seos_err_t result = SeosConfigLib_parameterEnumeratorInit(
+    seos_err_t result = OS_ConfigServiceLib_parameterEnumeratorInit(
                             instance,
                             &domain->enumerator,
                             &searchEnumerator);
@@ -592,7 +614,7 @@ SeosConfigLib_domainCreateParameterEnumerator(
 
     for (;;)
     {
-        result = SeosConfigLib_parameterEnumeratorGetElement(
+        result = OS_ConfigServiceLib_parameterEnumeratorGetElement(
                      instance,
                      &searchEnumerator,
                      &searchParameter);
@@ -602,14 +624,16 @@ SeosConfigLib_domainCreateParameterEnumerator(
             return SEOS_ERROR_GENERIC;
         }
 
-        if (SEOS_SUCCESS == SeosConfigLib_compareParameterName(parameterName,
-                                                               &searchParameter.parameterName))
+        if (SEOS_SUCCESS == OS_ConfigServiceLib_compareParameterName(
+                parameterName,
+                &searchParameter.parameterName))
         {
             *parameterEnumerator = searchEnumerator;
             return SEOS_SUCCESS;
         }
-        result = SeosConfigLib_parameterEnumeratorIncrement(instance,
-                                                            &searchEnumerator);
+        result = OS_ConfigServiceLib_parameterEnumeratorIncrement(
+                     instance,
+                     &searchEnumerator);
         if (SEOS_SUCCESS != result)
         {
             Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
@@ -620,16 +644,16 @@ SeosConfigLib_domainCreateParameterEnumerator(
 
 
 seos_err_t
-SeosConfigLib_domainGetElement(
-    SeosConfigLib* instance,
-    SeosConfigLib_Domain const* domain,
-    SeosConfigLib_ParameterName const* parameterName,
-    SeosConfigLib_Parameter* parameter)
+OS_ConfigServiceLib_domainGetElement(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_Domain_t const* domain,
+    OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
+    OS_ConfigServiceLibTypes_Parameter_t* parameter)
 {
-    SeosConfigLib_ParameterEnumerator parameterEnumerator;
-    SeosConfigLib_Parameter searchParameter;
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t parameterEnumerator;
+    OS_ConfigServiceLibTypes_Parameter_t searchParameter;
 
-    seos_err_t result = SeosConfigLib_domainCreateParameterEnumerator(
+    seos_err_t result = OS_ConfigServiceLib_domainCreateParameterEnumerator(
                             instance,
                             domain,
                             parameterName,
@@ -641,7 +665,7 @@ SeosConfigLib_domainGetElement(
         return SEOS_ERROR_GENERIC;
     }
 
-    result = SeosConfigLib_parameterEnumeratorGetElement(
+    result = OS_ConfigServiceLib_parameterEnumeratorGetElement(
                  instance,
                  &parameterEnumerator,
                  &searchParameter);
@@ -659,42 +683,42 @@ SeosConfigLib_domainGetElement(
 
 
 void
-SeosConfigLib_parameterGetName(
-    SeosConfigLib_Parameter const* parameter,
-    SeosConfigLib_ParameterName* parameterName)
+OS_ConfigServiceLib_parameterGetName(
+    OS_ConfigServiceLibTypes_Parameter_t const* parameter,
+    OS_ConfigServiceLibTypes_ParameterName_t* parameterName)
 {
     *parameterName = parameter->parameterName;
 }
 
 
 void
-SeosConfigLib_parameterGetType(
-    SeosConfigLib_Parameter const* parameter,
-    SeosConfigLib_ParameterType* parameterType)
+OS_ConfigServiceLib_parameterGetType(
+    OS_ConfigServiceLibTypes_Parameter_t const* parameter,
+    OS_ConfigServiceLibTypes_ParameterType_t* parameterType)
 {
     *parameterType = parameter->parameterType;
 }
 
 
 size_t
-SeosConfigLib_parameterGetSize(
-    SeosConfigLib_Parameter const* parameter)
+OS_ConfigServiceLib_parameterGetSize(
+    OS_ConfigServiceLibTypes_Parameter_t const* parameter)
 {
     switch (parameter->parameterType)
     {
-    case SEOS_CONFIG_LIB_PARAMETER_TYPE_INTEGER32:
+    case OS_CONFIG_LIB_PARAMETER_TYPE_INTEGER32:
         return sizeof(uint32_t);
         break;
 
-    case SEOS_CONFIG_LIB_PARAMETER_TYPE_INTEGER64:
+    case OS_CONFIG_LIB_PARAMETER_TYPE_INTEGER64:
         return sizeof(uint64_t);
         break;
 
-    case SEOS_CONFIG_LIB_PARAMETER_TYPE_STRING:
+    case OS_CONFIG_LIB_PARAMETER_TYPE_STRING:
         return parameter->parameterValue.valueString.size;
         break;
 
-    case SEOS_CONFIG_LIB_PARAMETER_TYPE_BLOB:
+    case OS_CONFIG_LIB_PARAMETER_TYPE_BLOB:
         return parameter->parameterValue.valueBlob.size;
         break;
 
@@ -706,28 +730,28 @@ SeosConfigLib_parameterGetSize(
 
 
 seos_err_t
-SeosConfigLib_parameterGetValue(
-    SeosConfigLib* instance,
-    SeosConfigLib_Parameter const* parameter,
+OS_ConfigServiceLib_parameterGetValue(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     void* buffer,
     size_t bufferLength,
     size_t* bytesCopied)
 {
-    size_t parameterSize = SeosConfigLib_parameterGetSize(parameter);
+    size_t parameterSize = OS_ConfigServiceLib_parameterGetSize(parameter);
 
     if (parameterSize <= bufferLength)
     {
         switch (parameter->parameterType)
         {
-        case SEOS_CONFIG_LIB_PARAMETER_TYPE_INTEGER32:
-        case SEOS_CONFIG_LIB_PARAMETER_TYPE_INTEGER64:
+        case OS_CONFIG_LIB_PARAMETER_TYPE_INTEGER32:
+        case OS_CONFIG_LIB_PARAMETER_TYPE_INTEGER64:
             memcpy(buffer, &parameter->parameterValue, parameterSize);
             *bytesCopied = parameterSize;
             break;
 
-        case SEOS_CONFIG_LIB_PARAMETER_TYPE_STRING:
+        case OS_CONFIG_LIB_PARAMETER_TYPE_STRING:
         {
-            seos_err_t result = SeosConfigLib_fetchVariableLengthString(
+            seos_err_t result = OS_ConfigServiceLib_fetchVariableLengthString(
                                     &instance->stringBackend,
                                     parameter->parameterValue.valueString.index,
                                     parameterSize,
@@ -737,9 +761,9 @@ SeosConfigLib_parameterGetValue(
         }
         break;
 
-        case SEOS_CONFIG_LIB_PARAMETER_TYPE_BLOB:
+        case OS_CONFIG_LIB_PARAMETER_TYPE_BLOB:
         {
-            seos_err_t result = SeosConfigLib_fetchVariableLengthBlob(
+            seos_err_t result = OS_ConfigServiceLib_fetchVariableLengthBlob(
                                     &instance->blobBackend,
                                     parameterSize,
                                     parameter->parameterValue.valueBlob.index,
@@ -771,9 +795,9 @@ SeosConfigLib_parameterGetValue(
 
 // Get the parameter value - specific format.
 seos_err_t
-SeosConfigLib_parameterGetValueAsU32(
-    SeosConfigLib* instance,
-    SeosConfigLib_Parameter const* parameter,
+OS_ConfigServiceLib_parameterGetValueAsU32(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     uint32_t* value)
 {
     *value = parameter->parameterValue.valueInteger32;
@@ -784,9 +808,9 @@ SeosConfigLib_parameterGetValueAsU32(
 
 // Get the parameter value - specific format.
 seos_err_t
-SeosConfigLib_parameterGetValueAsU64(
-    SeosConfigLib* instance,
-    SeosConfigLib_Parameter const* parameter,
+OS_ConfigServiceLib_parameterGetValueAsU64(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     uint64_t* value)
 {
     *value = parameter->parameterValue.valueInteger64;
@@ -797,15 +821,15 @@ SeosConfigLib_parameterGetValueAsU64(
 
 // Get the parameter value - specific format.
 seos_err_t
-SeosConfigLib_parameterGetValueAsString(
-    SeosConfigLib* instance,
-    SeosConfigLib_Parameter const* parameter,
+OS_ConfigServiceLib_parameterGetValueAsString(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     char* buffer,
     size_t bufferLength)
 {
     size_t bytesCopied;
 
-    return SeosConfigLib_parameterGetValue(
+    return OS_ConfigServiceLib_parameterGetValue(
                instance,
                parameter,
                buffer,
@@ -816,15 +840,15 @@ SeosConfigLib_parameterGetValueAsString(
 
 // Get the parameter value - specific format.
 seos_err_t
-SeosConfigLib_parameterGetValueAsBlob(
-    SeosConfigLib* instance,
-    SeosConfigLib_Parameter const* parameter,
+OS_ConfigServiceLib_parameterGetValueAsBlob(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     void* buffer,
     size_t bufferLength)
 {
     size_t bytesCopied;
 
-    return SeosConfigLib_parameterGetValue(
+    return OS_ConfigServiceLib_parameterGetValue(
                instance,
                parameter,
                buffer,
@@ -835,14 +859,14 @@ SeosConfigLib_parameterGetValueAsBlob(
 
 // Set the parameter value - raw format.
 seos_err_t
-SeosConfigLib_parameterSetValue(
-    SeosConfigLib* instance,
-    SeosConfigLib_ParameterEnumerator const* enumerator,
-    SeosConfigLib_ParameterType parameterType,
+OS_ConfigServiceLib_parameterSetValue(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
+    OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void const* buffer,
     size_t bufferLength)
 {
-    SeosConfigLib_Parameter parameter;
+    OS_ConfigServiceLibTypes_Parameter_t parameter;
 
     // Fetch the parameter pointed to by the enumerator.
     // Check the parameter type to be written is correct.
@@ -850,7 +874,7 @@ SeosConfigLib_parameterSetValue(
     // String and blob: check the given size is ok and
     // which may be smaller than the maximum record size.
 
-    int result = SeosConfigLib_parameterEnumeratorGetElement(
+    int result = OS_ConfigServiceLib_parameterEnumeratorGetElement(
                      instance,
                      enumerator,
                      &parameter);
@@ -860,7 +884,7 @@ SeosConfigLib_parameterSetValue(
         return SEOS_ERROR_GENERIC;
     }
 
-    result = SeosConfigLib_ParameterIsWriteableForMe(&parameter) ? 0 : -1;
+    result = OS_ConfigServiceLib_ParameterIsWriteableForMe(&parameter) ? 0 : -1;
     if (SEOS_SUCCESS != result)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
@@ -873,12 +897,12 @@ SeosConfigLib_parameterSetValue(
         return SEOS_ERROR_GENERIC;
     }
 
-    size_t parameterSize = SeosConfigLib_parameterGetSize(&parameter);
+    size_t parameterSize = OS_ConfigServiceLib_parameterGetSize(&parameter);
 
     switch (parameter.parameterType)
     {
-    case SEOS_CONFIG_LIB_PARAMETER_TYPE_INTEGER32:
-    case SEOS_CONFIG_LIB_PARAMETER_TYPE_INTEGER64:
+    case OS_CONFIG_LIB_PARAMETER_TYPE_INTEGER32:
+    case OS_CONFIG_LIB_PARAMETER_TYPE_INTEGER64:
         if (parameterSize == bufferLength)
         {
             memcpy(&parameter.parameterValue, buffer, parameterSize);
@@ -891,20 +915,20 @@ SeosConfigLib_parameterSetValue(
         }
         break;
 
-    case SEOS_CONFIG_LIB_PARAMETER_TYPE_STRING:
+    case OS_CONFIG_LIB_PARAMETER_TYPE_STRING:
         parameter.parameterValue.valueString.size = bufferLength;
 
-        result = SeosConfigLib_writeVariableLengthString(
+        result = OS_ConfigServiceLib_writeVariableLengthString(
                      &instance->stringBackend,
                      parameter.parameterValue.valueString.index,
                      buffer,
                      bufferLength);
         break;
 
-    case SEOS_CONFIG_LIB_PARAMETER_TYPE_BLOB:
+    case OS_CONFIG_LIB_PARAMETER_TYPE_BLOB:
         parameter.parameterValue.valueBlob.size = bufferLength;
 
-        result = SeosConfigLib_writeVariableLengthBlob(
+        result = OS_ConfigServiceLib_writeVariableLengthBlob(
                      &instance->blobBackend,
                      parameter.parameterValue.valueBlob.index,
                      parameter.parameterValue.valueBlob.numberOfBlocks,
@@ -920,7 +944,7 @@ SeosConfigLib_parameterSetValue(
 
     if (SEOS_SUCCESS == result)
     {
-        result = SeosConfigBackend_writeRecord(
+        result = OS_ConfigServiceBackend_writeRecord(
                      &instance->parameterBackend,
                      enumerator->index,
                      &parameter,
@@ -938,15 +962,15 @@ SeosConfigLib_parameterSetValue(
 
 // Set the parameter value - specific format.
 seos_err_t
-SeosConfigLib_parameterSetValueAsU32(
-    SeosConfigLib* instance,
-    SeosConfigLib_ParameterEnumerator const* enumerator,
+OS_ConfigServiceLib_parameterSetValueAsU32(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     uint32_t value)
 {
-    return SeosConfigLib_parameterSetValue(
+    return OS_ConfigServiceLib_parameterSetValue(
                instance,
                enumerator,
-               SEOS_CONFIG_LIB_PARAMETER_TYPE_INTEGER32,
+               OS_CONFIG_LIB_PARAMETER_TYPE_INTEGER32,
                &value,
                sizeof(uint32_t));
 }
@@ -954,15 +978,15 @@ SeosConfigLib_parameterSetValueAsU32(
 
 // Set the parameter value - specific format.
 seos_err_t
-SeosConfigLib_parameterSetValueAsU64(
-    SeosConfigLib* instance,
-    SeosConfigLib_ParameterEnumerator const* enumerator,
+OS_ConfigServiceLib_parameterSetValueAsU64(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     uint64_t value)
 {
-    return SeosConfigLib_parameterSetValue(
+    return OS_ConfigServiceLib_parameterSetValue(
                instance,
                enumerator,
-               SEOS_CONFIG_LIB_PARAMETER_TYPE_INTEGER64,
+               OS_CONFIG_LIB_PARAMETER_TYPE_INTEGER64,
                &value,
                sizeof(uint64_t));
 }
@@ -970,17 +994,17 @@ SeosConfigLib_parameterSetValueAsU64(
 
 // Set the parameter value - specific format.
 seos_err_t
-SeosConfigLib_parameterSetValueAsString(
-    SeosConfigLib* instance,
-    SeosConfigLib_ParameterEnumerator const* enumerator,
-    SeosConfigLib_ParameterType parameterType,
+OS_ConfigServiceLib_parameterSetValueAsString(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
+    OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     char const* buffer,
     size_t bufferLength)
 {
-    return SeosConfigLib_parameterSetValue(
+    return OS_ConfigServiceLib_parameterSetValue(
                instance,
                enumerator,
-               SEOS_CONFIG_LIB_PARAMETER_TYPE_STRING,
+               OS_CONFIG_LIB_PARAMETER_TYPE_STRING,
                buffer,
                bufferLength);
 }
@@ -988,17 +1012,17 @@ SeosConfigLib_parameterSetValueAsString(
 
 // Set the parameter value - specific format.
 seos_err_t
-SeosConfigLib_parameterSetValueAsBlob(
-    SeosConfigLib* instance,
-    SeosConfigLib_ParameterEnumerator const* enumerator,
-    SeosConfigLib_ParameterType parameterType,
+OS_ConfigServiceLib_parameterSetValueAsBlob(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
+    OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void const* buffer,
     size_t bufferLength)
 {
-    return SeosConfigLib_parameterSetValue(
+    return OS_ConfigServiceLib_parameterSetValue(
                instance,
                enumerator,
-               SEOS_CONFIG_LIB_PARAMETER_TYPE_BLOB,
+               OS_CONFIG_LIB_PARAMETER_TYPE_BLOB,
                buffer,
                bufferLength);
 }
@@ -1008,50 +1032,54 @@ SeosConfigLib_parameterSetValueAsBlob(
 static
 seos_err_t
 find_parameter(
-    SeosConfigLib* instance,
-    SeosConfigLib_DomainEnumerator* domainEnumerator,
-    SeosConfigLib_ParameterName const* parameterName,
-    SeosConfigLib_Parameter* parameter)
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_DomainEnumerator_t* domainEnumerator,
+    OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
+    OS_ConfigServiceLibTypes_Parameter_t* parameter)
 {
     seos_err_t ret;
-    SeosConfigLib_ParameterEnumerator paramEnumerator = {0};
+    OS_ConfigServiceLibTypes_ParameterEnumerator_t paramEnumerator = {0};
 
-    ret = SeosConfigLib_parameterEnumeratorInit(instance,
-                                                domainEnumerator,
-                                                &paramEnumerator);
+    ret = OS_ConfigServiceLib_parameterEnumeratorInit(
+              instance,
+              domainEnumerator,
+              &paramEnumerator);
     if (0 != ret)
     {
-        Debug_LOG_ERROR("SeosConfigLib_parameterEnumeratorInit() failed, ret %d",
+        Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorInit() failed, ret %d",
                         ret);
         return SEOS_ERROR_GENERIC;
     }
 
     for (;;)
     {
-        ret = SeosConfigLib_parameterEnumeratorGetElement(instance,
-                                                          &paramEnumerator,
-                                                          parameter);
+        ret = OS_ConfigServiceLib_parameterEnumeratorGetElement(
+                  instance,
+                  &paramEnumerator,
+                  parameter);
         if (0 != ret)
         {
-            Debug_LOG_ERROR("SeosConfigLib_parameterEnumeratorGetElement() failed, ret %d",
+            Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorGetElement() failed, ret %d",
                             ret);
             return SEOS_ERROR_GENERIC;
         }
 
-        SeosConfigLib_ParameterName parameterNameTmp;
-        SeosConfigLib_parameterGetName(parameter, &parameterNameTmp);
-        if (SEOS_SUCCESS == SeosConfigLib_compareParameterName(&parameterNameTmp,
-                                                               parameterName))
+        OS_ConfigServiceLibTypes_ParameterName_t parameterNameTmp;
+        OS_ConfigServiceLib_parameterGetName(parameter, &parameterNameTmp);
+        if (SEOS_SUCCESS == OS_ConfigServiceLib_compareParameterName(
+                &parameterNameTmp,
+                parameterName))
         {
             // enumerator holds the right paramter
             return SEOS_SUCCESS;
         }
 
-        ret = SeosConfigLib_parameterEnumeratorIncrement(instance,
-                                                         &paramEnumerator);
+        ret = OS_ConfigServiceLib_parameterEnumeratorIncrement(
+                  instance,
+                  &paramEnumerator);
         if (0 != ret)
         {
-            Debug_LOG_ERROR("SeosConfigLib_parameterEnumeratorIncrement() failed, ret %d",
+            Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorIncrement() failed, ret %d",
                             ret);
             return SEOS_ERROR_GENERIC;
         }
@@ -1063,39 +1091,41 @@ find_parameter(
 static
 seos_err_t
 find_domain(
-    SeosConfigLib* instance,
-    SeosConfigLib_DomainEnumerator* enumerator,
-    SeosConfigLib_DomainName const* domainName)
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator,
+    OS_ConfigServiceLibTypes_DomainName_t const* domainName)
 {
     int ret;
-    SeosConfigLib_domainEnumeratorInit(instance, enumerator);
+    OS_ConfigServiceLib_domainEnumeratorInit(instance, enumerator);
 
     for (;;)
     {
-        SeosConfigLib_Domain domain;
-        ret = SeosConfigLib_domainEnumeratorGetElement(
+        OS_ConfigServiceLibTypes_Domain_t domain;
+        ret = OS_ConfigServiceLib_domainEnumeratorGetElement(
                   instance,
                   enumerator,
                   &domain);
         if (0 != ret)
         {
-            Debug_LOG_ERROR("SeosConfigLib_domainEnumeratorGetElement() failed, ret %d",
+            Debug_LOG_ERROR("OS_ConfigServiceLib_domainEnumeratorGetElement() failed, ret %d",
                             ret);
             return SEOS_ERROR_GENERIC;
         }
 
-        SeosConfigLib_DomainName domainNameTmp;
-        SeosConfigLib_domainGetName(&domain, &domainNameTmp);
-        if (SEOS_SUCCESS == SeosConfigLib_compareDomainName(&domainNameTmp, domainName))
+        OS_ConfigServiceLibTypes_DomainName_t domainNameTmp;
+        OS_ConfigServiceLib_domainGetName(&domain, &domainNameTmp);
+        if (SEOS_SUCCESS == OS_ConfigServiceLib_compareDomainName(
+                &domainNameTmp,
+                domainName))
         {
             // enumerator holds the right domain
             return SEOS_SUCCESS;
         }
 
-        ret = SeosConfigLib_domainEnumeratorIncrement(instance, enumerator);
+        ret = OS_ConfigServiceLib_domainEnumeratorIncrement(instance, enumerator);
         if (0 != ret)
         {
-            Debug_LOG_ERROR("SeosConfigLib_domainEnumeratorIncrement() failed, ret %d",
+            Debug_LOG_ERROR("OS_ConfigServiceLib_domainEnumeratorIncrement() failed, ret %d",
                             ret);
             return SEOS_ERROR_GENERIC;
         }
@@ -1106,18 +1136,18 @@ find_domain(
 //------------------------------------------------------------------------------
 
 seos_err_t
-SeosConfigLib_parameterGetValueFromDomainName(
-    SeosConfigLib* instance,
-    SeosConfigLib_DomainName const* domainName,
-    SeosConfigLib_ParameterName const* parameterName,
-    SeosConfigLib_ParameterType parameterType,
+OS_ConfigServiceLib_parameterGetValueFromDomainName(
+    OS_ConfigServiceLib_t* instance,
+    OS_ConfigServiceLibTypes_DomainName_t const* domainName,
+    OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
+    OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void* buffer,
     size_t bufferLength,
     size_t* bytesCopied)
 {
     seos_err_t ret;
 
-    SeosConfigLib_DomainEnumerator domain_enumerator = {0};
+    OS_ConfigServiceLibTypes_DomainEnumerator_t domain_enumerator = {0};
     ret = find_domain(instance, &domain_enumerator, domainName);
     if (SEOS_SUCCESS != ret)
     {
@@ -1125,7 +1155,7 @@ SeosConfigLib_parameterGetValueFromDomainName(
         return SEOS_ERROR_CONFIG_DOMAIN_NOT_FOUND;
     }
 
-    SeosConfigLib_Parameter parameter = {0};
+    OS_ConfigServiceLibTypes_Parameter_t parameter = {0};
     ret = find_parameter(instance, &domain_enumerator, parameterName, &parameter);
     if (SEOS_SUCCESS != ret)
     {
@@ -1140,7 +1170,7 @@ SeosConfigLib_parameterGetValueFromDomainName(
         return SEOS_ERROR_CONFIG_TYPE_MISMATCH;
     }
 
-    int err = SeosConfigLib_parameterGetValue(
+    int err = OS_ConfigServiceLib_parameterGetValue(
                   instance,
                   &parameter,
                   buffer,
@@ -1148,8 +1178,8 @@ SeosConfigLib_parameterGetValueFromDomainName(
                   bytesCopied);
     if (err < 0)
     {
-        Debug_LOG_ERROR("SeosConfigLib_parameterGetValue() failed, ret %d", ret);
-        // ToDo: SeosConfigLib_parameterGetValue() should return error codes
+        Debug_LOG_ERROR("OS_ConfigServiceLib_parameterGetValue() failed, ret %d", ret);
+        // ToDo: OS_ConfigServiceLib_parameterGetValue() should return error codes
         //       about the actual problem, so we can return them
         return SEOS_ERROR_GENERIC;
     }

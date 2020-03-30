@@ -6,7 +6,7 @@ cmake_policy(SET CMP0076 NEW)
 
 #------------------------------------------------------------------------------
 
-project(seos_configuration_api C)
+project(OS_ConfigService_api C)
 
 add_library(${PROJECT_NAME} INTERFACE)
 
@@ -28,15 +28,15 @@ target_include_directories(${PROJECT_NAME}
 
 target_sources(${PROJECT_NAME}
     INTERFACE
-        src/SeosConfigAccessRights.c
-        src/SeosConfigAppIdentifier.c
-        src/SeosConfigBackend.c
-        src/seos_config.c
-        src/seos_config_handle.c
-        src/seos_config_instance_store.c
-        src/SeosConfigLib.c
-        src/seos_config_library.c
-        src/seos_config_server.c
+        src/OS_ConfigServiceAccessRights.c
+        src/OS_ConfigServiceAppIdentifier.c
+        src/OS_ConfigServiceBackend.c
+        src/OS_ConfigService.c
+        src/OS_ConfigServiceHandle.c
+        src/OS_ConfigServiceInstanceStore.c
+        src/OS_ConfigServiceLib.c
+        src/OS_ConfigServiceLibrary.c
+        src/OS_ConfigServiceServer.c
 )
 
 target_link_libraries(${PROJECT_NAME}

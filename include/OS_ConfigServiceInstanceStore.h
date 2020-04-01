@@ -1,9 +1,18 @@
 /**
- * Copyright (C) 2019, Hensoldt Cyber GmbH
+ * Copyright (C) 2020, Hensoldt Cyber GmbH
+ *
+ * @addtogroup InstanceStore
+ * @{
+ *
+ * @file OS_ConfigServiceInstanceStore.h
+ *
+ * @brief Helper module to manage configuration library instances.
+ *
  */
 
 #pragma once
 
+/* Includes ------------------------------------------------------------------*/
 #include "OS_ConfigServiceLib.h"
 
 // The maximum number of configuration libraries the store can maintain.
@@ -19,8 +28,10 @@ typedef struct
 }
 OS_ConfigServiceInstanceStore_t;
 
-
+/* Exported functions --------------------------------------------------------*/
 OS_ConfigServiceLib_t*
 OS_ConfigServiceInstanceStore_getInstance(
     OS_ConfigServiceInstanceStore_t* self,
     unsigned int instanceIndex);
+
+/** @} */

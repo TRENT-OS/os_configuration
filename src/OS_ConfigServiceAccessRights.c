@@ -1,9 +1,11 @@
-/**
- * Copyright (C) 2019, Hensoldt Cyber GmbH
+/*
+ *  Copyright (C) 2019, Hensoldt Cyber GmbH
  */
 
+/* Includes ------------------------------------------------------------------*/
 #include "OS_ConfigServiceAccessRights.h"
 
+/* Exported functions --------------------------------------------------------*/
 void OS_ConfigServiceAccessRights_ClearAll(
     OS_ConfigServiceAccessRights_t* accessRights)
 {
@@ -13,7 +15,7 @@ void OS_ConfigServiceAccessRights_ClearAll(
     }
 }
 
-
+//------------------------------------------------------------------------------
 void OS_ConfigServiceAccessRights_SetAll(
     OS_ConfigServiceAccessRights_t* accessRights)
 {
@@ -23,7 +25,7 @@ void OS_ConfigServiceAccessRights_SetAll(
     }
 }
 
-
+//------------------------------------------------------------------------------
 void OS_ConfigServiceAccessRights_Set(
     OS_ConfigServiceAccessRights_t* accessRights,
     unsigned int entryIndex)
@@ -40,7 +42,7 @@ void OS_ConfigServiceAccessRights_Set(
     }
 }
 
-
+//------------------------------------------------------------------------------
 void OS_ConfigServiceAccessRights_Clear(
     OS_ConfigServiceAccessRights_t* accessRights,
     unsigned int entryIndex)
@@ -57,7 +59,7 @@ void OS_ConfigServiceAccessRights_Clear(
     }
 }
 
-
+//------------------------------------------------------------------------------
 bool OS_ConfigServiceAccessRights_IsSet(
     OS_ConfigServiceAccessRights_t const* accessRights,
     unsigned int entryIndex)

@@ -1,9 +1,20 @@
 /**
- * Copyright (C) 2019, Hensoldt Cyber GmbH
+ * Copyright (C) 2020, Hensoldt Cyber GmbH
+ *
+ * @addtogroup Backend
+ * @{
+ *
+ * @file OS_ConfigServiceBackend.h
+ *
+ * @brief Depending on which type of backend is built (either a FileSystem or a MemoryBackend)
+ * this module collects functions to interact with the backend (read, write, etc.).
+ *
  */
+
 
 #pragma once
 
+/* Includes ------------------------------------------------------------------*/
 #include "SeosError.h"
 
 #if defined(OS_CONFIG_SERVICE_BACKEND_FILESYSTEM)
@@ -14,6 +25,7 @@
 
 #endif // OS_CONFIG_SERVICE_BACKEND_FILESYSTEM
 
+/* Exported types/defines/enums ----------------------------------------------*/
 
 #if defined(OS_CONFIG_SERVICE_BACKEND_FILESYSTEM)
 
@@ -142,11 +154,9 @@ unsigned int
 OS_ConfigServiceBackend_getNumberOfRecords(
     OS_ConfigServiceBackend_t const* instance);
 
-
 size_t
 OS_ConfigServiceBackend_getSizeOfRecords(
     OS_ConfigServiceBackend_t const* instance);
-
 
 seos_err_t
 OS_ConfigServiceBackend_readRecord(
@@ -155,10 +165,11 @@ OS_ConfigServiceBackend_readRecord(
     void* buf,
     size_t bufLen);
 
-
 seos_err_t
 OS_ConfigServiceBackend_writeRecord(
     OS_ConfigServiceBackend_t* instance,
     unsigned int recordIndex,
     const void* buf,
     size_t bufLen);
+
+/** @} */

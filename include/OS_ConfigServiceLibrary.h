@@ -1,14 +1,25 @@
 /**
- * Copyright (C) 2019, Hensoldt Cyber GmbH
+ * Copyright (C) 2020, Hensoldt Cyber GmbH
+ *
+ * @addtogroup LibraryWrapper
+ * @{
+ *
+ * @file OS_ConfigServiceLibrary.h
+ *
+ * @brief Contains wrapper functions to be called if the ConfigService is built as
+ * a library.
+ *
  */
 
 #pragma once
 
+/* Includes ------------------------------------------------------------------*/
 #include "SeosError.h"
 
 #include "OS_ConfigServiceDataTypes.h"
 #include "OS_ConfigServiceInstanceStore.h"
 
+/* Exported functions --------------------------------------------------------*/
 OS_ConfigServiceInstanceStore_t*
 OS_ConfigServiceLibrary_getInstances(void);
 
@@ -44,7 +55,6 @@ OS_ConfigServiceLibrary_domainEnumeratorGetElement(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_Domain_t* domain);
-
 
 seos_err_t
 OS_ConfigServiceLibrary_parameterEnumeratorInit(
@@ -185,3 +195,5 @@ OS_ConfigServiceLibrary_parameterGetValueFromDomainName(
     void* buffer,
     size_t bufferLength,
     size_t* bytesCopied);
+
+/** @} */

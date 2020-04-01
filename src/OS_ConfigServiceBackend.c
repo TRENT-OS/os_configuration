@@ -1,8 +1,8 @@
-/**
- * Copyright (C) 2019, Hensoldt Cyber GmbH
+/*
+ *  Copyright (C) 2019, Hensoldt Cyber GmbH
  */
 
-
+/* Includes ------------------------------------------------------------------*/
 #include "LibDebug/Debug.h"
 #include "SeosError.h"
 #include "OS_ConfigServiceBackend.h"
@@ -22,8 +22,7 @@ typedef struct
 }
 OS_ConfigServiceBackend_BackendFsLayout_t;
 
-
-//------------------------------------------------------------------------------
+/* Exported functions --------------------------------------------------------*/
 static
 seos_err_t OS_ConfigServiceBackend_writeToFile(
     hPartition_t  phandle,
@@ -64,7 +63,6 @@ seos_err_t OS_ConfigServiceBackend_writeToFile(
 
     return SEOS_SUCCESS;
 }
-
 
 //------------------------------------------------------------------------------
 static
@@ -107,7 +105,6 @@ seos_err_t OS_ConfigServiceBackend_readFromFile(
 
     return SEOS_SUCCESS;
 }
-
 
 //------------------------------------------------------------------------------
 static
@@ -168,7 +165,6 @@ seos_err_t OS_ConfigServiceBackend_createFile(
     return SEOS_SUCCESS;
 }
 
-
 //------------------------------------------------------------------------------
 static seos_err_t
 writeRecord_backend_filesystem(
@@ -196,7 +192,6 @@ writeRecord_backend_filesystem(
     return writeResult;
 }
 
-
 //------------------------------------------------------------------------------
 static seos_err_t
 readRecord_backend_filesystem(
@@ -223,7 +218,6 @@ readRecord_backend_filesystem(
 
     return readResult;
 }
-
 
 //------------------------------------------------------------------------------
 seos_err_t
@@ -308,8 +302,7 @@ typedef struct
 }
 OS_ConfigServiceBackend_BackendMemLayout_t;
 
-
-//------------------------------------------------------------------------------
+/* Exported functions --------------------------------------------------------*/
 static seos_err_t
 writeRecord_backend_memory(
     OS_ConfigServiceBackend_t*   instance,
@@ -324,7 +317,6 @@ writeRecord_backend_memory(
 
     return SEOS_SUCCESS;
 }
-
 
 //------------------------------------------------------------------------------
 static seos_err_t
@@ -341,7 +333,6 @@ readRecord_backend_memory(
 
     return SEOS_SUCCESS;
 }
-
 
 //------------------------------------------------------------------------------
 seos_err_t
@@ -370,7 +361,6 @@ OS_ConfigServiceBackend_createMemBackend(
     }
 }
 
-
 //------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceBackend_createMemBackendAutoSized(
@@ -386,7 +376,6 @@ OS_ConfigServiceBackend_createMemBackendAutoSized(
                numberOfRecords,
                sizeOfRecord);
 }
-
 
 //------------------------------------------------------------------------------
 seos_err_t

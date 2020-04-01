@@ -1,9 +1,19 @@
 /**
- * Copyright (C) 2019, Hensoldt Cyber GmbH
+ * Copyright (C) 2020, Hensoldt Cyber GmbH
+ *
+ * @addtogroup ServerWrapper
+ * @{
+ *
+ * @file OS_ConfigServiceServer.h
+ *
+ * @brief Contains wrapper functions to be called if the ConfigService is built as
+ * a server component.
+ *
  */
 
 #pragma once
 
+/* Includes ------------------------------------------------------------------*/
 #include "camkes.h"
 
 #include "SeosError.h"
@@ -11,6 +21,7 @@
 #include "OS_ConfigServiceDataTypes.h"
 #include "OS_ConfigServiceInstanceStore.h"
 
+/* Exported functions --------------------------------------------------------*/
 OS_ConfigServiceInstanceStore_t*
 OS_ConfigServiceServer_getInstances(void);
 
@@ -35,7 +46,6 @@ OS_ConfigServiceServer_domainEnumeratorReset(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator);
 
-
 seos_err_t
 OS_ConfigServiceServer_domainEnumeratorIncrement(
     OS_ConfigServiceHandle_t handle,
@@ -46,7 +56,6 @@ OS_ConfigServiceServer_domainEnumeratorGetElement(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_Domain_t* domain);
-
 
 seos_err_t
 OS_ConfigServiceServer_parameterEnumeratorInit(
@@ -187,3 +196,5 @@ OS_ConfigServiceServer_parameterGetValueFromDomainName(
     dataport_ptr_t buffer,
     size_t bufferLength,
     size_t* bytesCopied);
+
+/** @} */

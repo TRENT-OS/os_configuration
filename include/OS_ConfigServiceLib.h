@@ -1,9 +1,18 @@
 /**
- * Copyright (C) 2019, Hensoldt Cyber GmbH
+ * Copyright (C) 2020, Hensoldt Cyber GmbH
+ *
+ * @addtogroup Lib
+ * @{
+ *
+ * @file OS_ConfigServiceLib.h
+ *
+ * @brief Contains core functions offered by the ConfigService library.
+ *
  */
 
 #pragma once
 
+/* Includes ------------------------------------------------------------------*/
 #include "OS_ConfigServiceLibTypes.h"
 #include "OS_ConfigServiceBackend.h"
 #include "OS_ConfigServiceAccessRights.h"
@@ -18,6 +27,7 @@ typedef struct
 }
 OS_ConfigServiceLib_t;
 
+/* Exported functions --------------------------------------------------------*/
 int
 OS_ConfigServiceLib_Init(
     OS_ConfigServiceLib_t* instance,
@@ -55,7 +65,6 @@ OS_ConfigServiceLib_domainEnumeratorGetElement(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_DomainEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_Domain_t* domain);
-
 
 // On success: enumerator points to the first parameter of the given domain.
 // Success indication is required: there may not be a parameter for the given domain, failed data retrieval, ...
@@ -102,7 +111,6 @@ OS_ConfigServiceLib_domainCreateParameterEnumerator(
     OS_ConfigServiceLibTypes_Domain_t const* domain,
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* parameterEnumerator);
-
 
 // Find parameter by name in given domain.
 seos_err_t
@@ -218,3 +226,5 @@ OS_ConfigServiceLib_parameterGetValueFromDomainName(
     void* buffer,
     size_t bufferLength,
     size_t* bytesCopied);
+
+/** @} */

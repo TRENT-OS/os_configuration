@@ -1,9 +1,9 @@
-# TRENTOS Configuration Service
+# TRENTOS ConfigService
 
 
 ## Overview
 
-Provides the TRENTOS Configuration Service API that allows to write and retrieve
+Provides the TRENTOS ConfigService API that allows to write and retrieve
 configuration parameters either by using it locally in
 a component or as a separate remote server component.
 
@@ -16,7 +16,7 @@ a component or as a separate remote server component.
 
 ### Build options
 
-The TRENTOS Configuration Service can be integrated in three different ways, for
+The TRENTOS ConfigService can be integrated in three different ways, for
 which you will partially have to set specific flags:
 
 | Build Option        | Flag                             |

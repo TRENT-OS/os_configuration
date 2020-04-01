@@ -1,10 +1,11 @@
-/**
- * Copyright (C) 2019, Hensoldt Cyber GmbH
+/*
+ *  Copyright (C) 2019, Hensoldt Cyber GmbH
  */
 
+/* Includes ------------------------------------------------------------------*/
 #include "OS_ConfigServiceHandle.h"
 
-
+/* Exported functions --------------------------------------------------------*/
 void
 OS_ConfigServiceHandle_initRemoteHandle(
     unsigned int instanceId,
@@ -14,7 +15,7 @@ OS_ConfigServiceHandle_initRemoteHandle(
     handle->handle.rpc.id = instanceId;
 }
 
-
+//------------------------------------------------------------------------------
 void
 OS_ConfigServiceHandle_initLocalHandle(
     void* instance,
@@ -24,7 +25,7 @@ OS_ConfigServiceHandle_initLocalHandle(
     handle->handle.local.instance = instance;
 }
 
-
+//------------------------------------------------------------------------------
 OS_ConfigServiceHandle_HandleKind_t
 OS_ConfigServiceHandle_getHandleKind(
     OS_ConfigServiceHandle_t handle)
@@ -32,7 +33,7 @@ OS_ConfigServiceHandle_getHandleKind(
     return handle.handleKind;
 }
 
-
+//------------------------------------------------------------------------------
 unsigned int
 OS_ConfigServiceHandle_getRemoteInstance(
     OS_ConfigServiceHandle_t handle)
@@ -40,7 +41,7 @@ OS_ConfigServiceHandle_getRemoteInstance(
     return handle.handle.rpc.id;
 }
 
-
+//------------------------------------------------------------------------------
 void*
 OS_ConfigServiceHandle_getLocalInstance(
     OS_ConfigServiceHandle_t handle)

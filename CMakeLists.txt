@@ -45,3 +45,15 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 #------------------------------------------------------------------------------
+
+# if invoked from the SEOS sandbox, provide a documentation build target
+if (COMMAND seos_create_doxygen_target)
+
+    seos_create_doxygen_target( seos_configuration_doc
+        # API header is documented as part of seos_core_api, so we do nothing
+        "echo"
+        # API header is documented as part of seos_core_api, so we do nothing
+        "echo"
+    )
+
+endif()

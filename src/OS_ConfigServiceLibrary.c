@@ -1,11 +1,13 @@
-/**
- * Copyright (C) 2019, Hensoldt Cyber GmbH
+/*
+ *  Copyright (C) 2019, Hensoldt Cyber GmbH
  */
 
+/* Includes ------------------------------------------------------------------*/
 #include <stdlib.h>
 
 #include "OS_ConfigServiceLibrary.h"
 
+/* Exported functions --------------------------------------------------------*/
 // The library implementation does not have an instance store.
 OS_ConfigServiceInstanceStore_t*
 OS_ConfigServiceLibrary_getInstances(void)
@@ -13,7 +15,7 @@ OS_ConfigServiceLibrary_getInstances(void)
     return NULL;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_createHandle(
     OS_ConfigServiceHandle_HandleKind_t handleKind,
@@ -23,7 +25,7 @@ OS_ConfigServiceLibrary_createHandle(
     return SEOS_ERROR_INVALID_PARAMETER;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_domainEnumeratorInit(
     OS_ConfigServiceHandle_t handle,
@@ -44,7 +46,7 @@ OS_ConfigServiceLibrary_domainEnumeratorInit(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_domainEnumeratorClose(
     OS_ConfigServiceHandle_t handle,
@@ -65,7 +67,7 @@ OS_ConfigServiceLibrary_domainEnumeratorClose(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_domainEnumeratorReset(
     OS_ConfigServiceHandle_t handle,
@@ -86,7 +88,7 @@ OS_ConfigServiceLibrary_domainEnumeratorReset(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_domainEnumeratorIncrement(
     OS_ConfigServiceHandle_t handle,
@@ -105,7 +107,7 @@ OS_ConfigServiceLibrary_domainEnumeratorIncrement(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_domainEnumeratorGetElement(
     OS_ConfigServiceHandle_t handle,
@@ -128,7 +130,7 @@ OS_ConfigServiceLibrary_domainEnumeratorGetElement(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterEnumeratorInit(
     OS_ConfigServiceHandle_t handle,
@@ -151,7 +153,7 @@ OS_ConfigServiceLibrary_parameterEnumeratorInit(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterEnumeratorClose(
     OS_ConfigServiceHandle_t handle,
@@ -172,7 +174,7 @@ OS_ConfigServiceLibrary_parameterEnumeratorClose(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterEnumeratorReset(
     OS_ConfigServiceHandle_t handle,
@@ -191,7 +193,7 @@ OS_ConfigServiceLibrary_parameterEnumeratorReset(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterEnumeratorIncrement(
     OS_ConfigServiceHandle_t handle,
@@ -210,7 +212,7 @@ OS_ConfigServiceLibrary_parameterEnumeratorIncrement(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterEnumeratorGetElement(
     OS_ConfigServiceHandle_t handle,
@@ -233,7 +235,7 @@ OS_ConfigServiceLibrary_parameterEnumeratorGetElement(
     }
 }
 
-
+//------------------------------------------------------------------------------
 void
 OS_ConfigServiceLibrary_domainGetName(
     OS_ConfigServiceLibTypes_Domain_t const* domain,
@@ -242,7 +244,7 @@ OS_ConfigServiceLibrary_domainGetName(
     OS_ConfigServiceLib_domainGetName(domain, domainName);
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_domainCreateParameterEnumerator(
     OS_ConfigServiceHandle_t handle,
@@ -267,7 +269,7 @@ OS_ConfigServiceLibrary_domainCreateParameterEnumerator(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_domainGetElement(
     OS_ConfigServiceHandle_t handle,
@@ -292,7 +294,7 @@ OS_ConfigServiceLibrary_domainGetElement(
     }
 }
 
-
+//------------------------------------------------------------------------------
 void
 OS_ConfigServiceLibrary_parameterGetName(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -301,7 +303,7 @@ OS_ConfigServiceLibrary_parameterGetName(
     OS_ConfigServiceLib_parameterGetName(parameter, parameterName);
 }
 
-
+//------------------------------------------------------------------------------
 void
 OS_ConfigServiceLibrary_parameterGetType(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -310,7 +312,7 @@ OS_ConfigServiceLibrary_parameterGetType(
     OS_ConfigServiceLib_parameterGetType(parameter, parameterType);
 }
 
-
+//------------------------------------------------------------------------------
 size_t
 OS_ConfigServiceLibrary_parameterGetSize(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter)
@@ -318,7 +320,7 @@ OS_ConfigServiceLibrary_parameterGetSize(
     return OS_ConfigServiceLib_parameterGetSize(parameter);
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterGetValue(
     OS_ConfigServiceHandle_t handle,
@@ -345,7 +347,7 @@ OS_ConfigServiceLibrary_parameterGetValue(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterGetValueAsU32(
     OS_ConfigServiceHandle_t handle,
@@ -365,7 +367,7 @@ OS_ConfigServiceLibrary_parameterGetValueAsU32(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterGetValueAsU64(
     OS_ConfigServiceHandle_t handle,
@@ -385,7 +387,7 @@ OS_ConfigServiceLibrary_parameterGetValueAsU64(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterGetValueAsString(
     OS_ConfigServiceHandle_t handle,
@@ -410,7 +412,7 @@ OS_ConfigServiceLibrary_parameterGetValueAsString(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterGetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
@@ -435,7 +437,7 @@ OS_ConfigServiceLibrary_parameterGetValueAsBlob(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterSetValue(
     OS_ConfigServiceHandle_t handle,
@@ -462,7 +464,7 @@ OS_ConfigServiceLibrary_parameterSetValue(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterSetValueAsU32(
     OS_ConfigServiceHandle_t handle,
@@ -482,7 +484,7 @@ OS_ConfigServiceLibrary_parameterSetValueAsU32(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterSetValueAsU64(
     OS_ConfigServiceHandle_t handle,
@@ -502,7 +504,7 @@ OS_ConfigServiceLibrary_parameterSetValueAsU64(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterSetValueAsString(
     OS_ConfigServiceHandle_t handle,
@@ -529,7 +531,7 @@ OS_ConfigServiceLibrary_parameterSetValueAsString(
     }
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceLibrary_parameterSetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
@@ -555,7 +557,6 @@ OS_ConfigServiceLibrary_parameterSetValueAsBlob(
         return SEOS_ERROR_INVALID_PARAMETER;
     }
 }
-
 
 //------------------------------------------------------------------------------
 seos_err_t

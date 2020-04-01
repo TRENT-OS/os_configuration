@@ -1,13 +1,24 @@
 /**
- * Copyright (C) 2019, Hensoldt Cyber GmbH
+ * Copyright (C) 2020, Hensoldt Cyber GmbH
+ *
+ * @addtogroup Lib
+ * @{
+ *
+ * @file OS_ConfigServiceLibTypes.h
+ *
+ * @brief Collection of data structures defined for the ConfigService.
+ *
  */
 
 #pragma once
 
+/* Includes ------------------------------------------------------------------*/
 #include "stdint.h"
 #include "stddef.h"
 
 #include "OS_ConfigServiceAccessRights.h"
+
+/* Exported types/defines/enums ----------------------------------------------*/
 
 // Limits the user of OS_ConfigService has to know.
 // Important: these limits have to be small enough to be allocated on the stack.
@@ -125,3 +136,4 @@ typedef struct
 }
 OS_ConfigServiceLibTypes_Domain_t;
 
+/** @} */

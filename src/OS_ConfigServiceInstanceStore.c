@@ -1,9 +1,11 @@
-/**
- * Copyright (C) 2019, Hensoldt Cyber GmbH
+/*
+ *  Copyright (C) 2019, Hensoldt Cyber GmbH
  */
 
+/* Includes ------------------------------------------------------------------*/
 #include "OS_ConfigServiceInstanceStore.h"
 
+/* Exported functions --------------------------------------------------------*/
 OS_ConfigServiceLib_t*
 OS_ConfigServiceInstanceStore_getInstance(
     OS_ConfigServiceInstanceStore_t* self,

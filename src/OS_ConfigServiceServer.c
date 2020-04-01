@@ -1,13 +1,14 @@
-/**
- * Copyright (C) 2019, Hensoldt Cyber GmbH
+/*
+ *  Copyright (C) 2019, Hensoldt Cyber GmbH
  */
 
+/* Includes ------------------------------------------------------------------*/
 #if defined (OS_CONFIG_SERVICE_CAMKES_SERVER)
 
 #include "OS_ConfigServiceServer.h"
 #include "OS_ConfigServiceLibrary.h"
 
-
+/* Local types ---------------------------------------------------------------*/
 typedef struct
 {
     OS_ConfigServiceInstanceStore_t instanceStore;
@@ -17,7 +18,7 @@ OS_ConfigServiceServer_t;
 
 static OS_ConfigServiceServer_t server;
 
-
+/* Exported functions --------------------------------------------------------*/
 static
 seos_err_t
 OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(
@@ -50,14 +51,14 @@ OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(
     }
 }
 
-
+//------------------------------------------------------------------------------
 OS_ConfigServiceInstanceStore_t*
 OS_ConfigServiceServer_getInstances(void)
 {
     return &server.instanceStore;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_createHandle(
     OS_ConfigServiceHandle_HandleKind_t handleKind,
@@ -93,7 +94,7 @@ OS_ConfigServiceServer_createHandle(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_domainEnumeratorInit(
     OS_ConfigServiceHandle_t handle,
@@ -118,6 +119,7 @@ OS_ConfigServiceServer_domainEnumeratorInit(
     return result;
 }
 
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_domainEnumeratorClose(
     OS_ConfigServiceHandle_t handle,
@@ -142,7 +144,7 @@ OS_ConfigServiceServer_domainEnumeratorClose(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_domainEnumeratorReset(
     OS_ConfigServiceHandle_t handle,
@@ -167,7 +169,7 @@ OS_ConfigServiceServer_domainEnumeratorReset(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_domainEnumeratorIncrement(
     OS_ConfigServiceHandle_t handle,
@@ -192,7 +194,7 @@ OS_ConfigServiceServer_domainEnumeratorIncrement(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_domainEnumeratorGetElement(
     OS_ConfigServiceHandle_t handle,
@@ -219,7 +221,7 @@ OS_ConfigServiceServer_domainEnumeratorGetElement(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterEnumeratorInit(
     OS_ConfigServiceHandle_t handle,
@@ -246,7 +248,7 @@ OS_ConfigServiceServer_parameterEnumeratorInit(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterEnumeratorClose(
     OS_ConfigServiceHandle_t handle,
@@ -271,7 +273,7 @@ OS_ConfigServiceServer_parameterEnumeratorClose(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterEnumeratorReset(
     OS_ConfigServiceHandle_t handle,
@@ -296,7 +298,7 @@ OS_ConfigServiceServer_parameterEnumeratorReset(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterEnumeratorIncrement(
     OS_ConfigServiceHandle_t handle,
@@ -321,7 +323,7 @@ OS_ConfigServiceServer_parameterEnumeratorIncrement(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterEnumeratorGetElement(
     OS_ConfigServiceHandle_t handle,
@@ -346,7 +348,7 @@ OS_ConfigServiceServer_parameterEnumeratorGetElement(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 void
 OS_ConfigServiceServer_domainGetName(
     OS_ConfigServiceLibTypes_Domain_t const* domain,
@@ -355,7 +357,7 @@ OS_ConfigServiceServer_domainGetName(
     OS_ConfigServiceLibrary_domainGetName(domain, domainName);
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_domainCreateParameterEnumerator(
     OS_ConfigServiceHandle_t handle,
@@ -384,7 +386,7 @@ OS_ConfigServiceServer_domainCreateParameterEnumerator(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_domainGetElement(
     OS_ConfigServiceHandle_t handle,
@@ -413,7 +415,7 @@ OS_ConfigServiceServer_domainGetElement(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 void
 OS_ConfigServiceServer_parameterGetName(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -422,7 +424,7 @@ OS_ConfigServiceServer_parameterGetName(
     OS_ConfigServiceLibrary_parameterGetName(parameter, parameterName);
 }
 
-
+//------------------------------------------------------------------------------
 void
 OS_ConfigServiceServer_parameterGetType(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -431,7 +433,7 @@ OS_ConfigServiceServer_parameterGetType(
     OS_ConfigServiceLibrary_parameterGetType(parameter, parameterType);
 }
 
-
+//------------------------------------------------------------------------------
 size_t
 OS_ConfigServiceServer_parameterGetSize(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter)
@@ -439,7 +441,7 @@ OS_ConfigServiceServer_parameterGetSize(
     return OS_ConfigServiceLibrary_parameterGetSize(parameter);
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterGetValue(
     OS_ConfigServiceHandle_t handle,
@@ -471,7 +473,7 @@ OS_ConfigServiceServer_parameterGetValue(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterGetValueAsU32(
     OS_ConfigServiceHandle_t handle,
@@ -498,7 +500,7 @@ OS_ConfigServiceServer_parameterGetValueAsU32(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterGetValueAsU64(
     OS_ConfigServiceHandle_t handle,
@@ -525,7 +527,7 @@ OS_ConfigServiceServer_parameterGetValueAsU64(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterGetValueAsString(
     OS_ConfigServiceHandle_t handle,
@@ -554,7 +556,7 @@ OS_ConfigServiceServer_parameterGetValueAsString(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterGetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
@@ -584,7 +586,7 @@ OS_ConfigServiceServer_parameterGetValueAsBlob(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterSetValue(
     OS_ConfigServiceHandle_t handle,
@@ -616,7 +618,7 @@ OS_ConfigServiceServer_parameterSetValue(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterSetValueAsU32(
     OS_ConfigServiceHandle_t handle,
@@ -643,7 +645,7 @@ OS_ConfigServiceServer_parameterSetValueAsU32(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterSetValueAsU64(
     OS_ConfigServiceHandle_t handle,
@@ -670,7 +672,7 @@ OS_ConfigServiceServer_parameterSetValueAsU64(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterSetValueAsString(
     OS_ConfigServiceHandle_t handle,
@@ -702,7 +704,7 @@ OS_ConfigServiceServer_parameterSetValueAsString(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterSetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
@@ -734,7 +736,7 @@ OS_ConfigServiceServer_parameterSetValueAsBlob(
     return result;
 }
 
-
+//------------------------------------------------------------------------------
 seos_err_t
 OS_ConfigServiceServer_parameterGetValueFromDomainName(
     OS_ConfigServiceHandle_t handle,

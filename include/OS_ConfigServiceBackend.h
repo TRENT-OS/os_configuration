@@ -21,7 +21,7 @@
 
 #include "seos_fs_datatypes.h"
 #include "seos_pm_api.h"
-#include "seos_fs_api.h"
+#include "OS_FilesystemApi.h"
 
 #endif // OS_CONFIG_SERVICE_BACKEND_FILESYSTEM
 

@@ -20,7 +20,7 @@
 #if defined(OS_CONFIG_SERVICE_BACKEND_FILESYSTEM)
 
 #include "seos_fs_datatypes.h"
-#include "seos_pm.h"
+#include "seos_pm_api.h"
 #include "seos_fs.h"
 
 #endif // OS_CONFIG_SERVICE_BACKEND_FILESYSTEM

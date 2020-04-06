@@ -35,8 +35,8 @@ seos_err_t OS_ConfigServiceBackend_writeToFile(
     seos_err_t file_stat = SEOS_SUCCESS;
 
     // Open file
-    fhandle = OS_FilesystemApi_openFile(phandle, name, FA_WRITE);
-    if (!OS_FilesystemApi_validateFileHandle(fhandle))
+    fhandle = OS_Filesystem_openFile(phandle, name, FA_WRITE);
+    if (!OS_Filesystem_validateFileHandle(fhandle))
     {
         return SEOS_ERROR_GENERIC;
     }
@@ -46,7 +46,7 @@ seos_err_t OS_ConfigServiceBackend_writeToFile(
     Debug_LOG_DEBUG("file_write length:%d\n", length);
 
     // Call filesystem API function to write into a file
-    file_stat = OS_FilesystemApi_writeFile(fhandle, (long)offset, (long)length, buffer);
+    file_stat = OS_Filesystem_writeFile(fhandle, (long)offset, (long)length, buffer);
     Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
@@ -54,7 +54,7 @@ seos_err_t OS_ConfigServiceBackend_writeToFile(
     }
 
     // Close this file
-    file_stat = OS_FilesystemApi_closeFile(fhandle);
+    file_stat = OS_Filesystem_closeFile(fhandle);
     Debug_LOG_DEBUG("file_close:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
@@ -77,8 +77,8 @@ seos_err_t OS_ConfigServiceBackend_readFromFile(
     seos_err_t file_stat = SEOS_SUCCESS;
 
     // Open file
-    fhandle = OS_FilesystemApi_openFile(phandle, name, FA_READ);
-    if (!OS_FilesystemApi_validateFileHandle(fhandle))
+    fhandle = OS_Filesystem_openFile(phandle, name, FA_READ);
+    if (!OS_Filesystem_validateFileHandle(fhandle))
     {
         return SEOS_ERROR_GENERIC;
     }
@@ -88,7 +88,7 @@ seos_err_t OS_ConfigServiceBackend_readFromFile(
     Debug_LOG_DEBUG("file_read length:%d\n", length);
 
     // Call filesystem API function to write into a file
-    file_stat = OS_FilesystemApi_readFile(fhandle, (long)offset, (long)length, buffer);
+    file_stat = OS_Filesystem_readFile(fhandle, (long)offset, (long)length, buffer);
     Debug_LOG_DEBUG("file_read:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
@@ -96,7 +96,7 @@ seos_err_t OS_ConfigServiceBackend_readFromFile(
     }
 
     // Close this file
-    file_stat = OS_FilesystemApi_closeFile(fhandle);
+    file_stat = OS_Filesystem_closeFile(fhandle);
     Debug_LOG_DEBUG("file_close:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
@@ -119,8 +119,8 @@ seos_err_t OS_ConfigServiceBackend_createFile(
     seos_err_t file_stat = SEOS_SUCCESS;
 
     // Open file
-    fhandle = OS_FilesystemApi_openFile(phandle, name, FA_CREATE_ALWAYS | FA_WRITE);
-    if (!OS_FilesystemApi_validateFileHandle(fhandle))
+    fhandle = OS_Filesystem_openFile(phandle, name, FA_CREATE_ALWAYS | FA_WRITE);
+    if (!OS_Filesystem_validateFileHandle(fhandle))
     {
         return SEOS_ERROR_GENERIC;
     }
@@ -137,7 +137,7 @@ seos_err_t OS_ConfigServiceBackend_createFile(
 
     for (unsigned int k = 0; k < numberOfBlocks; ++k)
     {
-        file_stat = OS_FilesystemApi_writeFile(fhandle, (long)fileSize, (long)BLOCK_SIZE, buf);
+        file_stat = OS_Filesystem_writeFile(fhandle, (long)fileSize, (long)BLOCK_SIZE, buf);
         Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
         if (file_stat > 0)
         {
@@ -147,7 +147,7 @@ seos_err_t OS_ConfigServiceBackend_createFile(
         fileSize += BLOCK_SIZE;
     }
 
-    file_stat = OS_FilesystemApi_writeFile(fhandle, (long)fileSize, (long)sizeOfLastBlock, buf);
+    file_stat = OS_Filesystem_writeFile(fhandle, (long)fileSize, (long)sizeOfLastBlock, buf);
     Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
@@ -155,7 +155,7 @@ seos_err_t OS_ConfigServiceBackend_createFile(
     }
 
     // Close this file
-    file_stat = OS_FilesystemApi_closeFile(fhandle);
+    file_stat = OS_Filesystem_closeFile(fhandle);
     Debug_LOG_DEBUG("file_close:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {

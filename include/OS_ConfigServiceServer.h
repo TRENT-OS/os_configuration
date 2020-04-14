@@ -12,7 +12,7 @@
  */
 
 #pragma once
-
+#if defined (OS_CONFIG_CAMKES_SERVER)
 /* Includes ------------------------------------------------------------------*/
 #include "camkes.h"
 
@@ -197,4 +197,5 @@ OS_ConfigServiceServer_parameterGetValueFromDomainName(
     size_t bufferLength,
     size_t* bytesCopied);
 
+#endif
 /** @} */

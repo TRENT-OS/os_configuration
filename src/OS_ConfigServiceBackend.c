@@ -271,7 +271,7 @@ OS_ConfigServiceBackend_initializeFileBackend(
 
     Debug_LOG_DEBUG("header of file backend read ok\n");
     Debug_LOG_DEBUG("number of records: %u\n", backendFsLayout.numberOfRecords);
-    Debug_LOG_DEBUG("size of records: %d\n", backendFsLayout.sizeOfRecord);
+    Debug_LOG_DEBUG("size of records: %zu\n", backendFsLayout.sizeOfRecord);
 
     instance->backendType = OS_CONFIG_BACKEND_BACKEND_TYPE_FS;
 
@@ -493,7 +493,7 @@ OS_ConfigServiceBackend_writeRecord(
     if (bufLen != instance->sizeOfRecord)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        Debug_LOG_DEBUG("Error: bufLen: %d - instance->sizeOfRecord: %d\n", bufLen,
+        Debug_LOG_DEBUG("Error: bufLen: %zu - instance->sizeOfRecord: %zu\n", bufLen,
                         instance->sizeOfRecord);
         return SEOS_ERROR_INVALID_PARAMETER;
     }

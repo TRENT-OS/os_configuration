@@ -12,7 +12,7 @@
  */
 
 #pragma once
-#if defined (OS_CONFIG_CAMKES_SERVER)
+#if defined (OS_CONFIG_SERVICE_CAMKES_SERVER)
 /* Includes ------------------------------------------------------------------*/
 #include "camkes.h"
 

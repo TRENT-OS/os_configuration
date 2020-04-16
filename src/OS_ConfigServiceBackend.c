@@ -18,7 +18,7 @@
 typedef struct
 {
     unsigned int  numberOfRecords;
-    size_t        sizeOfRecord;
+    uint64_t        sizeOfRecord;
 }
 OS_ConfigServiceBackend_BackendFsLayout_t;
 
@@ -225,7 +225,7 @@ OS_ConfigServiceBackend_createFileBackend(
     OS_ConfigServiceBackend_FileName_t  name,
     hPartition_t                phandle,
     unsigned int                numberOfRecords,
-    size_t                     sizeOfRecord)
+    uint64_t                     sizeOfRecord)
 {
     size_t fileSize = sizeof(OS_ConfigServiceBackend_BackendFsLayout_t) +
                       numberOfRecords *
@@ -271,7 +271,7 @@ OS_ConfigServiceBackend_initializeFileBackend(
 
     Debug_LOG_DEBUG("header of file backend read ok\n");
     Debug_LOG_DEBUG("number of records: %u\n", backendFsLayout.numberOfRecords);
-    Debug_LOG_DEBUG("size of records: %zu\n", backendFsLayout.sizeOfRecord);
+    Debug_LOG_DEBUG("size of records: %llu", (long long)backendFsLayout.sizeOfRecord);
 
     instance->backendType = OS_CONFIG_BACKEND_BACKEND_TYPE_FS;
 

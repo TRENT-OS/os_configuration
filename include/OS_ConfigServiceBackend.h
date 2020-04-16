@@ -97,7 +97,7 @@ OS_ConfigServiceBackend_createFileBackend(
     OS_ConfigServiceBackend_FileName_t name,
     hPartition_t phandle,
     unsigned int numberOfRecords,
-    size_t sizeOfRecord);
+    uint64_t sizeOfRecord);
 
 // Initialize the given backend object with the backend layout retrieved from
 // the given file.

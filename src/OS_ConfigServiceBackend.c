@@ -15,10 +15,12 @@
 
 #if defined(OS_CONFIG_SERVICE_BACKEND_FILESYSTEM)
 
+// we have to use exactly defined types here, so the layout of the data
+// structure is well defined on 32-bit and 64-bit systems.
 typedef struct
 {
-    unsigned int  numberOfRecords;
-    size_t        sizeOfRecord;
+    uint32_t  numberOfRecords;
+    uint64_t  sizeOfRecord;
 }
 OS_ConfigServiceBackend_BackendFsLayout_t;
 
@@ -271,7 +273,7 @@ OS_ConfigServiceBackend_initializeFileBackend(
 
     Debug_LOG_DEBUG("header of file backend read ok\n");
     Debug_LOG_DEBUG("number of records: %u\n", backendFsLayout.numberOfRecords);
-    Debug_LOG_DEBUG("size of records: %d\n", backendFsLayout.sizeOfRecord);
+    Debug_LOG_DEBUG("size of records: %" PRIu64"\n", backendFsLayout.sizeOfRecord);
 
     instance->backendType = OS_CONFIG_BACKEND_BACKEND_TYPE_FS;
 

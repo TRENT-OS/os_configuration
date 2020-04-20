@@ -493,8 +493,8 @@ OS_ConfigServiceBackend_writeRecord(
     if (bufLen != instance->sizeOfRecord)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        Debug_LOG_DEBUG("Error: bufLen: %d - instance->sizeOfRecord: %d\n", bufLen,
-                        instance->sizeOfRecord);
+        Debug_LOG_DEBUG("Error: bufLen: %zu - instance->sizeOfRecord: %zu\n",
+                        bufLen, instance->sizeOfRecord);
         return SEOS_ERROR_INVALID_PARAMETER;
     }
 

@@ -48,7 +48,11 @@ seos_err_t OS_ConfigServiceBackend_writeToFile(
     Debug_LOG_DEBUG("file_write length:%d\n", length);
 
     // Call filesystem API function to write into a file
-    file_stat = OS_Filesystem_writeFile(fhandle, (long)offset, (long)length, buffer);
+    file_stat = OS_Filesystem_writeFile(
+                    fhandle,
+                    (long)offset,
+                    (long)length,
+                    buffer);
     Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
@@ -139,7 +143,11 @@ seos_err_t OS_ConfigServiceBackend_createFile(
 
     for (unsigned int k = 0; k < numberOfBlocks; ++k)
     {
-        file_stat = OS_Filesystem_writeFile(fhandle, (long)fileSize, (long)BLOCK_SIZE, buf);
+        file_stat = OS_Filesystem_writeFile(
+                        fhandle,
+                        (long)fileSize,
+                        (long)BLOCK_SIZE,
+                        buf);
         Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
         if (file_stat > 0)
         {
@@ -149,7 +157,11 @@ seos_err_t OS_ConfigServiceBackend_createFile(
         fileSize += BLOCK_SIZE;
     }
 
-    file_stat = OS_Filesystem_writeFile(fhandle, (long)fileSize, (long)sizeOfLastBlock, buf);
+    file_stat = OS_Filesystem_writeFile(
+                    fhandle,
+                    (long)fileSize,
+                    (long)sizeOfLastBlock,
+                    buf);
     Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {

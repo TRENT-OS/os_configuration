@@ -13,6 +13,8 @@
 
 #pragma once
 
+#include <stdint.h>
+
 /* Exported types/defines/enums ----------------------------------------------*/
 
 // Distinguishes between server and local handles.
@@ -56,7 +58,7 @@ OS_ConfigServiceHandle_HandleKind_t
 OS_ConfigServiceHandle_getHandleKind(
     OS_ConfigServiceHandle_t handle);
 
-unsigned int
+intptr_t
 OS_ConfigServiceHandle_getRemoteInstance(
     OS_ConfigServiceHandle_t handle);
 

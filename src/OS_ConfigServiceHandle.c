@@ -34,7 +34,7 @@ OS_ConfigServiceHandle_getHandleKind(
 }
 
 //------------------------------------------------------------------------------
-unsigned int
+intptr_t
 OS_ConfigServiceHandle_getRemoteInstance(
     OS_ConfigServiceHandle_t handle)
 {

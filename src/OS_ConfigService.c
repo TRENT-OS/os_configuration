@@ -34,7 +34,7 @@ OS_ConfigService_getInstances(void)
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_createHandle(
     OS_ConfigServiceHandle_HandleKind_t handleKind,
     unsigned int id,
@@ -77,7 +77,7 @@ OS_ConfigService_createHandle(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_domainEnumeratorInit(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
@@ -98,7 +98,7 @@ OS_ConfigService_domainEnumeratorInit(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_domainEnumeratorClose(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
@@ -119,7 +119,7 @@ OS_ConfigService_domainEnumeratorClose(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_domainEnumeratorReset(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
@@ -140,7 +140,7 @@ OS_ConfigService_domainEnumeratorReset(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_domainEnumeratorIncrement(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
@@ -161,7 +161,7 @@ OS_ConfigService_domainEnumeratorIncrement(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_domainEnumeratorGetElement(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t const* enumerator,
@@ -189,7 +189,7 @@ OS_ConfigService_domainEnumeratorGetElement(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterEnumeratorInit(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t const* domainEnumerator,
@@ -217,7 +217,7 @@ OS_ConfigService_parameterEnumeratorInit(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterEnumeratorClose(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
@@ -238,7 +238,7 @@ OS_ConfigService_parameterEnumeratorClose(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterEnumeratorReset(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
@@ -259,7 +259,7 @@ OS_ConfigService_parameterEnumeratorReset(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterEnumeratorIncrement(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
@@ -284,7 +284,7 @@ OS_ConfigService_parameterEnumeratorIncrement(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterEnumeratorGetElement(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
@@ -321,7 +321,7 @@ OS_ConfigService_domainGetName(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_domainCreateParameterEnumerator(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Domain_t const* domain,
@@ -352,7 +352,7 @@ OS_ConfigService_domainCreateParameterEnumerator(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_domainGetElement(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Domain_t const* domain,
@@ -409,7 +409,7 @@ OS_ConfigService_parameterGetSize(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterGetValue(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -456,7 +456,7 @@ OS_ConfigService_parameterGetValue(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterGetValueAsU32(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -484,7 +484,7 @@ OS_ConfigService_parameterGetValueAsU32(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterGetValueAsU64(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -512,7 +512,7 @@ OS_ConfigService_parameterGetValueAsU64(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterGetValueAsString(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -556,7 +556,7 @@ OS_ConfigService_parameterGetValueAsString(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterGetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -600,7 +600,7 @@ OS_ConfigService_parameterGetValueAsBlob(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterSetValue(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
@@ -639,7 +639,7 @@ OS_ConfigService_parameterSetValue(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterSetValueAsU32(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
@@ -667,7 +667,7 @@ OS_ConfigService_parameterSetValueAsU32(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterSetValueAsU64(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
@@ -695,7 +695,7 @@ OS_ConfigService_parameterSetValueAsU64(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterSetValueAsString(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
@@ -734,7 +734,7 @@ OS_ConfigService_parameterSetValueAsString(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterSetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
@@ -773,7 +773,7 @@ OS_ConfigService_parameterSetValueAsBlob(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigService_parameterGetValueFromDomainName(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainName_t const* domainName,

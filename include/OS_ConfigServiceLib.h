@@ -54,13 +54,13 @@ OS_ConfigServiceLib_domainEnumeratorReset(
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator);
 
 // Result: 0 if enumerator could be increased. Enumerator is not changed if it could not be increased.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_domainEnumeratorIncrement(
     OS_ConfigServiceLib_t const* instance,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator);
 
 // Note: May fail because of failed data retrieval.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_domainEnumeratorGetElement(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_DomainEnumerator_t const* enumerator,
@@ -68,7 +68,7 @@ OS_ConfigServiceLib_domainEnumeratorGetElement(
 
 // On success: enumerator points to the first parameter of the given domain.
 // Success indication is required: there may not be a parameter for the given domain, failed data retrieval, ...
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterEnumeratorInit(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_DomainEnumerator_t const* domainEnumerator,
@@ -80,19 +80,19 @@ OS_ConfigServiceLib_parameterEnumeratorClose(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator);
 
 // Set the enumerator to the first paramter of the given domain. May fail if there is no parameter in the given domain.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterEnumeratorReset(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator);
 
 // Result: 0 if enumerator could be increased.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterEnumeratorIncrement(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator);
 
 // Note: May fail because of failed data retrieval. Assume parameter enumerator is valid.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterEnumeratorGetElement(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
@@ -105,7 +105,7 @@ OS_ConfigServiceLib_domainGetName(
     OS_ConfigServiceLibTypes_DomainName_t* domainName);
 
 // Create a parameter enumerator pointing to the parameter with the given name in the given domain.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_domainCreateParameterEnumerator(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_Domain_t const* domain,
@@ -113,7 +113,7 @@ OS_ConfigServiceLib_domainCreateParameterEnumerator(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* parameterEnumerator);
 
 // Find parameter by name in given domain.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_domainGetElement(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_Domain_t const* domain,
@@ -138,7 +138,7 @@ OS_ConfigServiceLib_parameterGetSize(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter);
 
 // Get the parameter value - raw format.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterGetValue(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -147,21 +147,21 @@ OS_ConfigServiceLib_parameterGetValue(
     size_t* bytesCopied);
 
 // Get the parameter value - specific format.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterGetValueAsU32(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     uint32_t* value);
 
 // Get the parameter value - specific format.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterGetValueAsU64(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     uint64_t* value);
 
 // Get the parameter value - specific format.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterGetValueAsString(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -169,7 +169,7 @@ OS_ConfigServiceLib_parameterGetValueAsString(
     size_t bufferLength);
 
 // Get the parameter value - specific format.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterGetValueAsBlob(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -177,7 +177,7 @@ OS_ConfigServiceLib_parameterGetValueAsBlob(
     size_t bufferLength);
 
 // Set the parameter value - raw format.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterSetValue(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
@@ -186,21 +186,21 @@ OS_ConfigServiceLib_parameterSetValue(
     size_t bufferLength);
 
 // Set the parameter value - specific format.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterSetValueAsU32(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     uint32_t value);
 
 // Set the parameter value - specific format.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterSetValueAsU64(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     uint64_t value);
 
 // Set the parameter value - specific format.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterSetValueAsString(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
@@ -209,7 +209,7 @@ OS_ConfigServiceLib_parameterSetValueAsString(
     size_t bufferLength);
 
 // Set the parameter value - specific format.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterSetValueAsBlob(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
@@ -217,7 +217,7 @@ OS_ConfigServiceLib_parameterSetValueAsBlob(
     void const* buffer,
     size_t bufferLength);
 
-seos_err_t
+OS_Error_t
 OS_ConfigServiceLib_parameterGetValueFromDomainName(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_DomainName_t const* domainName,

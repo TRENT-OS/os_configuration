@@ -20,7 +20,7 @@ static OS_ConfigServiceServer_t server;
 
 /* Exported functions --------------------------------------------------------*/
 static
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(
     OS_ConfigServiceHandle_t remoteHandle,
     OS_ConfigServiceHandle_t* localHandle)
@@ -59,13 +59,13 @@ OS_ConfigServiceServer_getInstances(void)
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_createHandle(
     OS_ConfigServiceHandle_HandleKind_t handleKind,
     unsigned int id,
     OS_ConfigServiceHandle_t* handle)
 {
-    seos_err_t result;
+    OS_Error_t result;
 
     if (handleKind == OS_CONFIG_HANDLE_KIND_RPC)
     {
@@ -95,13 +95,13 @@ OS_ConfigServiceServer_createHandle(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_domainEnumeratorInit(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -120,13 +120,13 @@ OS_ConfigServiceServer_domainEnumeratorInit(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_domainEnumeratorClose(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -145,13 +145,13 @@ OS_ConfigServiceServer_domainEnumeratorClose(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_domainEnumeratorReset(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -170,13 +170,13 @@ OS_ConfigServiceServer_domainEnumeratorReset(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_domainEnumeratorIncrement(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -195,14 +195,14 @@ OS_ConfigServiceServer_domainEnumeratorIncrement(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_domainEnumeratorGetElement(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_Domain_t* domain)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -222,14 +222,14 @@ OS_ConfigServiceServer_domainEnumeratorGetElement(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterEnumeratorInit(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t const* domainEnumerator,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -249,13 +249,13 @@ OS_ConfigServiceServer_parameterEnumeratorInit(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterEnumeratorClose(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -274,13 +274,13 @@ OS_ConfigServiceServer_parameterEnumeratorClose(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterEnumeratorReset(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -299,13 +299,13 @@ OS_ConfigServiceServer_parameterEnumeratorReset(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterEnumeratorIncrement(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -324,14 +324,14 @@ OS_ConfigServiceServer_parameterEnumeratorIncrement(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterEnumeratorGetElement(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_Parameter_t* parameter)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -358,7 +358,7 @@ OS_ConfigServiceServer_domainGetName(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_domainCreateParameterEnumerator(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Domain_t const* domain,
@@ -366,7 +366,7 @@ OS_ConfigServiceServer_domainCreateParameterEnumerator(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* parameterEnumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -387,7 +387,7 @@ OS_ConfigServiceServer_domainCreateParameterEnumerator(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_domainGetElement(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Domain_t const* domain,
@@ -395,7 +395,7 @@ OS_ConfigServiceServer_domainGetElement(
     OS_ConfigServiceLibTypes_Parameter_t* parameter)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -442,7 +442,7 @@ OS_ConfigServiceServer_parameterGetSize(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterGetValue(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -451,7 +451,7 @@ OS_ConfigServiceServer_parameterGetValue(
     size_t* bytesCopied)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -474,14 +474,14 @@ OS_ConfigServiceServer_parameterGetValue(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsU32(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     uint32_t* value)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -501,14 +501,14 @@ OS_ConfigServiceServer_parameterGetValueAsU32(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsU64(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     uint64_t* value)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -528,7 +528,7 @@ OS_ConfigServiceServer_parameterGetValueAsU64(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsString(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -536,7 +536,7 @@ OS_ConfigServiceServer_parameterGetValueAsString(
     size_t bufferLength)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -557,7 +557,7 @@ OS_ConfigServiceServer_parameterGetValueAsString(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
@@ -565,7 +565,7 @@ OS_ConfigServiceServer_parameterGetValueAsBlob(
     size_t bufferLength)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -587,7 +587,7 @@ OS_ConfigServiceServer_parameterGetValueAsBlob(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterSetValue(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
@@ -596,7 +596,7 @@ OS_ConfigServiceServer_parameterSetValue(
     size_t bufferLength)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -619,14 +619,14 @@ OS_ConfigServiceServer_parameterSetValue(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterSetValueAsU32(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     uint32_t value)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -646,14 +646,14 @@ OS_ConfigServiceServer_parameterSetValueAsU32(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterSetValueAsU64(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     uint64_t value)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -673,7 +673,7 @@ OS_ConfigServiceServer_parameterSetValueAsU64(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterSetValueAsString(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
@@ -682,7 +682,7 @@ OS_ConfigServiceServer_parameterSetValueAsString(
     size_t bufferLength)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -705,7 +705,7 @@ OS_ConfigServiceServer_parameterSetValueAsString(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterSetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
@@ -714,7 +714,7 @@ OS_ConfigServiceServer_parameterSetValueAsBlob(
     size_t bufferLength)
 {
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t result;
+    OS_Error_t result;
 
     if (SEOS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
@@ -737,7 +737,7 @@ OS_ConfigServiceServer_parameterSetValueAsBlob(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceServer_parameterGetValueFromDomainName(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainName_t const* domainName,
@@ -749,7 +749,7 @@ OS_ConfigServiceServer_parameterGetValueFromDomainName(
 {
 
     OS_ConfigServiceHandle_t localHandle;
-    seos_err_t ret = OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(
+    OS_Error_t ret = OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(
                          handle,
                          &localHandle);
     if (SEOS_SUCCESS != ret)

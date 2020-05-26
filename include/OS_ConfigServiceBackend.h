@@ -15,7 +15,7 @@
 #pragma once
 
 /* Includes ------------------------------------------------------------------*/
-#include "SeosError.h"
+#include "OS_Error.h"
 
 #if defined(OS_CONFIG_SERVICE_BACKEND_FILESYSTEM)
 
@@ -92,7 +92,7 @@ OS_ConfigServiceBackend_t;
 
 // Management function: creates the given file to contain the specified backend
 // layout.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceBackend_createFileBackend(
     OS_ConfigServiceBackend_FileName_t name,
     hPartition_t phandle,
@@ -101,7 +101,7 @@ OS_ConfigServiceBackend_createFileBackend(
 
 // Initialize the given backend object with the backend layout retrieved from
 // the given file.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceBackend_initializeFileBackend(
     OS_ConfigServiceBackend_t* instance,
     OS_ConfigServiceBackend_FileName_t name,
@@ -118,7 +118,7 @@ OS_ConfigServiceBackend_initializeFileBackend(
 
 // Management function: initializes the given buffer to contain the specified
 // backend layout.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceBackend_createMemBackend(
     void* buffer,
     size_t bufferSize,
@@ -128,7 +128,7 @@ OS_ConfigServiceBackend_createMemBackend(
 
 // Management function: initializes the given buffer to contain the specified
 // backend layout.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceBackend_createMemBackendAutoSized(
     void* buffer,
     size_t bufferSize,
@@ -137,7 +137,7 @@ OS_ConfigServiceBackend_createMemBackendAutoSized(
 
 // Initialize the given backend object with the backend layout retrieved from
 // the given buffer.
-seos_err_t
+OS_Error_t
 OS_ConfigServiceBackend_initializeMemBackend(
     OS_ConfigServiceBackend_t* instance,
     void* buffer,
@@ -158,14 +158,14 @@ size_t
 OS_ConfigServiceBackend_getSizeOfRecords(
     OS_ConfigServiceBackend_t const* instance);
 
-seos_err_t
+OS_Error_t
 OS_ConfigServiceBackend_readRecord(
     OS_ConfigServiceBackend_t* instance,
     unsigned int recordIndex,
     void* buf,
     size_t bufLen);
 
-seos_err_t
+OS_Error_t
 OS_ConfigServiceBackend_writeRecord(
     OS_ConfigServiceBackend_t* instance,
     unsigned int recordIndex,

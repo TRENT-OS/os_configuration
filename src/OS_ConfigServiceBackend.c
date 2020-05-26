@@ -4,7 +4,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "LibDebug/Debug.h"
-#include "SeosError.h"
+#include "OS_Error.h"
 #include "OS_ConfigServiceBackend.h"
 
 #include <string.h>
@@ -26,7 +26,7 @@ OS_ConfigServiceBackend_BackendFsLayout_t;
 
 /* Exported functions --------------------------------------------------------*/
 static
-seos_err_t OS_ConfigServiceBackend_writeToFile(
+OS_Error_t OS_ConfigServiceBackend_writeToFile(
     hPartition_t  phandle,
     const char*   name,
     unsigned int  offset,
@@ -34,7 +34,7 @@ seos_err_t OS_ConfigServiceBackend_writeToFile(
     int           length)
 {
     hFile_t fhandle;
-    seos_err_t file_stat = SEOS_SUCCESS;
+    OS_Error_t file_stat = SEOS_SUCCESS;
 
     // Open file
     fhandle = OS_Filesystem_openFile(phandle, name, FA_WRITE);
@@ -72,7 +72,7 @@ seos_err_t OS_ConfigServiceBackend_writeToFile(
 
 //------------------------------------------------------------------------------
 static
-seos_err_t OS_ConfigServiceBackend_readFromFile(
+OS_Error_t OS_ConfigServiceBackend_readFromFile(
     hPartition_t  phandle,
     const char*   name,
     unsigned int  offset,
@@ -80,7 +80,7 @@ seos_err_t OS_ConfigServiceBackend_readFromFile(
     int           length)
 {
     hFile_t fhandle;
-    seos_err_t file_stat = SEOS_SUCCESS;
+    OS_Error_t file_stat = SEOS_SUCCESS;
 
     // Open file
     fhandle = OS_Filesystem_openFile(phandle, name, FA_READ);
@@ -114,7 +114,7 @@ seos_err_t OS_ConfigServiceBackend_readFromFile(
 
 //------------------------------------------------------------------------------
 static
-seos_err_t OS_ConfigServiceBackend_createFile(
+OS_Error_t OS_ConfigServiceBackend_createFile(
     hPartition_t  phandle,
     const char*   name,
     int           length)
@@ -122,7 +122,7 @@ seos_err_t OS_ConfigServiceBackend_createFile(
     enum {BLOCK_SIZE = 256};
     static char buf[256];
     hFile_t fhandle;
-    seos_err_t file_stat = SEOS_SUCCESS;
+    OS_Error_t file_stat = SEOS_SUCCESS;
 
     // Open file
     fhandle = OS_Filesystem_openFile(phandle, name, FA_CREATE_ALWAYS | FA_WRITE);
@@ -180,7 +180,7 @@ seos_err_t OS_ConfigServiceBackend_createFile(
 }
 
 //------------------------------------------------------------------------------
-static seos_err_t
+static OS_Error_t
 writeRecord_backend_filesystem(
     OS_ConfigServiceBackend_t*   instance,
     unsigned int         recordIndex,
@@ -191,7 +191,7 @@ writeRecord_backend_filesystem(
                           recordIndex *
                           instance->sizeOfRecord;
 
-    seos_err_t writeResult = OS_ConfigServiceBackend_writeToFile(
+    OS_Error_t writeResult = OS_ConfigServiceBackend_writeToFile(
                                  instance->backend.fileSystem.phandle,
                                  instance->backend.fileSystem.name.buffer,
                                  offset,
@@ -207,7 +207,7 @@ writeRecord_backend_filesystem(
 }
 
 //------------------------------------------------------------------------------
-static seos_err_t
+static OS_Error_t
 readRecord_backend_filesystem(
     OS_ConfigServiceBackend_t*   instance,
     unsigned int         recordIndex,
@@ -218,7 +218,7 @@ readRecord_backend_filesystem(
                           recordIndex *
                           instance->sizeOfRecord;
 
-    seos_err_t readResult = OS_ConfigServiceBackend_readFromFile(
+    OS_Error_t readResult = OS_ConfigServiceBackend_readFromFile(
                                 instance->backend.fileSystem.phandle,
                                 instance->backend.fileSystem.name.buffer,
                                 offset,
@@ -234,7 +234,7 @@ readRecord_backend_filesystem(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceBackend_createFileBackend(
     OS_ConfigServiceBackend_FileName_t  name,
     hPartition_t                phandle,
@@ -249,7 +249,7 @@ OS_ConfigServiceBackend_createFileBackend(
     backendFsLayout.numberOfRecords = numberOfRecords;
     backendFsLayout.sizeOfRecord = sizeOfRecord;
 
-    seos_err_t result = OS_ConfigServiceBackend_createFile(phandle, name.buffer,
+    OS_Error_t result = OS_ConfigServiceBackend_createFile(phandle, name.buffer,
                                                            fileSize);
     if (SEOS_SUCCESS != result)
     {
@@ -265,7 +265,7 @@ OS_ConfigServiceBackend_createFileBackend(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceBackend_initializeFileBackend(
     OS_ConfigServiceBackend_t*          instance,
     OS_ConfigServiceBackend_FileName_t  name,
@@ -317,7 +317,7 @@ typedef struct
 OS_ConfigServiceBackend_BackendMemLayout_t;
 
 /* Exported functions --------------------------------------------------------*/
-static seos_err_t
+static OS_Error_t
 writeRecord_backend_memory(
     OS_ConfigServiceBackend_t*   instance,
     unsigned int         recordIndex,
@@ -333,7 +333,7 @@ writeRecord_backend_memory(
 }
 
 //------------------------------------------------------------------------------
-static seos_err_t
+static OS_Error_t
 readRecord_backend_memory(
     OS_ConfigServiceBackend_t*   instance,
     unsigned int         recordIndex,
@@ -349,7 +349,7 @@ readRecord_backend_memory(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceBackend_createMemBackend(
     void*         buffer,
     size_t        bufferSize,
@@ -376,7 +376,7 @@ OS_ConfigServiceBackend_createMemBackend(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceBackend_createMemBackendAutoSized(
     void*   buffer,
     size_t  bufferSize,
@@ -392,7 +392,7 @@ OS_ConfigServiceBackend_createMemBackendAutoSized(
 }
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceBackend_initializeMemBackend(
     OS_ConfigServiceBackend_t*   instance,
     void*                buffer,
@@ -437,7 +437,7 @@ OS_ConfigServiceBackend_getSizeOfRecords(
 
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceBackend_readRecord(
     OS_ConfigServiceBackend_t*   instance,
     unsigned int         recordIndex,
@@ -491,7 +491,7 @@ OS_ConfigServiceBackend_readRecord(
 
 
 //------------------------------------------------------------------------------
-seos_err_t
+OS_Error_t
 OS_ConfigServiceBackend_writeRecord(
     OS_ConfigServiceBackend_t*   instance,
     unsigned int         recordIndex,

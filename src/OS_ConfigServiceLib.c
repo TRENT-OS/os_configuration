@@ -23,12 +23,12 @@ OS_ConfigServiceLib_enumeratorRawIncrement(
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         Debug_LOG_DEBUG("Error: index: %u - maxIndex: %u\n", *index, maxIndex);
-        result = SEOS_ERROR_GENERIC;
+        result = OS_ERROR_GENERIC;
     }
     else
     {
         *index += 1;
-        result = SEOS_SUCCESS;
+        result = OS_SUCCESS;
     }
 
     return result;
@@ -98,27 +98,27 @@ OS_ConfigServiceLib_findParamter(
                   &parameter,
                   sizeof(OS_ConfigServiceLibTypes_Parameter_t));
 
-        if (SEOS_SUCCESS != ret)
+        if (OS_SUCCESS != ret)
         {
             Debug_LOG_ERROR("OS_ConfigServiceBackend_readRecord() failed, error %d", ret);
-            return SEOS_ERROR_GENERIC;
+            return OS_ERROR_GENERIC;
         }
 
         if ((parameter.domain.index == searchEnumerator.domainEnumerator.index) &&
             (OS_ConfigServiceLib_ParameterIsVisibleForMe(&parameter)))
         {
             *enumerator = searchEnumerator;
-            return SEOS_SUCCESS;
+            return OS_SUCCESS;
         }
 
         ret = OS_ConfigServiceLib_parameterEnumeratorRawIncrement(
                   instance,
                   &searchEnumerator);
-        if (SEOS_SUCCESS != ret)
+        if (OS_SUCCESS != ret)
         {
             Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorRawIncrement() failed, error %d",
                             ret);
-            return SEOS_ERROR_GENERIC;
+            return OS_ERROR_GENERIC;
         }
     }
 }
@@ -135,7 +135,7 @@ OS_ConfigServiceLib_advanceParameterEnumerator(
                                 instance,
                                 searchEnumerator);
 
-    if (SEOS_SUCCESS == findResult)
+    if (OS_SUCCESS == findResult)
     {
         *resultEnumerator = *searchEnumerator;
     }
@@ -159,11 +159,11 @@ OS_ConfigServiceLib_compareParameterName(
         if (a->name[k] != b->name[k])
         {
             //Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-            return SEOS_ERROR_GENERIC;
+            return OS_ERROR_GENERIC;
         }
     }
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
@@ -178,11 +178,11 @@ OS_ConfigServiceLib_compareDomainName(
         if (a->name[k] != b->name[k])
         {
             Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-            return SEOS_ERROR_GENERIC;
+            return OS_ERROR_GENERIC;
         }
     }
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
@@ -201,7 +201,7 @@ OS_ConfigServiceLib_fetchVariableLengthString(
     if (stringSize > bufferLength)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     OS_Error_t fetchResult = OS_ConfigServiceBackend_readRecord(
@@ -210,7 +210,7 @@ OS_ConfigServiceLib_fetchVariableLengthString(
                                  tmpBuf,
                                  sizeof(tmpBuf));
 
-    if (SEOS_SUCCESS == fetchResult)
+    if (OS_SUCCESS == fetchResult)
     {
         memcpy(buffer, tmpBuf, stringSize);
     }
@@ -236,7 +236,7 @@ OS_ConfigServiceLib_fetchVariableLengthBlob(
     if (blobSize > bufferLength)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     // We anticipate a maximum size here which should be ok to place on the stack.
@@ -252,10 +252,10 @@ OS_ConfigServiceLib_fetchVariableLengthBlob(
                                      tmpBuf,
                                      sizeof(tmpBuf));
 
-        if (SEOS_SUCCESS != fetchResult)
+        if (OS_SUCCESS != fetchResult)
         {
             Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-            return SEOS_ERROR_GENERIC;
+            return OS_ERROR_GENERIC;
         }
 
         size_t bytesToCopy;
@@ -275,7 +275,7 @@ OS_ConfigServiceLib_fetchVariableLengthBlob(
         index++;
     }
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
@@ -293,7 +293,7 @@ OS_ConfigServiceLib_writeVariableLengthString(
     if (bufferLength > OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     memset(tmpBuf, 0, OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH);
@@ -324,7 +324,7 @@ OS_ConfigServiceLib_writeVariableLengthBlob(
     if (bufferLength > blobCapacity)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     // We anticipate a maximum size here which should be ok to place on the stack.
@@ -352,17 +352,17 @@ OS_ConfigServiceLib_writeVariableLengthBlob(
                                      tmpBuf,
                                      sizeof(tmpBuf));
 
-        if (SEOS_SUCCESS != fetchResult)
+        if (OS_SUCCESS != fetchResult)
         {
             Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-            return SEOS_ERROR_GENERIC;
+            return OS_ERROR_GENERIC;
         }
 
         bytesCopied += bytesToCopy;
         index++;
     }
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
@@ -378,28 +378,28 @@ OS_ConfigServiceLib_Init(
             OS_ConfigServiceLibTypes_Parameter_t))
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 
     if (OS_ConfigServiceBackend_getSizeOfRecords(domainBackend) != sizeof(
             OS_ConfigServiceLibTypes_Domain_t))
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 
     if (OS_ConfigServiceBackend_getSizeOfRecords(stringBackend) !=
         OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 
     if (OS_ConfigServiceBackend_getSizeOfRecords(blobBackend) !=
         OS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_LENGTH)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 
     instance->parameterBackend = *parameterBackend;
@@ -407,7 +407,7 @@ OS_ConfigServiceLib_Init(
     instance->stringBackend = *stringBackend;
     instance->blobBackend = *blobBackend;
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
@@ -462,15 +462,15 @@ OS_ConfigServiceLib_domainEnumeratorGetElement(
                                  domain,
                                  sizeof(OS_ConfigServiceLibTypes_Domain_t));
 
-    if (SEOS_SUCCESS == fetchResult)
+    if (OS_SUCCESS == fetchResult)
     {
         domain->enumerator = *enumerator;
-        return SEOS_SUCCESS;
+        return OS_SUCCESS;
     }
     else
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 }
 
@@ -488,7 +488,7 @@ OS_ConfigServiceLib_parameterEnumeratorInit(
     result = OS_ConfigServiceLib_parameterEnumeratorReset(
                  instance,
                  &initEnumerator);
-    if (SEOS_SUCCESS == result)
+    if (OS_SUCCESS == result)
     {
         *enumerator = initEnumerator;
     }
@@ -521,7 +521,7 @@ OS_ConfigServiceLib_parameterEnumeratorReset(
                  instance,
                  &searchEnumerator,
                  enumerator);
-    if (SEOS_SUCCESS == result)
+    if (OS_SUCCESS == result)
     {
         *enumerator = searchEnumerator;
     }
@@ -538,7 +538,7 @@ OS_Error_t OS_ConfigServiceLib_parameterEnumeratorIncrement(
 {
     OS_ConfigServiceLibTypes_ParameterEnumerator_t searchEnumerator = *enumerator;
 
-    if (SEOS_SUCCESS == OS_ConfigServiceLib_parameterEnumeratorRawIncrement(
+    if (OS_SUCCESS == OS_ConfigServiceLib_parameterEnumeratorRawIncrement(
             instance,
             &searchEnumerator))
     {
@@ -551,7 +551,7 @@ OS_Error_t OS_ConfigServiceLib_parameterEnumeratorIncrement(
     else
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 }
 
@@ -570,15 +570,15 @@ OS_ConfigServiceLib_parameterEnumeratorGetElement(
                                  &retrievedParameter,
                                  sizeof(OS_ConfigServiceLibTypes_Parameter_t));
 
-    if (SEOS_SUCCESS == fetchResult)
+    if (OS_SUCCESS == fetchResult)
     {
         *parameter = retrievedParameter;
-        return SEOS_SUCCESS;
+        return OS_SUCCESS;
     }
     else
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 }
 
@@ -607,10 +607,10 @@ OS_ConfigServiceLib_domainCreateParameterEnumerator(
                             instance,
                             &domain->enumerator,
                             &searchEnumerator);
-    if (SEOS_SUCCESS != result)
+    if (OS_SUCCESS != result)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     for (;;)
@@ -619,26 +619,26 @@ OS_ConfigServiceLib_domainCreateParameterEnumerator(
                      instance,
                      &searchEnumerator,
                      &searchParameter);
-        if (SEOS_SUCCESS != result)
+        if (OS_SUCCESS != result)
         {
             Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-            return SEOS_ERROR_GENERIC;
+            return OS_ERROR_GENERIC;
         }
 
-        if (SEOS_SUCCESS == OS_ConfigServiceLib_compareParameterName(
+        if (OS_SUCCESS == OS_ConfigServiceLib_compareParameterName(
                 parameterName,
                 &searchParameter.parameterName))
         {
             *parameterEnumerator = searchEnumerator;
-            return SEOS_SUCCESS;
+            return OS_SUCCESS;
         }
         result = OS_ConfigServiceLib_parameterEnumeratorIncrement(
                      instance,
                      &searchEnumerator);
-        if (SEOS_SUCCESS != result)
+        if (OS_SUCCESS != result)
         {
             Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-            return SEOS_ERROR_GENERIC;
+            return OS_ERROR_GENERIC;
         }
     } // end for(;;)
 }
@@ -660,25 +660,25 @@ OS_ConfigServiceLib_domainGetElement(
                             parameterName,
                             &parameterEnumerator);
 
-    if (SEOS_SUCCESS != result)
+    if (OS_SUCCESS != result)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     result = OS_ConfigServiceLib_parameterEnumeratorGetElement(
                  instance,
                  &parameterEnumerator,
                  &searchParameter);
-    if (SEOS_SUCCESS == result)
+    if (OS_SUCCESS == result)
     {
         *parameter = searchParameter;
-        return SEOS_SUCCESS;
+        return OS_SUCCESS;
     }
     else
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 }
 
@@ -758,7 +758,7 @@ OS_ConfigServiceLib_parameterGetValue(
                                     parameterSize,
                                     buffer,
                                     bufferLength);
-            *bytesCopied = (result == SEOS_SUCCESS) ? parameterSize : 0;
+            *bytesCopied = (result == OS_SUCCESS) ? parameterSize : 0;
         }
         break;
 
@@ -771,7 +771,7 @@ OS_ConfigServiceLib_parameterGetValue(
                                     parameter->parameterValue.valueBlob.numberOfBlocks,
                                     buffer,
                                     bufferLength);
-            *bytesCopied = (result == SEOS_SUCCESS) ? parameterSize : 0;
+            *bytesCopied = (result == OS_SUCCESS) ? parameterSize : 0;
         }
         break;
 
@@ -790,7 +790,7 @@ OS_ConfigServiceLib_parameterGetValue(
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
     }
 
-    return (bytesCopied > 0) ? SEOS_SUCCESS : SEOS_ERROR_GENERIC;
+    return (bytesCopied > 0) ? OS_SUCCESS : OS_ERROR_GENERIC;
 }
 
 //------------------------------------------------------------------------------
@@ -803,7 +803,7 @@ OS_ConfigServiceLib_parameterGetValueAsU32(
 {
     *value = parameter->parameterValue.valueInteger32;
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
@@ -816,7 +816,7 @@ OS_ConfigServiceLib_parameterGetValueAsU64(
 {
     *value = parameter->parameterValue.valueInteger64;
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
@@ -879,23 +879,23 @@ OS_ConfigServiceLib_parameterSetValue(
                      instance,
                      enumerator,
                      &parameter);
-    if (SEOS_SUCCESS != result)
+    if (OS_SUCCESS != result)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     result = OS_ConfigServiceLib_ParameterIsWriteableForMe(&parameter) ? 0 : -1;
-    if (SEOS_SUCCESS != result)
+    if (OS_SUCCESS != result)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     if (parameterType != parameter.parameterType)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     size_t parameterSize = OS_ConfigServiceLib_parameterGetSize(&parameter);
@@ -907,12 +907,12 @@ OS_ConfigServiceLib_parameterSetValue(
         if (parameterSize == bufferLength)
         {
             memcpy(&parameter.parameterValue, buffer, parameterSize);
-            result = SEOS_SUCCESS;
+            result = OS_SUCCESS;
         }
         else
         {
             Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-            result = SEOS_ERROR_GENERIC;
+            result = OS_ERROR_GENERIC;
         }
         break;
 
@@ -939,11 +939,11 @@ OS_ConfigServiceLib_parameterSetValue(
 
     default:
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        result = SEOS_ERROR_GENERIC;
+        result = OS_ERROR_GENERIC;
         break;
     }
 
-    if (SEOS_SUCCESS == result)
+    if (OS_SUCCESS == result)
     {
         result = OS_ConfigServiceBackend_writeRecord(
                      &instance->parameterBackend,
@@ -954,7 +954,7 @@ OS_ConfigServiceLib_parameterSetValue(
     else
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        result = SEOS_ERROR_GENERIC;
+        result = OS_ERROR_GENERIC;
     }
 
     return result;
@@ -1048,7 +1048,7 @@ find_parameter(
     {
         Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorInit() failed, ret %d",
                         ret);
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     for (;;)
@@ -1061,17 +1061,17 @@ find_parameter(
         {
             Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorGetElement() failed, ret %d",
                             ret);
-            return SEOS_ERROR_GENERIC;
+            return OS_ERROR_GENERIC;
         }
 
         OS_ConfigServiceLibTypes_ParameterName_t parameterNameTmp;
         OS_ConfigServiceLib_parameterGetName(parameter, &parameterNameTmp);
-        if (SEOS_SUCCESS == OS_ConfigServiceLib_compareParameterName(
+        if (OS_SUCCESS == OS_ConfigServiceLib_compareParameterName(
                 &parameterNameTmp,
                 parameterName))
         {
             // enumerator holds the right paramter
-            return SEOS_SUCCESS;
+            return OS_SUCCESS;
         }
 
         ret = OS_ConfigServiceLib_parameterEnumeratorIncrement(
@@ -1081,7 +1081,7 @@ find_parameter(
         {
             Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorIncrement() failed, ret %d",
                             ret);
-            return SEOS_ERROR_GENERIC;
+            return OS_ERROR_GENERIC;
         }
     } // end for(;;)
 }
@@ -1108,17 +1108,17 @@ find_domain(
         {
             Debug_LOG_ERROR("OS_ConfigServiceLib_domainEnumeratorGetElement() failed, ret %d",
                             ret);
-            return SEOS_ERROR_GENERIC;
+            return OS_ERROR_GENERIC;
         }
 
         OS_ConfigServiceLibTypes_DomainName_t domainNameTmp;
         OS_ConfigServiceLib_domainGetName(&domain, &domainNameTmp);
-        if (SEOS_SUCCESS == OS_ConfigServiceLib_compareDomainName(
+        if (OS_SUCCESS == OS_ConfigServiceLib_compareDomainName(
                 &domainNameTmp,
                 domainName))
         {
             // enumerator holds the right domain
-            return SEOS_SUCCESS;
+            return OS_SUCCESS;
         }
 
         ret = OS_ConfigServiceLib_domainEnumeratorIncrement(instance, enumerator);
@@ -1126,7 +1126,7 @@ find_domain(
         {
             Debug_LOG_ERROR("OS_ConfigServiceLib_domainEnumeratorIncrement() failed, ret %d",
                             ret);
-            return SEOS_ERROR_GENERIC;
+            return OS_ERROR_GENERIC;
         }
     } // end for(;;)
 }
@@ -1146,25 +1146,25 @@ OS_ConfigServiceLib_parameterGetValueFromDomainName(
 
     OS_ConfigServiceLibTypes_DomainEnumerator_t domain_enumerator = {0};
     ret = find_domain(instance, &domain_enumerator, domainName);
-    if (SEOS_SUCCESS != ret)
+    if (OS_SUCCESS != ret)
     {
         Debug_LOG_ERROR("find_domain() failed, ret %d", ret);
-        return SEOS_ERROR_CONFIG_DOMAIN_NOT_FOUND;
+        return OS_ERROR_CONFIG_DOMAIN_NOT_FOUND;
     }
 
     OS_ConfigServiceLibTypes_Parameter_t parameter = {0};
     ret = find_parameter(instance, &domain_enumerator, parameterName, &parameter);
-    if (SEOS_SUCCESS != ret)
+    if (OS_SUCCESS != ret)
     {
         Debug_LOG_ERROR("find_parameter() failed, ret %d", ret);
-        return SEOS_ERROR_CONFIG_PARAMETER_NOT_FOUND;
+        return OS_ERROR_CONFIG_PARAMETER_NOT_FOUND;
     }
 
     if (parameterType != parameter.parameterType)
     {
         Debug_LOG_ERROR("parameter tpye mismatch, requested %d found %d",
                         parameterType, parameter.parameterType);
-        return SEOS_ERROR_CONFIG_TYPE_MISMATCH;
+        return OS_ERROR_CONFIG_TYPE_MISMATCH;
     }
 
     int err = OS_ConfigServiceLib_parameterGetValue(
@@ -1178,8 +1178,8 @@ OS_ConfigServiceLib_parameterGetValueFromDomainName(
         Debug_LOG_ERROR("OS_ConfigServiceLib_parameterGetValue() failed, ret %d", ret);
         // ToDo: OS_ConfigServiceLib_parameterGetValue() should return error codes
         //       about the actual problem, so we can return them
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }

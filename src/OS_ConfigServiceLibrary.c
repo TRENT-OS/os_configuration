@@ -22,7 +22,7 @@ OS_ConfigServiceLibrary_createHandle(
     unsigned int id,
     OS_ConfigServiceHandle_t* handle)
 {
-    return SEOS_ERROR_INVALID_PARAMETER;
+    return OS_ERROR_INVALID_PARAMETER;
 }
 
 //------------------------------------------------------------------------------
@@ -38,11 +38,11 @@ OS_ConfigServiceLibrary_domainEnumeratorInit(
                                           OS_ConfigServiceHandle_getLocalInstance(handle);
         OS_ConfigServiceLib_domainEnumeratorInit(instance, enumerator);
 
-        return SEOS_SUCCESS;
+        return OS_SUCCESS;
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -59,11 +59,11 @@ OS_ConfigServiceLibrary_domainEnumeratorClose(
                                           OS_ConfigServiceHandle_getLocalInstance(handle);
         OS_ConfigServiceLib_domainEnumeratorClose(instance, enumerator);
 
-        return SEOS_SUCCESS;
+        return OS_SUCCESS;
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -80,11 +80,11 @@ OS_ConfigServiceLibrary_domainEnumeratorReset(
                                           OS_ConfigServiceHandle_getLocalInstance(handle);
         OS_ConfigServiceLib_domainEnumeratorReset(instance, enumerator);
 
-        return SEOS_SUCCESS;
+        return OS_SUCCESS;
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -103,7 +103,7 @@ OS_ConfigServiceLibrary_domainEnumeratorIncrement(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -126,7 +126,7 @@ OS_ConfigServiceLibrary_domainEnumeratorGetElement(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -149,7 +149,7 @@ OS_ConfigServiceLibrary_parameterEnumeratorInit(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -166,11 +166,11 @@ OS_ConfigServiceLibrary_parameterEnumeratorClose(
                                           OS_ConfigServiceHandle_getLocalInstance(handle);
         OS_ConfigServiceLib_parameterEnumeratorClose(instance, enumerator);
 
-        return SEOS_SUCCESS;
+        return OS_SUCCESS;
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -189,7 +189,7 @@ OS_ConfigServiceLibrary_parameterEnumeratorReset(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -208,7 +208,7 @@ OS_ConfigServiceLibrary_parameterEnumeratorIncrement(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -231,7 +231,7 @@ OS_ConfigServiceLibrary_parameterEnumeratorGetElement(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -265,7 +265,7 @@ OS_ConfigServiceLibrary_domainCreateParameterEnumerator(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -290,7 +290,7 @@ OS_ConfigServiceLibrary_domainGetElement(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -343,7 +343,7 @@ OS_ConfigServiceLibrary_parameterGetValue(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -363,7 +363,7 @@ OS_ConfigServiceLibrary_parameterGetValueAsU32(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -383,7 +383,7 @@ OS_ConfigServiceLibrary_parameterGetValueAsU64(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -408,7 +408,7 @@ OS_ConfigServiceLibrary_parameterGetValueAsString(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -433,7 +433,7 @@ OS_ConfigServiceLibrary_parameterGetValueAsBlob(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -460,7 +460,7 @@ OS_ConfigServiceLibrary_parameterSetValue(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -480,7 +480,7 @@ OS_ConfigServiceLibrary_parameterSetValueAsU32(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -500,7 +500,7 @@ OS_ConfigServiceLibrary_parameterSetValueAsU64(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -527,7 +527,7 @@ OS_ConfigServiceLibrary_parameterSetValueAsString(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -554,7 +554,7 @@ OS_ConfigServiceLibrary_parameterSetValueAsBlob(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -585,6 +585,6 @@ OS_ConfigServiceLibrary_parameterGetValueFromDomainName(
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }

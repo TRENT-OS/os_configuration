@@ -34,13 +34,13 @@ OS_Error_t OS_ConfigServiceBackend_writeToFile(
     int           length)
 {
     hFile_t fhandle;
-    OS_Error_t file_stat = SEOS_SUCCESS;
+    OS_Error_t file_stat = OS_SUCCESS;
 
     // Open file
     fhandle = OS_Filesystem_openFile(phandle, name, FA_WRITE);
     if (!OS_Filesystem_validateFileHandle(fhandle))
     {
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     Debug_LOG_DEBUG("file_write name:%s\n", name);
@@ -56,7 +56,7 @@ OS_Error_t OS_ConfigServiceBackend_writeToFile(
     Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     // Close this file
@@ -64,10 +64,10 @@ OS_Error_t OS_ConfigServiceBackend_writeToFile(
     Debug_LOG_DEBUG("file_close:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
@@ -80,13 +80,13 @@ OS_Error_t OS_ConfigServiceBackend_readFromFile(
     int           length)
 {
     hFile_t fhandle;
-    OS_Error_t file_stat = SEOS_SUCCESS;
+    OS_Error_t file_stat = OS_SUCCESS;
 
     // Open file
     fhandle = OS_Filesystem_openFile(phandle, name, FA_READ);
     if (!OS_Filesystem_validateFileHandle(fhandle))
     {
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     Debug_LOG_DEBUG("file_read name:%s\n", name);
@@ -98,7 +98,7 @@ OS_Error_t OS_ConfigServiceBackend_readFromFile(
     Debug_LOG_DEBUG("file_read:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     // Close this file
@@ -106,10 +106,10 @@ OS_Error_t OS_ConfigServiceBackend_readFromFile(
     Debug_LOG_DEBUG("file_close:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
@@ -122,13 +122,13 @@ OS_Error_t OS_ConfigServiceBackend_createFile(
     enum {BLOCK_SIZE = 256};
     static char buf[256];
     hFile_t fhandle;
-    OS_Error_t file_stat = SEOS_SUCCESS;
+    OS_Error_t file_stat = OS_SUCCESS;
 
     // Open file
     fhandle = OS_Filesystem_openFile(phandle, name, FA_CREATE_ALWAYS | FA_WRITE);
     if (!OS_Filesystem_validateFileHandle(fhandle))
     {
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     Debug_LOG_DEBUG("file_create: size: %d\n", length);
@@ -151,7 +151,7 @@ OS_Error_t OS_ConfigServiceBackend_createFile(
         Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
         if (file_stat > 0)
         {
-            return SEOS_ERROR_GENERIC;
+            return OS_ERROR_GENERIC;
         }
 
         fileSize += BLOCK_SIZE;
@@ -165,7 +165,7 @@ OS_Error_t OS_ConfigServiceBackend_createFile(
     Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     // Close this file
@@ -173,10 +173,10 @@ OS_Error_t OS_ConfigServiceBackend_createFile(
     Debug_LOG_DEBUG("file_close:%d\n", (uint8_t)file_stat);
     if (file_stat > 0)
     {
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
@@ -198,7 +198,7 @@ writeRecord_backend_filesystem(
                                  (void*)buf,
                                  bufLen);
 
-    if (SEOS_SUCCESS != writeResult)
+    if (OS_SUCCESS != writeResult)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
     }
@@ -225,7 +225,7 @@ readRecord_backend_filesystem(
                                 buf,
                                 bufLen);
 
-    if (SEOS_SUCCESS != readResult)
+    if (OS_SUCCESS != readResult)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
     }
@@ -251,7 +251,7 @@ OS_ConfigServiceBackend_createFileBackend(
 
     OS_Error_t result = OS_ConfigServiceBackend_createFile(phandle, name.buffer,
                                                            fileSize);
-    if (SEOS_SUCCESS != result)
+    if (OS_SUCCESS != result)
     {
         return result;
     }
@@ -273,14 +273,14 @@ OS_ConfigServiceBackend_initializeFileBackend(
 {
     OS_ConfigServiceBackend_BackendFsLayout_t backendFsLayout;
 
-    if (SEOS_SUCCESS != OS_ConfigServiceBackend_readFromFile(
+    if (OS_SUCCESS != OS_ConfigServiceBackend_readFromFile(
             phandle,
             name.buffer,
             0,
             &backendFsLayout,
             sizeof(OS_ConfigServiceBackend_BackendFsLayout_t)))
     {
-        return SEOS_ERROR_GENERIC;
+        return OS_ERROR_GENERIC;
     }
 
     Debug_LOG_DEBUG("header of file backend read ok\n");
@@ -295,7 +295,7 @@ OS_ConfigServiceBackend_initializeFileBackend(
     instance->numberOfRecords = backendFsLayout.numberOfRecords;
     instance->sizeOfRecord = backendFsLayout.sizeOfRecord;
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }
 
 #endif // OS_CONFIG_SERVICE_BACKEND_FILESYSTEM
@@ -329,7 +329,7 @@ writeRecord_backend_memory(
     char* record = &memLayout->buffer + instance->sizeOfRecord * recordIndex;
     memcpy(record, buf, instance->sizeOfRecord);
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
@@ -345,7 +345,7 @@ readRecord_backend_memory(
     char* record = &memLayout->buffer + instance->sizeOfRecord * recordIndex;
     memcpy(buf, record, instance->sizeOfRecord);
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
@@ -367,11 +367,11 @@ OS_ConfigServiceBackend_createMemBackend(
         memLayout->sizeOfRecord = sizeOfRecord;
         memLayout->bufferSize = bufferSize;
 
-        return SEOS_SUCCESS;
+        return OS_SUCCESS;
     }
     else
     {
-        return SEOS_ERROR_BUFFER_TOO_SMALL;
+        return OS_ERROR_BUFFER_TOO_SMALL;
     }
 }
 
@@ -408,7 +408,7 @@ OS_ConfigServiceBackend_initializeMemBackend(
     instance->numberOfRecords = memLayout->numberOfRecords;
     instance->sizeOfRecord = memLayout->sizeOfRecord;
 
-    return SEOS_SUCCESS;
+    return OS_SUCCESS;
 }
 
 #endif // OS_CONFIG_SERVICE_BACKEND_MEMORY
@@ -447,13 +447,13 @@ OS_ConfigServiceBackend_readRecord(
     if (recordIndex >= instance->numberOfRecords)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 
     if (bufLen < instance->sizeOfRecord)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 
     switch (instance->backendType)
@@ -486,7 +486,7 @@ OS_ConfigServiceBackend_readRecord(
     } // end switch (instance->backendType)
 
     Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-    return SEOS_ERROR_NOT_SUPPORTED;
+    return OS_ERROR_NOT_SUPPORTED;
 }
 
 
@@ -501,7 +501,7 @@ OS_ConfigServiceBackend_writeRecord(
     if (recordIndex >= instance->numberOfRecords)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 
     if (bufLen != instance->sizeOfRecord)
@@ -509,7 +509,7 @@ OS_ConfigServiceBackend_writeRecord(
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         Debug_LOG_DEBUG("Error: bufLen: %zu - instance->sizeOfRecord: %zu\n",
                         bufLen, instance->sizeOfRecord);
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 
     switch (instance->backendType)
@@ -542,5 +542,5 @@ OS_ConfigServiceBackend_writeRecord(
     } // end switch (instance->backendType)
 
     Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-    return SEOS_ERROR_NOT_SUPPORTED;
+    return OS_ERROR_NOT_SUPPORTED;
 }

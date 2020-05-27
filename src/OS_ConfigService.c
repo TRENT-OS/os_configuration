@@ -48,7 +48,7 @@ OS_ConfigService_createHandle(
                    id,
                    handle);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else if ((handleKind == OS_CONFIG_HANDLE_KIND_LOCAL))
@@ -63,16 +63,16 @@ OS_ConfigService_createHandle(
                 (void*)instance,
                 handle);
 
-            return SEOS_SUCCESS;
+            return OS_SUCCESS;
         }
         else
         {
-            return SEOS_ERROR_INVALID_PARAMETER;
+            return OS_ERROR_INVALID_PARAMETER;
         }
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -88,7 +88,7 @@ OS_ConfigService_domainEnumeratorInit(
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_domainEnumeratorInit(handle, enumerator);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -109,7 +109,7 @@ OS_ConfigService_domainEnumeratorClose(
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_domainEnumeratorClose(handle, enumerator);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -130,7 +130,7 @@ OS_ConfigService_domainEnumeratorReset(
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_domainEnumeratorReset(handle, enumerator);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -151,7 +151,7 @@ OS_ConfigService_domainEnumeratorIncrement(
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_domainEnumeratorIncrement(handle, enumerator);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -176,7 +176,7 @@ OS_ConfigService_domainEnumeratorGetElement(
                    enumerator,
                    domain);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -204,7 +204,7 @@ OS_ConfigService_parameterEnumeratorInit(
                    domainEnumerator,
                    enumerator);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -228,7 +228,7 @@ OS_ConfigService_parameterEnumeratorClose(
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_parameterEnumeratorClose(handle, enumerator);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -249,7 +249,7 @@ OS_ConfigService_parameterEnumeratorReset(
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_parameterEnumeratorReset(handle, enumerator);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -272,7 +272,7 @@ OS_ConfigService_parameterEnumeratorIncrement(
                    handle,
                    enumerator);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -299,7 +299,7 @@ OS_ConfigService_parameterEnumeratorGetElement(
                    enumerator,
                    parameter);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -338,7 +338,7 @@ OS_ConfigService_domainCreateParameterEnumerator(
                    parameterName,
                    parameterEnumerator);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -369,7 +369,7 @@ OS_ConfigService_domainGetElement(
                    parameterName,
                    parameter);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -433,7 +433,7 @@ OS_ConfigService_parameterGetValue(
                 bufferLength,
                 bytesCopied);
 
-        if (result == SEOS_SUCCESS)
+        if (result == OS_SUCCESS)
         {
             const void* buf = dataport_unwrap_ptr(bufferReceive);
             memcpy(buffer, buf, *bytesCopied);
@@ -441,7 +441,7 @@ OS_ConfigService_parameterGetValue(
 
         return result;
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -471,7 +471,7 @@ OS_ConfigService_parameterGetValueAsU32(
                    parameter,
                    value);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -499,7 +499,7 @@ OS_ConfigService_parameterGetValueAsU64(
                    parameter,
                    value);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -534,7 +534,7 @@ OS_ConfigService_parameterGetValueAsString(
                 bufferReceive,
                 bufferLength);
 
-        if (result == SEOS_SUCCESS)
+        if (result == OS_SUCCESS)
         {
             const void* buf = dataport_unwrap_ptr(bufferReceive);
             memcpy(buffer, buf, bufferLength);
@@ -542,7 +542,7 @@ OS_ConfigService_parameterGetValueAsString(
 
         return result;
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -578,7 +578,7 @@ OS_ConfigService_parameterGetValueAsBlob(
                 bufferReceive,
                 bufferLength);
 
-        if (result == SEOS_SUCCESS)
+        if (result == OS_SUCCESS)
         {
             const void* buf = dataport_unwrap_ptr(bufferReceive);
             memcpy(buffer, buf, bufferLength);
@@ -586,7 +586,7 @@ OS_ConfigService_parameterGetValueAsBlob(
 
         return result;
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -624,7 +624,7 @@ OS_ConfigService_parameterSetValue(
                    bufferSend,
                    bufferLength);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -654,7 +654,7 @@ OS_ConfigService_parameterSetValueAsU32(
                    enumerator,
                    value);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -682,7 +682,7 @@ OS_ConfigService_parameterSetValueAsU64(
                    enumerator,
                    value);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -719,7 +719,7 @@ OS_ConfigService_parameterSetValueAsString(
                    bufferSend,
                    bufferLength);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -758,7 +758,7 @@ OS_ConfigService_parameterSetValueAsBlob(
                    bufferSend,
                    bufferLength);
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 #endif
     }
     else
@@ -800,7 +800,7 @@ OS_ConfigService_parameterGetValueFromDomainName(
                          bufferLength,
                          bytesCopied);
 
-        if (result == SEOS_SUCCESS)
+        if (result == OS_SUCCESS)
         {
             const void* buf = dataport_unwrap_ptr(bufferReceive);
             memcpy(buffer, buf, *bytesCopied);
@@ -809,7 +809,7 @@ OS_ConfigService_parameterGetValueFromDomainName(
         return result;
 
 #else
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
 
 #endif
 

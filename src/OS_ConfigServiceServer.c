@@ -38,16 +38,16 @@ OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(
                 (void*)instance,
                 localHandle);
 
-            return SEOS_SUCCESS;
+            return OS_SUCCESS;
         }
         else
         {
-            return SEOS_ERROR_INVALID_PARAMETER;
+            return OS_ERROR_INVALID_PARAMETER;
         }
     }
     else
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 }
 
@@ -79,16 +79,16 @@ OS_ConfigServiceServer_createHandle(
                 id,
                 handle);
 
-            result = SEOS_SUCCESS;
+            result = OS_SUCCESS;
         }
         else
         {
-            result = SEOS_ERROR_INVALID_PARAMETER;
+            result = OS_ERROR_INVALID_PARAMETER;
         }
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -103,7 +103,7 @@ OS_ConfigServiceServer_domainEnumeratorInit(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -113,7 +113,7 @@ OS_ConfigServiceServer_domainEnumeratorInit(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -128,17 +128,17 @@ OS_ConfigServiceServer_domainEnumeratorClose(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
         OS_ConfigServiceLibrary_domainEnumeratorClose(localHandle, enumerator);
 
-        result = SEOS_SUCCESS;
+        result = OS_SUCCESS;
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -153,17 +153,17 @@ OS_ConfigServiceServer_domainEnumeratorReset(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
         OS_ConfigServiceLibrary_domainEnumeratorReset(localHandle, enumerator);
 
-        result = SEOS_SUCCESS;
+        result = OS_SUCCESS;
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -178,7 +178,7 @@ OS_ConfigServiceServer_domainEnumeratorIncrement(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -188,7 +188,7 @@ OS_ConfigServiceServer_domainEnumeratorIncrement(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -204,7 +204,7 @@ OS_ConfigServiceServer_domainEnumeratorGetElement(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -215,7 +215,7 @@ OS_ConfigServiceServer_domainEnumeratorGetElement(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -231,7 +231,7 @@ OS_ConfigServiceServer_parameterEnumeratorInit(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -242,7 +242,7 @@ OS_ConfigServiceServer_parameterEnumeratorInit(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -257,17 +257,17 @@ OS_ConfigServiceServer_parameterEnumeratorClose(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
         OS_ConfigServiceLibrary_parameterEnumeratorClose(localHandle, enumerator);
 
-        result = SEOS_SUCCESS;
+        result = OS_SUCCESS;
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -282,7 +282,7 @@ OS_ConfigServiceServer_parameterEnumeratorReset(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -292,7 +292,7 @@ OS_ConfigServiceServer_parameterEnumeratorReset(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -307,7 +307,7 @@ OS_ConfigServiceServer_parameterEnumeratorIncrement(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -317,7 +317,7 @@ OS_ConfigServiceServer_parameterEnumeratorIncrement(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -333,7 +333,7 @@ OS_ConfigServiceServer_parameterEnumeratorGetElement(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -342,7 +342,7 @@ OS_ConfigServiceServer_parameterEnumeratorGetElement(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -368,7 +368,7 @@ OS_ConfigServiceServer_domainCreateParameterEnumerator(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -380,7 +380,7 @@ OS_ConfigServiceServer_domainCreateParameterEnumerator(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -397,7 +397,7 @@ OS_ConfigServiceServer_domainGetElement(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -409,7 +409,7 @@ OS_ConfigServiceServer_domainGetElement(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -453,7 +453,7 @@ OS_ConfigServiceServer_parameterGetValue(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -467,7 +467,7 @@ OS_ConfigServiceServer_parameterGetValue(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -483,7 +483,7 @@ OS_ConfigServiceServer_parameterGetValueAsU32(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -494,7 +494,7 @@ OS_ConfigServiceServer_parameterGetValueAsU32(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -510,7 +510,7 @@ OS_ConfigServiceServer_parameterGetValueAsU64(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -521,7 +521,7 @@ OS_ConfigServiceServer_parameterGetValueAsU64(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -538,7 +538,7 @@ OS_ConfigServiceServer_parameterGetValueAsString(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -550,7 +550,7 @@ OS_ConfigServiceServer_parameterGetValueAsString(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -567,7 +567,7 @@ OS_ConfigServiceServer_parameterGetValueAsBlob(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -580,7 +580,7 @@ OS_ConfigServiceServer_parameterGetValueAsBlob(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -598,7 +598,7 @@ OS_ConfigServiceServer_parameterSetValue(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -612,7 +612,7 @@ OS_ConfigServiceServer_parameterSetValue(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -628,7 +628,7 @@ OS_ConfigServiceServer_parameterSetValueAsU32(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -639,7 +639,7 @@ OS_ConfigServiceServer_parameterSetValueAsU32(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -655,7 +655,7 @@ OS_ConfigServiceServer_parameterSetValueAsU64(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -666,7 +666,7 @@ OS_ConfigServiceServer_parameterSetValueAsU64(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -684,7 +684,7 @@ OS_ConfigServiceServer_parameterSetValueAsString(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -698,7 +698,7 @@ OS_ConfigServiceServer_parameterSetValueAsString(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -716,7 +716,7 @@ OS_ConfigServiceServer_parameterSetValueAsBlob(
     OS_ConfigServiceHandle_t localHandle;
     OS_Error_t result;
 
-    if (SEOS_SUCCESS ==
+    if (OS_SUCCESS ==
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
@@ -730,7 +730,7 @@ OS_ConfigServiceServer_parameterSetValueAsBlob(
     }
     else
     {
-        result = SEOS_ERROR_INVALID_PARAMETER;
+        result = OS_ERROR_INVALID_PARAMETER;
     }
 
     return result;
@@ -752,9 +752,9 @@ OS_ConfigServiceServer_parameterGetValueFromDomainName(
     OS_Error_t ret = OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(
                          handle,
                          &localHandle);
-    if (SEOS_SUCCESS != ret)
+    if (OS_SUCCESS != ret)
     {
-        return SEOS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 
     void* tmpBuf = dataport_unwrap_ptr(buffer);

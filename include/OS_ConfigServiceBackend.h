@@ -19,8 +19,8 @@
 
 #if defined(OS_CONFIG_SERVICE_BACKEND_FILESYSTEM)
 
-#include "seos_fs_datatypes.h"
-#include "seos_pm_api.h"
+#include "OS_FilesystemDataTypes.h"
+#include "OS_PartitionManager.h"
 #include "OS_Filesystem.h"
 
 #endif // OS_CONFIG_SERVICE_BACKEND_FILESYSTEM

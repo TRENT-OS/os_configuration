@@ -6,8 +6,8 @@
  *
  * @file OS_ConfigServiceServer.h
  *
- * @brief Contains wrapper functions to be called if the ConfigService is built as
- * a server component.
+ * @brief Contains wrapper functions to be called if the ConfigService is built
+ * as a server component.
  *
  */
 

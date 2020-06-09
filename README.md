@@ -34,7 +34,7 @@ backend with **OS_CONFIG_SERVICE_BACKEND_MEMORY**.
 If the component is built using a filesystem backend, it is recommended to take
 a look also at the documentation of the TRENTOS FileSystemCore and
 PartitionManager libraries.
-Please also note the usage of the **seos_core_api** lib in the next sample code
+Please also note the usage of the **os_core_api** lib in the next sample code
 segment. Along with other things, this also brings in the CAmkES
 interface file needed to build a client/server component setup. This will be
 explained further in the next section.
@@ -58,14 +58,14 @@ filesystem backend would result in:
             -DOS_CONFIG_SERVICE_BACKEND_FILESYSTEM # indicates the use of a filesystem backend
             -DOS_CONFIG_SERVICE_CAMKES_SERVER     # indicates a CAmkES configuration server is being built
         LIBS
-            seos_system_config
-            seos_libs
-            seos_core_api
-            seos_configuration
-            seos_partition_manager_api
-            seos_filesystem_core
-            seos_filesystem_fat
-            seos_filesystem_spiffs
+            os_system_config
+            os_libs
+            os_core_api
+            os_configuration
+            os_partition_manager_api
+            os_filesystem_core
+            os_filesystem_fat
+            os_filesystem_spiffs
     )
 
 A client component will have to only include the relevant lib and set the correct define:
@@ -81,14 +81,14 @@ A client component will have to only include the relevant lib and set the correc
             -Werror
             -DOS_CONFIG_SERVICE_CAMKES_CLIENT
         LIBS
-            seos_system_config
-            seos_core_api
-            seos_configuration
+            os_system_config
+            os_core_api
+            os_configuration
     )
 
 #### Integrating the CAmkES interface file when building a server component:
 As mentioned above, the TRENTOS SDK already provides the necessary files
-(**seos_core_api**) to set up an interface for the ConfigServer built as a
+(**os_core_api**) to set up an interface for the ConfigServer built as a
 CAmkES component. Simply import the **<if_OS_ConfigService.camkes>** interface
 in the CAmkES component file of the ConfigServer component and make sure to name
 the procedure **if_OS_ConfigService** and also define a dataport for the clients

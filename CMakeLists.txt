@@ -17,7 +17,7 @@ target_include_directories(${PROJECT_NAME}
 
 #------------------------------------------------------------------------------
 
-project(seos_configuration C)
+project(os_configuration C)
 
 add_library(${PROJECT_NAME} INTERFACE)
 
@@ -41,7 +41,7 @@ target_sources(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     INTERFACE
-        seos_libs
+        os_libs
 )
 
 #------------------------------------------------------------------------------
@@ -50,9 +50,9 @@ target_link_libraries(${PROJECT_NAME}
 if (COMMAND os_create_doxygen_target)
 
     os_create_doxygen_target( os_configuration_doc
-        # API header is documented as part of seos_core_api, so we do nothing
+        # API header is documented as part of os_core_api, so we do nothing
         "echo"
-        # API header is documented as part of seos_core_api, so we do nothing
+        # API header is documented as part of os_core_api, so we do nothing
         "echo"
     )
 

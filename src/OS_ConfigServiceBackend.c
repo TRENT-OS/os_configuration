@@ -8,6 +8,7 @@
 #include "OS_ConfigServiceBackend.h"
 
 #include <string.h>
+#include <inttypes.h>
 
 //------------------------------------------------------------------------------
 // Filesystem Backend API

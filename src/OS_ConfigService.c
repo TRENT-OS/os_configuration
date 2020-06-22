@@ -3,15 +3,18 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
+#include "string.h"
+
+#include "OS_ConfigService.h"
+#include "OS_ConfigServiceLibrary.h"
+
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
 #include "camkes.h"
 #endif
 
-#include "string.h"
-
-#include "OS_ConfigService.h"
+#if defined(OS_CONFIG_SERVICE_CAMKES_SERVER)
 #include "OS_ConfigServiceServer.h"
-#include "OS_ConfigServiceLibrary.h"
+#endif
 
 /* Local types ---------------------------------------------------------------*/
 typedef struct

@@ -52,20 +52,24 @@ OS_ConfigServiceLibTypes_ParameterName_t;
 // The value of a string paramter. The index points into a dedicated record backend.
 typedef struct
 {
-    size_t size;
+    // The storage layout of these structs is required to be the same accross
+    // different platforms so the int size needs to be explicit.
+    uint32_t size;
     uint32_t index;
 }
-OS_ConfigServiceLibTypes_ParameterString_t;
+__attribute__((packed)) OS_ConfigServiceLibTypes_ParameterString_t;
 
 
 // The value of a string paramter. The index points into a dedicated record backend.
 typedef struct
 {
-    size_t size;
+    // The storage layout of these structs is required to be the same accross
+    // different platforms so the int size needs to be explicit.
+    uint32_t size;
     uint32_t index;
     uint32_t numberOfBlocks;
 }
-OS_ConfigServiceLibTypes_ParameterBlob_t;
+__attribute__((packed)) OS_ConfigServiceLibTypes_ParameterBlob_t;
 
 
 // Internal: a paramter value.
@@ -73,23 +77,27 @@ OS_ConfigServiceLibTypes_ParameterBlob_t;
 // reasonable = it should be no problem to allocate it on the stack.
 typedef union
 {
+    // The storage layout of these structs is required to be the same accross
+    // different platforms so the int size needs to be explicit.
     // private (= only to be used by OS_ConfigService implementation)
     uint32_t valueInteger32;
     uint64_t valueInteger64;
     OS_ConfigServiceLibTypes_ParameterString_t valueString;
     OS_ConfigServiceLibTypes_ParameterBlob_t valueBlob;
 }
-OS_ConfigServiceLibTypes_ParameterValue_t;
+__attribute__((packed)) OS_ConfigServiceLibTypes_ParameterValue_t;
 
 
 // Points to a domain (contained in a dedicated record backend).
 // Will always point to an existing domain.
 typedef struct
 {
+    // The storage layout of these structs is required to be the same accross
+    // different platforms so the int size needs to be explicit.
     // private (= only to be used by OS_ConfigService implementation)
-    unsigned int index;
+    uint32_t index;
 }
-OS_ConfigServiceLibTypes_DomainEnumerator_t;
+__attribute__((packed)) OS_ConfigServiceLibTypes_DomainEnumerator_t;
 
 
 // Points to a parameter (contained in a dedicated record backend).
@@ -98,8 +106,10 @@ OS_ConfigServiceLibTypes_DomainEnumerator_t;
 // the current user is allowed to see.
 typedef struct
 {
+    // The storage layout of these structs is required to be the same accross
+    // different platforms so the int size needs to be explicit.
     // private (= only to be used by OS_ConfigService implementation)
-    unsigned int index;
+    uint32_t index;
     OS_ConfigServiceLibTypes_DomainEnumerator_t domainEnumerator;
 }
 OS_ConfigServiceLibTypes_ParameterEnumerator_t;

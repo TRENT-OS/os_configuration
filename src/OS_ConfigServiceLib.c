@@ -14,10 +14,9 @@ static
 OS_Error_t
 OS_ConfigServiceLib_enumeratorRawIncrement(
     unsigned int maxIndex,
-    unsigned int* index)
+    uint32_t* index)
 {
     OS_Error_t result;
-
 
     if (*index + 1 == maxIndex)
     {
@@ -41,6 +40,7 @@ OS_ConfigServiceLib_parameterEnumeratorRawIncrement(
     OS_ConfigServiceLib_t const* instance,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
+
     return OS_ConfigServiceLib_enumeratorRawIncrement(
                OS_ConfigServiceBackend_getNumberOfRecords(&instance->parameterBackend),
                &enumerator->index);
@@ -443,10 +443,22 @@ OS_ConfigServiceLib_domainEnumeratorIncrement(
     OS_ConfigServiceLib_t const* instance,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
+    // Store the packed index value in a temporary variable to avoid pointer
+    // misalignment.
+    uint32_t enumeratorIncrement = enumerator->index;
+
     OS_Error_t result = OS_ConfigServiceLib_enumeratorRawIncrement(
                             OS_ConfigServiceBackend_getNumberOfRecords(&instance->domainBackend),
-                            &enumerator->index);
-    return result;
+                            &enumeratorIncrement);
+    if (OS_SUCCESS != result)
+    {
+        Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
+        return result;
+    }
+
+    // Increment the index with successfully incremented temporary variable.
+    enumerator->index = enumeratorIncrement;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------

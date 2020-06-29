@@ -245,7 +245,7 @@ OS_ConfigServiceBackend_createFileBackend(
     size_t fileSize = sizeof(OS_ConfigServiceBackend_BackendFsLayout_t) +
                       numberOfRecords *
                       sizeOfRecord;
-    OS_ConfigServiceBackend_BackendFsLayout_t backendFsLayout;
+    OS_ConfigServiceBackend_BackendFsLayout_t backendFsLayout = {0};
 
     backendFsLayout.numberOfRecords = numberOfRecords;
     backendFsLayout.sizeOfRecord = sizeOfRecord;

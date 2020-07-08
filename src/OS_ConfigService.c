@@ -36,47 +36,42 @@ OS_ConfigService_getInstances(void)
     return &client.instanceStore;
 }
 
-//------------------------------------------------------------------------------
 OS_Error_t
-OS_ConfigService_createHandle(
-    OS_ConfigServiceHandle_HandleKind_t handleKind,
+OS_ConfigService_createHandleLocal(
     unsigned int id,
     OS_ConfigServiceHandle_t* handle)
 {
-    if (handleKind == OS_CONFIG_HANDLE_KIND_RPC)
-    {
-#if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        return OS_ConfigServiceServer_createHandle(
-                   handleKind,
-                   id,
-                   handle);
-#else
-        return OS_ERROR_INVALID_PARAMETER;
-#endif
-    }
-    else if ((handleKind == OS_CONFIG_HANDLE_KIND_LOCAL))
-    {
-        OS_ConfigServiceLib_t* instance = OS_ConfigServiceInstanceStore_getInstance(
-                                              &client.instanceStore,
-                                              id);
+    OS_ConfigServiceLib_t* instance = OS_ConfigServiceInstanceStore_getInstance(
+                                          &client.instanceStore,
+                                          id);
 
-        if (instance != NULL)
-        {
-            OS_ConfigServiceHandle_initLocalHandle(
-                (void*)instance,
-                handle);
+    if (instance != NULL)
+    {
+        OS_ConfigServiceHandle_initLocalHandle(
+            (void*)instance,
+            handle);
 
-            return OS_SUCCESS;
-        }
-        else
-        {
-            return OS_ERROR_INVALID_PARAMETER;
-        }
+        return OS_SUCCESS;
     }
     else
     {
         return OS_ERROR_INVALID_PARAMETER;
     }
+}
+
+OS_Error_t
+OS_ConfigService_createHandleRemote(
+    unsigned int id,
+    OS_ConfigServiceHandle_t* handle)
+{
+#if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
+    return OS_ConfigServiceServer_createHandle(
+               OS_CONFIG_HANDLE_KIND_RPC,
+               id,
+               handle);
+#else
+    return OS_ERROR_INVALID_PARAMETER;
+#endif
 }
 
 //------------------------------------------------------------------------------

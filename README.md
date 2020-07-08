@@ -201,7 +201,7 @@ acting as clients and connecting to a remote ConfigServer component only require
     OS_ConfigServiceHandle_t remoteHandle;
 
     //Open remote handle of the ConfigServer API
-    OS_ConfigService_createHandle(OS_CONFIG_HANDLE_KIND_RPC, <HANDLE_ID>, &remoteHandle);
+    OS_ConfigService_createHandleRemote(<HANDLE_ID>, &remoteHandle);
 
 If the ConfigServer is run locally on the client CAmkES component, it is also
 possible to create a local handle:
@@ -209,7 +209,7 @@ possible to create a local handle:
     OS_ConfigServiceHandle_t localHandle;
 
     //Open a local handle of the ConfigServer API
-    OS_ConfigService_createHandle(OS_CONFIG_HANDLE_KIND_LOCAL, <HANDLE_ID>, &localHandle);
+    OS_ConfigService_createHandleLocal(<HANDLE_ID>, &localHandle);
 
 
 #### Setting up a Configuration backend
@@ -297,9 +297,10 @@ and domain value to it as seen in this example:
 
 ### API Reference
 
-    OS_Error_t OS_ConfigService_createHandle(OS_ConfigServiceHandle_HandleKind_t handleKind, unsigned int id, out OS_ConfigServiceHandle_t handle);
+    OS_Error_t OS_ConfigService_createHandleLocal(unsigned int id, out OS_ConfigServiceHandle_t handle);
+    OS_Error_t OS_ConfigService_createHandleRemote(unsigned int id, out OS_ConfigServiceHandle_t handle);
 
-    OS_Error_t OS_ConfigService_domainEnumeratorInit(OS_ConfigServiceHandle_t handle, out OS_ConfigServiceLibTypes_DomainEnumerator_t enumerator);
+    OS_Error_t OS_ConfigService_domainEnumeratorInit(OLocalS_ConfigServiceHandle_t handle, out OS_ConfigServiceLibTypes_DomainEnumerator_t enumerator);
     OS_Error_t OS_ConfigService_domainEnumeratorClose(OS_ConfigServiceHandle_t handle, inout OS_ConfigServiceLibTypes_DomainEnumerator_t enumerator);
     OS_Error_t OS_ConfigService_domainEnumeratorReset(OS_ConfigServiceHandle_t handle, inout OS_ConfigServiceLibTypes_DomainEnumerator_t enumerator);
     OS_Error_t OS_ConfigService_domainEnumeratorIncrement(OS_ConfigServiceHandle_t handle, inout OS_ConfigServiceLibTypes_DomainEnumerator_t enumerator);

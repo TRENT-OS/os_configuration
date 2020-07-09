@@ -12,7 +12,7 @@ OS_ConfigServiceHandle_initRemoteHandle(
     OS_ConfigServiceHandle_t* handle)
 {
     handle->handleKind = OS_CONFIG_HANDLE_KIND_RPC;
-    handle->handle.rpc.id = instanceId;
+    handle->context.rpc.id = instanceId;
 }
 
 //------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ OS_ConfigServiceHandle_initLocalHandle(
     OS_ConfigServiceHandle_t* handle)
 {
     handle->handleKind = OS_CONFIG_HANDLE_KIND_LOCAL;
-    handle->handle.local.instance = instance;
+    handle->context.local.instance = instance;
 }
 
 //------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ intptr_t
 OS_ConfigServiceHandle_getRemoteInstance(
     OS_ConfigServiceHandle_t handle)
 {
-    return handle.handle.rpc.id;
+    return handle.context.rpc.id;
 }
 
 //------------------------------------------------------------------------------
@@ -46,5 +46,5 @@ void*
 OS_ConfigServiceHandle_getLocalInstance(
     OS_ConfigServiceHandle_t handle)
 {
-    return handle.handle.local.instance;
+    return handle.context.local.instance;
 }

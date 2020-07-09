@@ -39,7 +39,7 @@ typedef struct
         {
             void* instance;
         } local;
-    } handle;
+    } context;
 }
 OS_ConfigServiceHandle_t;
 

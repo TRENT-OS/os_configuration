@@ -28,20 +28,25 @@ OS_ConfigServiceBackend_BackendFsLayout_t;
 /* Exported functions --------------------------------------------------------*/
 static
 OS_Error_t OS_ConfigServiceBackend_writeToFile(
-    hPartition_t  phandle,
+    OS_FileSystem_Handle_t  hFs,
     const char*   name,
     unsigned int  offset,
     void*         buffer,
     int           length)
 {
-    hFile_t fhandle;
-    OS_Error_t file_stat = OS_SUCCESS;
+    OS_FileSystemFile_Handle_t hFile;
 
     // Open file
-    fhandle = OS_Filesystem_openFile(phandle, name, FA_WRITE);
-    if (!OS_Filesystem_validateFileHandle(fhandle))
+    OS_Error_t err = OS_FileSystemFile_open(
+                         hFs,
+                         &hFile,
+                         name,
+                         OS_FileSystem_OpenMode_RDWR,
+                         OS_FileSystem_OpenFlags_CREATE);
+    if (OS_SUCCESS != err)
     {
-        return OS_ERROR_GENERIC;
+        Debug_LOG_ERROR("OS_FileSystemFile_open() failed with: %d", err);
+        return err;
     }
 
     Debug_LOG_DEBUG("file_write name:%s\n", name);
@@ -49,23 +54,24 @@ OS_Error_t OS_ConfigServiceBackend_writeToFile(
     Debug_LOG_DEBUG("file_write length:%d\n", length);
 
     // Call filesystem API function to write into a file
-    file_stat = OS_Filesystem_writeFile(
-                    fhandle,
-                    (long)offset,
-                    (long)length,
-                    buffer);
-    Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
-    if (file_stat > 0)
+    err = OS_FileSystemFile_write(
+              hFs,
+              hFile,
+              (long)offset,
+              (long)length,
+              buffer);
+    if (OS_SUCCESS != err)
     {
-        return OS_ERROR_GENERIC;
+        Debug_LOG_ERROR("OS_FileSystemFile_write() failed with: %d", err);
+        return err;
     }
 
     // Close this file
-    file_stat = OS_Filesystem_closeFile(fhandle);
-    Debug_LOG_DEBUG("file_close:%d\n", (uint8_t)file_stat);
-    if (file_stat > 0)
+    err = OS_FileSystemFile_close(hFs, hFile);
+    if (OS_SUCCESS != err)
     {
-        return OS_ERROR_GENERIC;
+        Debug_LOG_ERROR("OS_FileSystemFile_close() failed with: %d", err);
+        return err;
     }
 
     return OS_SUCCESS;
@@ -74,20 +80,25 @@ OS_Error_t OS_ConfigServiceBackend_writeToFile(
 //------------------------------------------------------------------------------
 static
 OS_Error_t OS_ConfigServiceBackend_readFromFile(
-    hPartition_t  phandle,
+    OS_FileSystem_Handle_t  hFs,
     const char*   name,
     unsigned int  offset,
     void*         buffer,
     int           length)
 {
-    hFile_t fhandle;
-    OS_Error_t file_stat = OS_SUCCESS;
+    OS_FileSystemFile_Handle_t hFile;
 
     // Open file
-    fhandle = OS_Filesystem_openFile(phandle, name, FA_READ);
-    if (!OS_Filesystem_validateFileHandle(fhandle))
+    OS_Error_t err = OS_FileSystemFile_open(
+                         hFs,
+                         &hFile,
+                         name,
+                         OS_FileSystem_OpenMode_RDONLY,
+                         OS_FileSystem_OpenFlags_NONE);
+    if (OS_SUCCESS != err)
     {
-        return OS_ERROR_GENERIC;
+        Debug_LOG_ERROR("OS_FileSystemFile_open() failed with: %d", err);
+        return err;
     }
 
     Debug_LOG_DEBUG("file_read name:%s\n", name);
@@ -95,19 +106,24 @@ OS_Error_t OS_ConfigServiceBackend_readFromFile(
     Debug_LOG_DEBUG("file_read length:%d\n", length);
 
     // Call filesystem API function to write into a file
-    file_stat = OS_Filesystem_readFile(fhandle, (long)offset, (long)length, buffer);
-    Debug_LOG_DEBUG("file_read:%d\n", (uint8_t)file_stat);
-    if (file_stat > 0)
+    err = OS_FileSystemFile_read(
+              hFs,
+              hFile,
+              (long)offset,
+              (long)length,
+              buffer);
+    if (OS_SUCCESS != err)
     {
-        return OS_ERROR_GENERIC;
+        Debug_LOG_ERROR("OS_FileSystemFile_read() failed with: %d", err);
+        return err;
     }
 
     // Close this file
-    file_stat = OS_Filesystem_closeFile(fhandle);
-    Debug_LOG_DEBUG("file_close:%d\n", (uint8_t)file_stat);
-    if (file_stat > 0)
+    err = OS_FileSystemFile_close(hFs, hFile);
+    if (OS_SUCCESS != err)
     {
-        return OS_ERROR_GENERIC;
+        Debug_LOG_ERROR("OS_FileSystemFile_close() failed with: %d", err);
+        return err;
     }
 
     return OS_SUCCESS;
@@ -116,20 +132,25 @@ OS_Error_t OS_ConfigServiceBackend_readFromFile(
 //------------------------------------------------------------------------------
 static
 OS_Error_t OS_ConfigServiceBackend_createFile(
-    hPartition_t  phandle,
+    OS_FileSystem_Handle_t  hFs,
     const char*   name,
     int           length)
 {
     enum {BLOCK_SIZE = 256};
     static char buf[256];
-    hFile_t fhandle;
-    OS_Error_t file_stat = OS_SUCCESS;
+    OS_FileSystemFile_Handle_t hFile;
 
     // Open file
-    fhandle = OS_Filesystem_openFile(phandle, name, FA_CREATE_ALWAYS | FA_WRITE);
-    if (!OS_Filesystem_validateFileHandle(fhandle))
+    OS_Error_t err = OS_FileSystemFile_open(
+                         hFs,
+                         &hFile,
+                         name,
+                         OS_FileSystem_OpenMode_RDWR,
+                         OS_FileSystem_OpenFlags_CREATE);
+    if (OS_SUCCESS != err)
     {
-        return OS_ERROR_GENERIC;
+        Debug_LOG_ERROR("OS_FileSystemFile_open() failed with: %d", err);
+        return err;
     }
 
     Debug_LOG_DEBUG("file_create: size: %d\n", length);
@@ -144,37 +165,39 @@ OS_Error_t OS_ConfigServiceBackend_createFile(
 
     for (unsigned int k = 0; k < numberOfBlocks; ++k)
     {
-        file_stat = OS_Filesystem_writeFile(
-                        fhandle,
-                        (long)fileSize,
-                        (long)BLOCK_SIZE,
-                        buf);
-        Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
-        if (file_stat > 0)
+        err = OS_FileSystemFile_write(
+                  hFs,
+                  hFile,
+                  (long)fileSize,
+                  (long)BLOCK_SIZE,
+                  buf);
+        if (OS_SUCCESS != err)
         {
-            return OS_ERROR_GENERIC;
+            Debug_LOG_ERROR("OS_FileSystemFile_write() failed with: %d", err);
+            return err;
         }
 
         fileSize += BLOCK_SIZE;
     }
 
-    file_stat = OS_Filesystem_writeFile(
-                    fhandle,
-                    (long)fileSize,
-                    (long)sizeOfLastBlock,
-                    buf);
-    Debug_LOG_DEBUG("file_write:%d\n", (uint8_t)file_stat);
-    if (file_stat > 0)
+    err = OS_FileSystemFile_write(
+              hFs,
+              hFile,
+              (long)fileSize,
+              (long)sizeOfLastBlock,
+              buf);
+    if (OS_SUCCESS != err)
     {
-        return OS_ERROR_GENERIC;
+        Debug_LOG_ERROR("OS_FileSystemFile_write() failed with: %d", err);
+        return err;
     }
 
     // Close this file
-    file_stat = OS_Filesystem_closeFile(fhandle);
-    Debug_LOG_DEBUG("file_close:%d\n", (uint8_t)file_stat);
-    if (file_stat > 0)
+    err = OS_FileSystemFile_close(hFs, hFile);
+    if (OS_SUCCESS != err)
     {
-        return OS_ERROR_GENERIC;
+        Debug_LOG_ERROR("OS_FileSystemFile_close() failed with: %d", err);
+        return err;
     }
 
     return OS_SUCCESS;
@@ -193,7 +216,7 @@ writeRecord_backend_filesystem(
                           instance->sizeOfRecord;
 
     OS_Error_t writeResult = OS_ConfigServiceBackend_writeToFile(
-                                 instance->backend.fileSystem.phandle,
+                                 instance->backend.fileSystem.hFs,
                                  instance->backend.fileSystem.name.buffer,
                                  offset,
                                  (void*)buf,
@@ -220,7 +243,7 @@ readRecord_backend_filesystem(
                           instance->sizeOfRecord;
 
     OS_Error_t readResult = OS_ConfigServiceBackend_readFromFile(
-                                instance->backend.fileSystem.phandle,
+                                instance->backend.fileSystem.hFs,
                                 instance->backend.fileSystem.name.buffer,
                                 offset,
                                 buf,
@@ -238,8 +261,8 @@ readRecord_backend_filesystem(
 OS_Error_t
 OS_ConfigServiceBackend_createFileBackend(
     OS_ConfigServiceBackend_FileName_t  name,
-    hPartition_t                phandle,
-    unsigned int                numberOfRecords,
+    OS_FileSystem_Handle_t              hFs,
+    unsigned int               numberOfRecords,
     size_t                     sizeOfRecord)
 {
     size_t fileSize = sizeof(OS_ConfigServiceBackend_BackendFsLayout_t) +
@@ -250,7 +273,7 @@ OS_ConfigServiceBackend_createFileBackend(
     backendFsLayout.numberOfRecords = numberOfRecords;
     backendFsLayout.sizeOfRecord = sizeOfRecord;
 
-    OS_Error_t result = OS_ConfigServiceBackend_createFile(phandle, name.buffer,
+    OS_Error_t result = OS_ConfigServiceBackend_createFile(hFs, name.buffer,
                                                            fileSize);
     if (OS_SUCCESS != result)
     {
@@ -258,7 +281,7 @@ OS_ConfigServiceBackend_createFileBackend(
     }
 
     return OS_ConfigServiceBackend_writeToFile(
-               phandle,
+               hFs,
                name.buffer,
                0,
                &backendFsLayout,
@@ -270,12 +293,12 @@ OS_Error_t
 OS_ConfigServiceBackend_initializeFileBackend(
     OS_ConfigServiceBackend_t*          instance,
     OS_ConfigServiceBackend_FileName_t  name,
-    hPartition_t                phandle)
+    OS_FileSystem_Handle_t              hFs)
 {
     OS_ConfigServiceBackend_BackendFsLayout_t backendFsLayout;
 
     if (OS_SUCCESS != OS_ConfigServiceBackend_readFromFile(
-            phandle,
+            hFs,
             name.buffer,
             0,
             &backendFsLayout,
@@ -290,7 +313,7 @@ OS_ConfigServiceBackend_initializeFileBackend(
 
     instance->backendType = OS_CONFIG_BACKEND_BACKEND_TYPE_FS;
 
-    instance->backend.fileSystem.phandle = phandle;
+    instance->backend.fileSystem.hFs = hFs;
     instance->backend.fileSystem.name = name;
 
     instance->numberOfRecords = backendFsLayout.numberOfRecords;

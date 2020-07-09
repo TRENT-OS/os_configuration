@@ -150,7 +150,7 @@ otherwise the init process will not be able to parse the file contents.
     #define STRING_FILE "STRING.BIN"
     #define BLOB_FILE "BLOB.BIN"
 
-    hPartition_t phandle;
+    OS_FileSystem_Handle_t hFs;
     OS_ConfigServiceBackend_t parameterBackend;
     OS_ConfigServiceBackend_t domainBackend;
     OS_ConfigServiceBackend_t stringBackend;
@@ -167,19 +167,19 @@ otherwise the init process will not be able to parse the file contents.
 
     // domain backend
     initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_LEN, DOMAIN_FILE);
-    OS_ConfigServiceBackend_initializeFileBackend(&domainBackend, name, phandle);
+    OS_ConfigServiceBackend_initializeFileBackend(&domainBackend, name, hFs);
 
     // parameter backend
     initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_LEN, PARAMETER_FILE);
-    OS_ConfigServiceBackend_initializeFileBackend(&parameterBackend, name, phandle);
+    OS_ConfigServiceBackend_initializeFileBackend(&parameterBackend, name, hFs);
 
     // string parameter backend
     initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_LEN, STRING_FILE);
-    OS_ConfigServiceBackend_initializeFileBackend(&stringBackend, name, phandle);
+    OS_ConfigServiceBackend_initializeFileBackend(&stringBackend, name, hFs);
 
     // blob parameter backend
     initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_LEN, BLOB_FILE);
-    OS_ConfigServiceBackend_initializeFileBackend(&blobBackend, name, phandle);
+    OS_ConfigServiceBackend_initializeFileBackend(&blobBackend, name, hFs);
 
 
 Initializing the Configuration lib with a memory backend does not have any
@@ -235,15 +235,15 @@ to be called to create a filesystem backend:
 
     // create the desired number of domains
     initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_LEN, DOMAIN_FILE);
-    OS_ConfigServiceBackend_createFileBackend(name, phandle, <NUMBER_OF_DOMAINS>, sizeof(OS_ConfigServiceLibTypes_Domain_t));
+    OS_ConfigServiceBackend_createFileBackend(name, hFs, <NUMBER_OF_DOMAINS>, sizeof(OS_ConfigServiceLibTypes_Domain_t));
 
     // create the desired number of parameters
     initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_LEN, PARAMETER_FILE);
-    OS_ConfigServiceBackend_createFileBackend(name, phandle, <NUMBER_OF_PARAMETERS>, sizeof(OS_ConfigServiceLibTypes_Parameter_t));
+    OS_ConfigServiceBackend_createFileBackend(name, hFs, <NUMBER_OF_PARAMETERS>, sizeof(OS_ConfigServiceLibTypes_Parameter_t));
 
     // create the desired number of string parameters
     initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_LEN, STRING_FILE);
-    OS_ConfigServiceBackend_createFileBackend(name, phandle, <NUMBER_OF_STRINGS>, OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH);
+    OS_ConfigServiceBackend_createFileBackend(name, hFs, <NUMBER_OF_STRINGS>, OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH);
 
     //...
 

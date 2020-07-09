@@ -19,9 +19,7 @@
 
 #if defined(OS_CONFIG_SERVICE_BACKEND_FILESYSTEM)
 
-#include "OS_FilesystemDataTypes.h"
-#include "OS_PartitionManager.h"
-#include "OS_Filesystem.h"
+#include "OS_FileSystem.h"
 
 #endif // OS_CONFIG_SERVICE_BACKEND_FILESYSTEM
 
@@ -62,7 +60,7 @@ typedef struct
         struct
         {
             OS_ConfigServiceBackend_FileName_t name;
-            hPartition_t phandle;
+            OS_FileSystem_Handle_t hFs;
         } fileSystem;
 
 #endif // OS_CONFIG_SERVICE_BACKEND_FILESYSTEM
@@ -95,7 +93,7 @@ OS_ConfigServiceBackend_t;
 OS_Error_t
 OS_ConfigServiceBackend_createFileBackend(
     OS_ConfigServiceBackend_FileName_t name,
-    hPartition_t phandle,
+    OS_FileSystem_Handle_t hFs,
     unsigned int numberOfRecords,
     size_t sizeOfRecord);
 
@@ -105,7 +103,7 @@ OS_Error_t
 OS_ConfigServiceBackend_initializeFileBackend(
     OS_ConfigServiceBackend_t* instance,
     OS_ConfigServiceBackend_FileName_t name,
-    hPartition_t phandle);
+    OS_FileSystem_Handle_t hFs);
 
 #endif // OS_CONFIG_SERVICE_BACKEND_FILESYSTEM
 

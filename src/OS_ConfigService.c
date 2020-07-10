@@ -3,6 +3,8 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
+#include <unistd.h>
+
 #include "string.h"
 
 #include "OS_ConfigService.h"
@@ -62,13 +64,17 @@ OS_ConfigService_createHandleLocal(
 OS_Error_t
 OS_ConfigService_createHandleRemote(
     unsigned int id,
+    OS_ConfigService_ClientCtx_t* clientCtx,
     OS_ConfigServiceHandle_t* handle)
 {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-    return OS_ConfigServiceServer_createHandle(
-               OS_CONFIG_HANDLE_KIND_RPC,
-               id,
-               handle);
+    OS_Error_t err = OS_ConfigServiceServer_createHandle(
+                         id,
+                         (intptr_t) clientCtx,
+                         dataport_wrap_ptr(*clientCtx->dataport.io),
+                         clientCtx->dataport.size,
+                         handle);
+    return err;
 #else
     return OS_ERROR_INVALID_PARAMETER;
 #endif
@@ -419,22 +425,23 @@ OS_ConfigService_parameterGetValue(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        static dataport_ptr_t bufferReceive;
-
-        bufferReceive = dataport_wrap_ptr((void*)cfg_dataport_buf);
-
         int result =
             OS_ConfigServiceServer_parameterGetValue(
                 handle,
                 parameter,
-                bufferReceive,
                 bufferLength,
                 bytesCopied);
 
         if (result == OS_SUCCESS)
         {
-            const void* buf = dataport_unwrap_ptr(bufferReceive);
-            memcpy(buffer, buf, *bytesCopied);
+            if (*bytesCopied > bufferLength)
+            {
+                return OS_ERROR_BUFFER_TOO_SMALL;
+            }
+            OS_ConfigService_ClientCtx_t* clientCtx =
+                (OS_ConfigService_ClientCtx_t*)
+                OS_ConfigServiceHandle_getClientContext(&handle);
+            memcpy(buffer, *clientCtx->dataport.io, *bytesCopied);
         }
 
         return result;
@@ -521,21 +528,18 @@ OS_ConfigService_parameterGetValueAsString(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        static dataport_ptr_t bufferReceive;
-
-        bufferReceive = dataport_wrap_ptr((void*)cfg_dataport_buf);
-
         int result =
             OS_ConfigServiceServer_parameterGetValueAsString(
                 handle,
                 parameter,
-                bufferReceive,
                 bufferLength);
 
         if (result == OS_SUCCESS)
         {
-            const void* buf = dataport_unwrap_ptr(bufferReceive);
-            memcpy(buffer, buf, bufferLength);
+            OS_ConfigService_ClientCtx_t* clientCtx =
+                (OS_ConfigService_ClientCtx_t*)
+                OS_ConfigServiceHandle_getClientContext(&handle);
+            memcpy(buffer, *clientCtx->dataport.io, bufferLength);
         }
 
         return result;
@@ -565,21 +569,18 @@ OS_ConfigService_parameterGetValueAsBlob(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        static dataport_ptr_t bufferReceive;
-
-        bufferReceive = dataport_wrap_ptr((void*)cfg_dataport_buf);
-
         int result =
             OS_ConfigServiceServer_parameterGetValueAsBlob(
                 handle,
                 parameter,
-                bufferReceive,
                 bufferLength);
 
         if (result == OS_SUCCESS)
         {
-            const void* buf = dataport_unwrap_ptr(bufferReceive);
-            memcpy(buffer, buf, bufferLength);
+            OS_ConfigService_ClientCtx_t* clientCtx =
+                (OS_ConfigService_ClientCtx_t*)
+                OS_ConfigServiceHandle_getClientContext(&handle);
+            memcpy(buffer, *clientCtx->dataport.io, bufferLength);
         }
 
         return result;
@@ -610,16 +611,20 @@ OS_ConfigService_parameterSetValue(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        static dataport_ptr_t bufferSend;
+        OS_ConfigService_ClientCtx_t* clientCtx =
+            (OS_ConfigService_ClientCtx_t*)
+            OS_ConfigServiceHandle_getClientContext(&handle);
 
-        memcpy((void*)cfg_dataport_buf, buffer, bufferLength);
-        bufferSend = dataport_wrap_ptr((void*)cfg_dataport_buf);
+        if (bufferLength > clientCtx->dataport.size)
+        {
+            return OS_ERROR_BUFFER_TOO_SMALL;
+        }
+        memcpy(*clientCtx->dataport.io, buffer, bufferLength);
 
         return OS_ConfigServiceServer_parameterSetValue(
                    handle,
                    enumerator,
                    parameterType,
-                   bufferSend,
                    bufferLength);
 #else
         return OS_ERROR_INVALID_PARAMETER;
@@ -705,16 +710,20 @@ OS_ConfigService_parameterSetValueAsString(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        static dataport_ptr_t bufferSend;
+        OS_ConfigService_ClientCtx_t* clientCtx =
+            (OS_ConfigService_ClientCtx_t*)
+            OS_ConfigServiceHandle_getClientContext(&handle);
 
-        memcpy((void*)cfg_dataport_buf, buffer, bufferLength);
-        bufferSend = dataport_wrap_ptr((void*)cfg_dataport_buf);
+        if (bufferLength > clientCtx->dataport.size)
+        {
+            return OS_ERROR_BUFFER_TOO_SMALL;
+        }
+        memcpy(*clientCtx->dataport.io, buffer, bufferLength);
 
         return OS_ConfigServiceServer_parameterSetValueAsString(
                    handle,
                    enumerator,
                    parameterType,
-                   bufferSend,
                    bufferLength);
 #else
         return OS_ERROR_INVALID_PARAMETER;
@@ -744,16 +753,20 @@ OS_ConfigService_parameterSetValueAsBlob(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        static dataport_ptr_t bufferSend;
+        OS_ConfigService_ClientCtx_t* clientCtx =
+            (OS_ConfigService_ClientCtx_t*)
+            OS_ConfigServiceHandle_getClientContext(&handle);
 
-        memcpy((void*)cfg_dataport_buf, buffer, bufferLength);
-        bufferSend = dataport_wrap_ptr((void*)cfg_dataport_buf);
+        if (bufferLength > clientCtx->dataport.size)
+        {
+            return OS_ERROR_BUFFER_TOO_SMALL;
+        }
+        memcpy(*clientCtx->dataport.io, buffer, bufferLength);
 
         return OS_ConfigServiceServer_parameterSetValueAsBlob(
                    handle,
                    enumerator,
                    parameterType,
-                   bufferSend,
                    bufferLength);
 #else
         return OS_ERROR_INVALID_PARAMETER;
@@ -787,21 +800,25 @@ OS_ConfigService_parameterGetValueFromDomainName(
 
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
 
-        static dataport_ptr_t bufferReceive;
-        bufferReceive = dataport_wrap_ptr((void*)cfg_dataport_buf);
         int result = OS_ConfigServiceServer_parameterGetValueFromDomainName(
                          handle,
                          domainName,
                          parameterName,
                          parameterType,
-                         bufferReceive,
                          bufferLength,
                          bytesCopied);
 
         if (result == OS_SUCCESS)
         {
-            const void* buf = dataport_unwrap_ptr(bufferReceive);
-            memcpy(buffer, buf, *bytesCopied);
+            OS_ConfigService_ClientCtx_t* clientCtx =
+                (OS_ConfigService_ClientCtx_t*)
+                OS_ConfigServiceHandle_getClientContext(&handle);
+
+            if (*bytesCopied > bufferLength)
+            {
+                return OS_ERROR_BUFFER_TOO_SMALL;
+            }
+            memcpy(buffer, *clientCtx->dataport.io, *bytesCopied);
         }
 
         return result;

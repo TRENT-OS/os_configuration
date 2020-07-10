@@ -3,16 +3,24 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
+#include <unistd.h>
+
 #include "OS_ConfigServiceHandle.h"
 
 /* Exported functions --------------------------------------------------------*/
 void
 OS_ConfigServiceHandle_initRemoteHandle(
     unsigned int instanceId,
+    intptr_t clientCtx,
+    void* dataport,
+    size_t dataportSize,
     OS_ConfigServiceHandle_t* handle)
 {
     handle->handleKind = OS_CONFIG_HANDLE_KIND_RPC;
     handle->context.rpc.id = instanceId;
+    handle->context.rpc.dataport = dataport;
+    handle->context.rpc.dataportSize = dataportSize;
+    handle->context.rpc.clientCtx = clientCtx;
 }
 
 //------------------------------------------------------------------------------
@@ -47,4 +55,17 @@ OS_ConfigServiceHandle_getLocalInstance(
     OS_ConfigServiceHandle_t handle)
 {
     return handle.context.local.instance;
+}
+
+//------------------------------------------------------------------------------
+intptr_t
+OS_ConfigServiceHandle_getClientContext(
+    OS_ConfigServiceHandle_t* handle
+)
+{
+    if (handle->handleKind != OS_CONFIG_HANDLE_KIND_RPC)
+    {
+        return (intptr_t) NULL;
+    }
+    return handle->context.rpc.clientCtx;
 }

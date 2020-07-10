@@ -61,30 +61,27 @@ OS_ConfigServiceServer_getInstances(void)
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_createHandle(
-    OS_ConfigServiceHandle_HandleKind_t handleKind,
     unsigned int id,
+    intptr_t clientCtx,
+    dataport_ptr_t wrappedDp,
+    size_t wrappedDpSize,
     OS_ConfigServiceHandle_t* handle)
 {
     OS_Error_t result;
 
-    if (handleKind == OS_CONFIG_HANDLE_KIND_RPC)
+    OS_ConfigServiceLib_t* instance = OS_ConfigServiceInstanceStore_getInstance(
+                                          &server.instanceStore,
+                                          id);
+
+    if (instance != NULL)
     {
-        OS_ConfigServiceLib_t* instance = OS_ConfigServiceInstanceStore_getInstance(
-                                              &server.instanceStore,
-                                              id);
-
-        if (instance != NULL)
-        {
-            OS_ConfigServiceHandle_initRemoteHandle(
-                id,
-                handle);
-
-            result = OS_SUCCESS;
-        }
-        else
-        {
-            result = OS_ERROR_INVALID_PARAMETER;
-        }
+        OS_ConfigServiceHandle_initRemoteHandle(
+            id,
+            clientCtx,
+            dataport_unwrap_ptr(wrappedDp),
+            wrappedDpSize,
+            handle);
+        result = OS_SUCCESS;
     }
     else
     {
@@ -446,7 +443,6 @@ OS_Error_t
 OS_ConfigServiceServer_parameterGetValue(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
-    dataport_ptr_t buffer,
     size_t bufferLength,
     size_t* bytesCopied)
 {
@@ -457,11 +453,14 @@ OS_ConfigServiceServer_parameterGetValue(
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
-        void* tmpBuf = dataport_unwrap_ptr(buffer);
+        if (bufferLength > handle.context.rpc.dataportSize)
+        {
+            return OS_ERROR_BUFFER_TOO_SMALL;
+        }
         result = OS_ConfigServiceLibrary_parameterGetValue(
                      localHandle,
                      parameter,
-                     tmpBuf,
+                     handle.context.rpc.dataport,
                      bufferLength,
                      bytesCopied);
     }
@@ -532,7 +531,6 @@ OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsString(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
-    dataport_ptr_t buffer,
     size_t bufferLength)
 {
     OS_ConfigServiceHandle_t localHandle;
@@ -542,11 +540,15 @@ OS_ConfigServiceServer_parameterGetValueAsString(
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
-        void* tmpBuf = dataport_unwrap_ptr(buffer);
+        if (bufferLength > handle.context.rpc.dataportSize)
+        {
+            return OS_ERROR_BUFFER_TOO_SMALL;
+        }
         result = OS_ConfigServiceLibrary_parameterGetValueAsString(
                      localHandle,
                      parameter,
-                     tmpBuf, bufferLength);
+                     handle.context.rpc.dataport,
+                     bufferLength);
     }
     else
     {
@@ -561,7 +563,6 @@ OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
-    dataport_ptr_t buffer,
     size_t bufferLength)
 {
     OS_ConfigServiceHandle_t localHandle;
@@ -571,11 +572,14 @@ OS_ConfigServiceServer_parameterGetValueAsBlob(
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
-        void* tmpBuf = dataport_unwrap_ptr(buffer);
+        if (bufferLength > handle.context.rpc.dataportSize)
+        {
+            return OS_ERROR_BUFFER_TOO_SMALL;
+        }
         result = OS_ConfigServiceLibrary_parameterGetValueAsBlob(
                      localHandle,
                      parameter,
-                     tmpBuf,
+                     handle.context.rpc.dataport,
                      bufferLength);
     }
     else
@@ -592,7 +596,6 @@ OS_ConfigServiceServer_parameterSetValue(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    dataport_ptr_t buffer,
     size_t bufferLength)
 {
     OS_ConfigServiceHandle_t localHandle;
@@ -602,12 +605,15 @@ OS_ConfigServiceServer_parameterSetValue(
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
-        void* tmpBuf = dataport_unwrap_ptr(buffer);
+        if (bufferLength > handle.context.rpc.dataportSize)
+        {
+            return OS_ERROR_BUFFER_TOO_SMALL;
+        }
         result = OS_ConfigServiceLibrary_parameterSetValue(
                      localHandle,
                      enumerator,
                      parameterType,
-                     tmpBuf,
+                     handle.context.rpc.dataport,
                      bufferLength);
     }
     else
@@ -678,7 +684,6 @@ OS_ConfigServiceServer_parameterSetValueAsString(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    dataport_ptr_t buffer,
     size_t bufferLength)
 {
     OS_ConfigServiceHandle_t localHandle;
@@ -688,12 +693,15 @@ OS_ConfigServiceServer_parameterSetValueAsString(
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
-        void* tmpBuf = dataport_unwrap_ptr(buffer);
+        if (bufferLength > handle.context.rpc.dataportSize)
+        {
+            return OS_ERROR_BUFFER_TOO_SMALL;
+        }
         result = OS_ConfigServiceLibrary_parameterSetValueAsString(
                      localHandle,
                      enumerator,
                      parameterType,
-                     tmpBuf,
+                     handle.context.rpc.dataport,
                      bufferLength);
     }
     else
@@ -710,7 +718,6 @@ OS_ConfigServiceServer_parameterSetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    dataport_ptr_t buffer,
     size_t bufferLength)
 {
     OS_ConfigServiceHandle_t localHandle;
@@ -720,12 +727,15 @@ OS_ConfigServiceServer_parameterSetValueAsBlob(
         OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
                 &localHandle))
     {
-        void* tmpBuf = dataport_unwrap_ptr(buffer);
+        if (bufferLength > handle.context.rpc.dataportSize)
+        {
+            return OS_ERROR_BUFFER_TOO_SMALL;
+        }
         result = OS_ConfigServiceLibrary_parameterSetValueAsBlob(
                      localHandle,
                      enumerator,
                      parameterType,
-                     tmpBuf,
+                     handle.context.rpc.dataport,
                      bufferLength);
     }
     else
@@ -743,7 +753,6 @@ OS_ConfigServiceServer_parameterGetValueFromDomainName(
     OS_ConfigServiceLibTypes_DomainName_t const* domainName,
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    dataport_ptr_t buffer,
     size_t bufferLength,
     size_t* bytesCopied)
 {
@@ -757,13 +766,16 @@ OS_ConfigServiceServer_parameterGetValueFromDomainName(
         return OS_ERROR_INVALID_PARAMETER;
     }
 
-    void* tmpBuf = dataport_unwrap_ptr(buffer);
+    if (bufferLength > handle.context.rpc.dataportSize)
+    {
+        return OS_ERROR_BUFFER_TOO_SMALL;
+    }
     return OS_ConfigServiceLibrary_parameterGetValueFromDomainName(
                localHandle,
                domainName,
                parameterName,
                parameterType,
-               tmpBuf,
+               handle.context.rpc.dataport,
                bufferLength,
                bytesCopied);
 }

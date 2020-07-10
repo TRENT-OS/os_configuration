@@ -200,8 +200,15 @@ acting as clients and connecting to a remote ConfigServer component only require
 
     OS_ConfigServiceHandle_t remoteHandle;
 
+    static OS_ConfigService_ClientCtx_t ctx =
+    {
+        .dataport = OS_DATAPORT_ASSIGN(<dataport_to_server>)
+    };
     //Open remote handle of the ConfigServer API
-    OS_ConfigService_createHandleRemote(<HANDLE_ID>, &remoteHandle);
+    err = OS_ConfigService_createHandleRemote(
+            <HANDLE_ID>,
+            &ctx,
+            handle);
 
 If the ConfigServer is run locally on the client CAmkES component, it is also
 possible to create a local handle:
@@ -298,7 +305,7 @@ and domain value to it as seen in this example:
 ### API Reference
 
     OS_Error_t OS_ConfigService_createHandleLocal(unsigned int id, out OS_ConfigServiceHandle_t handle);
-    OS_Error_t OS_ConfigService_createHandleRemote(unsigned int id, out OS_ConfigServiceHandle_t handle);
+    OS_Error_t OS_ConfigService_createHandleRemote(unsigned int id, OS_ConfigService_ClientCtx_t* clientCtx,, out OS_ConfigServiceHandle_t handle);
 
     OS_Error_t OS_ConfigService_domainEnumeratorInit(OLocalS_ConfigServiceHandle_t handle, out OS_ConfigServiceLibTypes_DomainEnumerator_t enumerator);
     OS_Error_t OS_ConfigService_domainEnumeratorClose(OS_ConfigServiceHandle_t handle, inout OS_ConfigServiceLibTypes_DomainEnumerator_t enumerator);
@@ -319,19 +326,19 @@ and domain value to it as seen in this example:
     void OS_ConfigService_parameterGetType(refin OS_ConfigServiceLibTypes_Parameter_t parameter, out OS_ConfigServiceLibTypes_ParameterType_t parameterType);
     size_t OS_ConfigService_parameterGetSize(refin OS_ConfigServiceLibTypes_Parameter_t parameter);
 
-    OS_Error_t OS_ConfigService_parameterGetValue(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, dataport_ptr_t buffer, size_t bufferLength, out size_t bytesCopied);
+    OS_Error_t OS_ConfigService_parameterGetValue(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, size_t bufferLength, out size_t bytesCopied);
     OS_Error_t OS_ConfigService_parameterGetValueAsU32(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, out uint32_t value);
     OS_Error_t OS_ConfigService_parameterGetValueAsU64(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, out uint64_t value);
-    OS_Error_t OS_ConfigService_parameterGetValueAsString(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, dataport_ptr_t buffer, size_t bufferLength);
-    OS_Error_t OS_ConfigService_parameterGetValueAsBlob(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, dataport_ptr_t buffer, size_t bufferLength);
+    OS_Error_t OS_ConfigService_parameterGetValueAsString(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, size_t bufferLength);
+    OS_Error_t OS_ConfigService_parameterGetValueAsBlob(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, size_t bufferLength);
 
-    OS_Error_t OS_ConfigService_parameterSetValue(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, OS_ConfigServiceLibTypes_ParameterType_t parameterType, dataport_ptr_t buffer, size_t bufferLength);
+    OS_Error_t OS_ConfigService_parameterSetValue(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, OS_ConfigServiceLibTypes_ParameterType_t parameterType, size_t bufferLength);
     OS_Error_t OS_ConfigService_parameterSetValueAsU32(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, uint32_t value);
     OS_Error_t OS_ConfigService_parameterSetValueAsU64(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, uint64_t value);
-    OS_Error_t OS_ConfigService_parameterSetValueAsString(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, OS_ConfigServiceLibTypes_ParameterType_t parameterType, dataport_ptr_t buffer, size_t bufferLength);
-    OS_Error_t OS_ConfigService_parameterSetValueAsBlob(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, OS_ConfigServiceLibTypes_ParameterType_t parameterType, dataport_ptr_t buffer, size_t bufferLength);
+    OS_Error_t OS_ConfigService_parameterSetValueAsString(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, OS_ConfigServiceLibTypes_ParameterType_t parameterType, size_t bufferLength);
+    OS_Error_t OS_ConfigService_parameterSetValueAsBlob(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, OS_ConfigServiceLibTypes_ParameterType_t parameterType, size_t bufferLength);
 
-    OS_Error_t OS_ConfigService_parameterGetValueFromDomainName(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_DomainName_t domainName, refin OS_ConfigServiceLibTypes_ParameterName_t parameterName, OS_ConfigServiceLibTypes_ParameterType_t parameterType, dataport_ptr_t buffer, size_t bufferLength, out size_t bytesCopied);
+    OS_Error_t OS_ConfigService_parameterGetValueFromDomainName(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_DomainName_t domainName, refin OS_ConfigServiceLibTypes_ParameterName_t parameterName, OS_ConfigServiceLibTypes_ParameterType_t parameterType, size_t bufferLength, out size_t bytesCopied);
 
 ### Tests
 You can find an example test systems at:

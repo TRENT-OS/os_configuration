@@ -14,7 +14,7 @@
 #pragma once
 
 /* Includes ------------------------------------------------------------------*/
-#include "camkes.h"
+#include "camkes/dataport.h"
 
 #include "OS_Error.h"
 
@@ -27,8 +27,10 @@ OS_ConfigServiceServer_getInstances(void);
 
 OS_Error_t
 OS_ConfigServiceServer_createHandle(
-    OS_ConfigServiceHandle_HandleKind_t handleKind,
     unsigned int id,
+    intptr_t clientCtx,
+    dataport_ptr_t dataport,
+    size_t dataportSize,
     OS_ConfigServiceHandle_t* handle);
 
 OS_Error_t
@@ -121,7 +123,6 @@ OS_Error_t
 OS_ConfigServiceServer_parameterGetValue(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
-    dataport_ptr_t buffer,
     size_t bufferLength,
     size_t* bytesCopied);
 
@@ -141,14 +142,12 @@ OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsString(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
-    dataport_ptr_t buffer,
     size_t bufferLength);
 
 OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
-    dataport_ptr_t buffer,
     size_t bufferLength);
 
 OS_Error_t
@@ -156,7 +155,6 @@ OS_ConfigServiceServer_parameterSetValue(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    dataport_ptr_t buffer,
     size_t bufferLength);
 
 OS_Error_t
@@ -176,7 +174,6 @@ OS_ConfigServiceServer_parameterSetValueAsString(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    dataport_ptr_t buffer,
     size_t bufferLength);
 
 OS_Error_t
@@ -184,7 +181,6 @@ OS_ConfigServiceServer_parameterSetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    dataport_ptr_t buffer,
     size_t bufferLength);
 
 OS_Error_t
@@ -193,7 +189,6 @@ OS_ConfigServiceServer_parameterGetValueFromDomainName(
     OS_ConfigServiceLibTypes_DomainName_t const* domainName,
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    dataport_ptr_t buffer,
     size_t bufferLength,
     size_t* bytesCopied);
 

@@ -32,7 +32,10 @@ typedef struct
     {
         struct
         {
-            unsigned int id;
+            unsigned int    id;
+            void*           dataport;
+            size_t          dataportSize;
+            intptr_t        clientCtx;
         } rpc;
 
         struct
@@ -47,6 +50,9 @@ OS_ConfigServiceHandle_t;
 void
 OS_ConfigServiceHandle_initRemoteHandle(
     unsigned int instanceId,
+    intptr_t clientCtx,
+    void* dataport,
+    size_t dataportSize,
     OS_ConfigServiceHandle_t* handle);
 
 void
@@ -65,5 +71,10 @@ OS_ConfigServiceHandle_getRemoteInstance(
 void*
 OS_ConfigServiceHandle_getLocalInstance(
     OS_ConfigServiceHandle_t handle);
+
+intptr_t
+OS_ConfigServiceHandle_getClientContext(
+    OS_ConfigServiceHandle_t* handle
+);
 
 /** @} */

@@ -10,7 +10,6 @@ a component or as a separate remote server component.
 
 ### Dependencies
 
-* PartitionManager
 * FileSystem
 
 
@@ -32,8 +31,7 @@ backend with **OS_CONFIG_SERVICE_BACKEND_FILESYSTEM** or choosing a memory
 backend with **OS_CONFIG_SERVICE_BACKEND_MEMORY**.
 
 If the component is built using a filesystem backend, it is recommended to take
-a look also at the documentation of the TRENTOS FileSystemCore and
-PartitionManager libraries.
+a look also at the documentation of the TRENTOS FileSystem library.
 Please also note the usage of the **os_core_api** lib in the next sample code
 segment. Along with other things, this also brings in the CAmkES
 interface file needed to build a client/server component setup. This will be
@@ -50,10 +48,6 @@ filesystem backend would result in:
         C_FLAGS
             -Wall
             -Werror
-            # filesystem
-            -DOS_FS_BUILD_AS_LIB_BASIC_HANDLE
-            # partition manager
-            -DOS_PARTITION_MANAGER_BUILD_AS_COMPONENT # uses the PartitionManager as a component
             # config server
             -DOS_CONFIG_SERVICE_BACKEND_FILESYSTEM # indicates the use of a filesystem backend
             -DOS_CONFIG_SERVICE_CAMKES_SERVER     # indicates a CAmkES configuration server is being built
@@ -62,10 +56,7 @@ filesystem backend would result in:
             os_libs
             os_core_api
             os_configuration
-            os_partition_manager_api
-            os_filesystem_core
-            os_filesystem_fat
-            os_filesystem_spiffs
+            os_filesystem
     )
 
 A client component will have to only include the relevant lib and set the correct define:
@@ -121,10 +112,8 @@ setting a dataport:
 
 #### Initialization
 
-When initializing the Configuration lib with a filesystem backend, you will also
-have to first initialize a partition object with the partition ID you
-want to write to. The init process of the this can be found in the documentation
-of the PartitionManager lib and won't be covered in the following example.
+When initializing the Configuration lib with a filesystem backend, you will have
+to provide an initialized filesystem handle.
 
     #include "OS_ConfigServiceServer.h"   // use "OS_ConfigServiceLibrary.h" if you are using the library build option
 
@@ -183,10 +172,9 @@ otherwise the init process will not be able to parse the file contents.
 
 
 Initializing the Configuration lib with a memory backend does not have any
-dependencies to the PartitionManager and so you can skip the init process
-of this additional layer since you will be writing the parameters directly into
-memory of the component integrating this library. The init process
-is very similar to the one described above for the filesystem but once you start
+so you can skip the init process of this additional layer since you will be writing
+the parameters directly into memory of the component integrating this library. The
+init process is very similar to the one described above for the filesystem but once you start
 initializing the different sections, you will be calling the following
 functions:
 

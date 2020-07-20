@@ -41,8 +41,8 @@ OS_Error_t OS_ConfigServiceBackend_writeToFile(
                          hFs,
                          &hFile,
                          name,
-                         OS_FileSystem_OpenMode_RDWR,
-                         OS_FileSystem_OpenFlags_CREATE);
+                         OS_FileSystem_OpenMode_WRONLY,
+                         OS_FileSystem_OpenFlags_NONE);
     if (OS_SUCCESS != err)
     {
         Debug_LOG_ERROR("OS_FileSystemFile_open() failed with: %d", err);

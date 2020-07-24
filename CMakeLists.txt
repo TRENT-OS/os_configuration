@@ -43,17 +43,3 @@ target_link_libraries(${PROJECT_NAME}
     INTERFACE
         os_libs
 )
-
-#------------------------------------------------------------------------------
-
-# if invoked from the OS sandbox, provide a documentation build target
-if (COMMAND os_create_doxygen_target)
-
-    os_create_doxygen_target( os_configuration_doc
-        # API header is documented as part of os_core_api, so we do nothing
-        "echo"
-        # API header is documented as part of os_core_api, so we do nothing
-        "echo"
-    )
-
-endif()

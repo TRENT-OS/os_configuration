@@ -19,57 +19,36 @@
 #endif
 
 /* Local types ---------------------------------------------------------------*/
-typedef struct
-{
-    OS_ConfigServiceInstanceStore_t instanceStore;
-}
-OS_ConfigService_Client_t;
-
-
-static OS_ConfigService_Client_t client;
+static OS_ConfigServiceLib_t clientInstance;
 
 /* Exported functions --------------------------------------------------------*/
-OS_ConfigServiceInstanceStore_t*
-OS_ConfigService_getInstances(void)
+OS_ConfigServiceLib_t*
+OS_ConfigService_getInstance(void)
 {
 #if defined(OS_CONFIG_SERVICE_CAMKES_SERVER)
-    return OS_ConfigServiceServer_getInstances();
+    return OS_ConfigServiceServer_getInstance();
 #endif
-    return &client.instanceStore;
+    return &clientInstance;
 }
 
 OS_Error_t
 OS_ConfigService_createHandleLocal(
-    unsigned int id,
     OS_ConfigServiceHandle_t* handle)
 {
-    OS_ConfigServiceLib_t* instance = OS_ConfigServiceInstanceStore_getInstance(
-                                          &client.instanceStore,
-                                          id);
+    OS_ConfigServiceHandle_initLocalHandle(
+        (void*)&clientInstance,
+        handle);
 
-    if (instance != NULL)
-    {
-        OS_ConfigServiceHandle_initLocalHandle(
-            (void*)instance,
-            handle);
-
-        return OS_SUCCESS;
-    }
-    else
-    {
-        return OS_ERROR_INVALID_PARAMETER;
-    }
+    return OS_SUCCESS;
 }
 
 OS_Error_t
 OS_ConfigService_createHandleRemote(
-    unsigned int id,
     OS_ConfigService_ClientCtx_t* clientCtx,
     OS_ConfigServiceHandle_t* handle)
 {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
     OS_Error_t err = OS_ConfigServiceServer_createHandle(
-                         id,
                          (intptr_t) clientCtx,
                          dataport_wrap_ptr(*clientCtx->dataport.io),
                          clientCtx->dataport.size,
@@ -90,7 +69,7 @@ OS_ConfigService_domainEnumeratorInit(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        return OS_ConfigServiceServer_domainEnumeratorInit(handle, enumerator);
+        return OS_ConfigServiceServer_domainEnumeratorInit(enumerator);
 #else
         return OS_ERROR_INVALID_PARAMETER;
 #endif
@@ -111,7 +90,7 @@ OS_ConfigService_domainEnumeratorClose(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        return OS_ConfigServiceServer_domainEnumeratorClose(handle, enumerator);
+        return OS_ConfigServiceServer_domainEnumeratorClose(enumerator);
 #else
         return OS_ERROR_INVALID_PARAMETER;
 #endif
@@ -132,7 +111,7 @@ OS_ConfigService_domainEnumeratorReset(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        return OS_ConfigServiceServer_domainEnumeratorReset(handle, enumerator);
+        return OS_ConfigServiceServer_domainEnumeratorReset(enumerator);
 #else
         return OS_ERROR_INVALID_PARAMETER;
 #endif
@@ -153,7 +132,7 @@ OS_ConfigService_domainEnumeratorIncrement(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        return OS_ConfigServiceServer_domainEnumeratorIncrement(handle, enumerator);
+        return OS_ConfigServiceServer_domainEnumeratorIncrement(enumerator);
 #else
         return OS_ERROR_INVALID_PARAMETER;
 #endif
@@ -176,7 +155,6 @@ OS_ConfigService_domainEnumeratorGetElement(
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_domainEnumeratorGetElement(
-                   handle,
                    enumerator,
                    domain);
 #else
@@ -204,7 +182,6 @@ OS_ConfigService_parameterEnumeratorInit(
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_parameterEnumeratorInit(
-                   handle,
                    domainEnumerator,
                    enumerator);
 #else
@@ -230,7 +207,7 @@ OS_ConfigService_parameterEnumeratorClose(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        return OS_ConfigServiceServer_parameterEnumeratorClose(handle, enumerator);
+        return OS_ConfigServiceServer_parameterEnumeratorClose(enumerator);
 #else
         return OS_ERROR_INVALID_PARAMETER;
 #endif
@@ -251,7 +228,7 @@ OS_ConfigService_parameterEnumeratorReset(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        return OS_ConfigServiceServer_parameterEnumeratorReset(handle, enumerator);
+        return OS_ConfigServiceServer_parameterEnumeratorReset(enumerator);
 #else
         return OS_ERROR_INVALID_PARAMETER;
 #endif
@@ -273,7 +250,6 @@ OS_ConfigService_parameterEnumeratorIncrement(
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_parameterEnumeratorIncrement(
-                   handle,
                    enumerator);
 #else
         return OS_ERROR_INVALID_PARAMETER;
@@ -299,7 +275,6 @@ OS_ConfigService_parameterEnumeratorGetElement(
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_parameterEnumeratorGetElement(
-                   handle,
                    enumerator,
                    parameter);
 #else
@@ -337,7 +312,6 @@ OS_ConfigService_domainCreateParameterEnumerator(
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_domainCreateParameterEnumerator(
-                   handle,
                    domain,
                    parameterName,
                    parameterEnumerator);
@@ -368,7 +342,6 @@ OS_ConfigService_domainGetElement(
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_domainGetElement(
-                   handle,
                    domain,
                    parameterName,
                    parameter);
@@ -427,7 +400,6 @@ OS_ConfigService_parameterGetValue(
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         int result =
             OS_ConfigServiceServer_parameterGetValue(
-                handle,
                 parameter,
                 bufferLength,
                 bytesCopied);
@@ -472,7 +444,6 @@ OS_ConfigService_parameterGetValueAsU32(
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_parameterGetValueAsU32(
-                   handle,
                    parameter,
                    value);
 #else
@@ -500,7 +471,6 @@ OS_ConfigService_parameterGetValueAsU64(
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_parameterGetValueAsU64(
-                   handle,
                    parameter,
                    value);
 #else
@@ -530,7 +500,6 @@ OS_ConfigService_parameterGetValueAsString(
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         int result =
             OS_ConfigServiceServer_parameterGetValueAsString(
-                handle,
                 parameter,
                 bufferLength);
 
@@ -571,7 +540,6 @@ OS_ConfigService_parameterGetValueAsBlob(
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         int result =
             OS_ConfigServiceServer_parameterGetValueAsBlob(
-                handle,
                 parameter,
                 bufferLength);
 
@@ -622,7 +590,6 @@ OS_ConfigService_parameterSetValue(
         memcpy(*clientCtx->dataport.io, buffer, bufferLength);
 
         return OS_ConfigServiceServer_parameterSetValue(
-                   handle,
                    enumerator,
                    parameterType,
                    bufferLength);
@@ -653,7 +620,6 @@ OS_ConfigService_parameterSetValueAsU32(
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_parameterSetValueAsU32(
-                   handle,
                    enumerator,
                    value);
 #else
@@ -681,7 +647,6 @@ OS_ConfigService_parameterSetValueAsU64(
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
         return OS_ConfigServiceServer_parameterSetValueAsU64(
-                   handle,
                    enumerator,
                    value);
 #else
@@ -721,7 +686,6 @@ OS_ConfigService_parameterSetValueAsString(
         memcpy(*clientCtx->dataport.io, buffer, bufferLength);
 
         return OS_ConfigServiceServer_parameterSetValueAsString(
-                   handle,
                    enumerator,
                    parameterType,
                    bufferLength);
@@ -764,7 +728,6 @@ OS_ConfigService_parameterSetValueAsBlob(
         memcpy(*clientCtx->dataport.io, buffer, bufferLength);
 
         return OS_ConfigServiceServer_parameterSetValueAsBlob(
-                   handle,
                    enumerator,
                    parameterType,
                    bufferLength);
@@ -801,7 +764,6 @@ OS_ConfigService_parameterGetValueFromDomainName(
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
 
         int result = OS_ConfigServiceServer_parameterGetValueFromDomainName(
-                         handle,
                          domainName,
                          parameterName,
                          parameterType,

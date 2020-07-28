@@ -33,7 +33,6 @@ target_sources(${PROJECT_NAME}
         src/OS_ConfigServiceBackend.c
         src/OS_ConfigService.c
         src/OS_ConfigServiceHandle.c
-        src/OS_ConfigServiceInstanceStore.c
         src/OS_ConfigServiceLib.c
         src/OS_ConfigServiceLibrary.c
         src/OS_ConfigServiceServer.c

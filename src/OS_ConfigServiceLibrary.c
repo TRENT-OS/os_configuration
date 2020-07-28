@@ -8,14 +8,6 @@
 #include "OS_ConfigServiceLibrary.h"
 
 /* Exported functions --------------------------------------------------------*/
-// The library implementation does not have an instance store.
-OS_ConfigServiceInstanceStore_t*
-OS_ConfigServiceLibrary_getInstances(void)
-{
-    return NULL;
-}
-
-//------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceLibrary_createHandle(
     OS_ConfigServiceHandle_HandleKind_t handleKind,

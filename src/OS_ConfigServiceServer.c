@@ -8,341 +8,244 @@
 #include "OS_ConfigServiceServer.h"
 #include "OS_ConfigServiceLibrary.h"
 
+#include "LibDebug/Debug.h"
+
+#include <camkes.h>
+
 /* Local types ---------------------------------------------------------------*/
-typedef struct
+static OS_ConfigServiceLib_t serverInstance;
+
+// Not generated yet by camkes
+seL4_Word OS_ConfigServiceServer_get_sender_id(void);
+
+// How many parallel remote instances can we handle? This number can be easily
+// increased, for now it is aligned with the limits of other server systems
+// which are provided by TRENTOS-M SDK 1.0
+#define MAX_REMOTE_HANDLES 8
+static OS_ConfigServiceHandle_t localHandleCopies[MAX_REMOTE_HANDLES];
+
+static OS_ConfigServiceHandle_t*
+getLocalCopyOfHandle(void)
 {
-    OS_ConfigServiceInstanceStore_t instanceStore;
+    seL4_Word id = OS_ConfigServiceServer_get_sender_id();
+    Debug_ASSERT(id >= 0 && id < MAX_REMOTE_HANDLES);
+    return &localHandleCopies[id];
 }
-OS_ConfigServiceServer_t;
-
-
-static OS_ConfigServiceServer_t server;
 
 /* Exported functions --------------------------------------------------------*/
-static
-OS_Error_t
-OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(
-    OS_ConfigServiceHandle_t remoteHandle,
-    OS_ConfigServiceHandle_t* localHandle)
+OS_ConfigServiceLib_t*
+OS_ConfigServiceServer_getInstance(void)
 {
-    if (OS_CONFIG_HANDLE_KIND_RPC == OS_ConfigServiceHandle_getHandleKind(
-            remoteHandle))
-    {
-        OS_ConfigServiceLib_t* instance = OS_ConfigServiceInstanceStore_getInstance(
-                                              &server.instanceStore,
-                                              OS_ConfigServiceHandle_getRemoteInstance(remoteHandle));
-
-        if (instance != NULL)
-        {
-            OS_ConfigServiceHandle_initLocalHandle(
-                (void*)instance,
-                localHandle);
-
-            return OS_SUCCESS;
-        }
-        else
-        {
-            return OS_ERROR_INVALID_PARAMETER;
-        }
-    }
-    else
-    {
-        return OS_ERROR_INVALID_PARAMETER;
-    }
-}
-
-//------------------------------------------------------------------------------
-OS_ConfigServiceInstanceStore_t*
-OS_ConfigServiceServer_getInstances(void)
-{
-    return &server.instanceStore;
+    return &serverInstance;
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_createHandle(
-    unsigned int id,
     intptr_t clientCtx,
     dataport_ptr_t wrappedDp,
     size_t wrappedDpSize,
     OS_ConfigServiceHandle_t* handle)
 {
-    OS_Error_t result;
+    void* ptr;
 
-    OS_ConfigServiceLib_t* instance = OS_ConfigServiceInstanceStore_getInstance(
-                                          &server.instanceStore,
-                                          id);
-
-    if (instance != NULL)
+    // Make sure that we actually get a dataport here and not some arbitrary
+    // memory pointer..
+    if ((ptr = dataport_unwrap_ptr(wrappedDp)) == NULL)
     {
-        OS_ConfigServiceHandle_initRemoteHandle(
-            id,
-            clientCtx,
-            dataport_unwrap_ptr(wrappedDp),
-            wrappedDpSize,
-            handle);
-        result = OS_SUCCESS;
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_INVALID_PARAMETER;
     }
 
-    return result;
+    // Formerly, the server would init a context and pass it back to the client,
+    // which would then send it back so the server knew the dataport etc. for
+    // this specific client. Now, we keep the init and sending it back to thew
+    // client, but we no longer accept the client sending its context again and
+    // again, so we keep a copy of it in case it is needed (when using a dataport)
+    OS_ConfigServiceHandle_initRemoteHandle(
+        clientCtx,
+        ptr,
+        wrappedDpSize,
+        handle);
+
+    // Every client has its own copy which we keep and index based on their
+    // CAmkES badge ID.
+    OS_ConfigServiceHandle_initRemoteHandle(
+        clientCtx,
+        ptr,
+        wrappedDpSize,
+        getLocalCopyOfHandle());
+
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_domainEnumeratorInit(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        result = OS_ConfigServiceLibrary_domainEnumeratorInit(
-                     localHandle,
-                     enumerator);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-    return result;
+    return OS_ConfigServiceLibrary_domainEnumeratorInit(
+               localHandle,
+               enumerator);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_domainEnumeratorClose(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        OS_ConfigServiceLibrary_domainEnumeratorClose(localHandle, enumerator);
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-        result = OS_SUCCESS;
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceLibrary_domainEnumeratorClose(
+        localHandle,
+        enumerator);
 
-    return result;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_domainEnumeratorReset(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        OS_ConfigServiceLibrary_domainEnumeratorReset(localHandle, enumerator);
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-        result = OS_SUCCESS;
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceLibrary_domainEnumeratorReset(
+        localHandle,
+        enumerator);
 
-    return result;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_domainEnumeratorIncrement(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        result = OS_ConfigServiceLibrary_domainEnumeratorIncrement(
-                     localHandle,
-                     enumerator);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-    return result;
+    return OS_ConfigServiceLibrary_domainEnumeratorIncrement(
+               localHandle,
+               enumerator);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_domainEnumeratorGetElement(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_Domain_t* domain)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        result = OS_ConfigServiceLibrary_domainEnumeratorGetElement(
-                     localHandle,
-                     enumerator,
-                     domain);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-    return result;
+    return OS_ConfigServiceLibrary_domainEnumeratorGetElement(
+               localHandle,
+               enumerator,
+               domain);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterEnumeratorInit(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainEnumerator_t const* domainEnumerator,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        result = OS_ConfigServiceLibrary_parameterEnumeratorInit(
-                     localHandle,
-                     domainEnumerator,
-                     enumerator);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-    return result;
+    return OS_ConfigServiceLibrary_parameterEnumeratorInit(
+               localHandle,
+               domainEnumerator,
+               enumerator);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterEnumeratorClose(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        OS_ConfigServiceLibrary_parameterEnumeratorClose(localHandle, enumerator);
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-        result = OS_SUCCESS;
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceLibrary_parameterEnumeratorClose(
+        localHandle,
+        enumerator);
 
-    return result;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterEnumeratorReset(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        result = OS_ConfigServiceLibrary_parameterEnumeratorReset(
-                     localHandle,
-                     enumerator);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-    return result;
+    return OS_ConfigServiceLibrary_parameterEnumeratorReset(
+               localHandle,
+               enumerator);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterEnumeratorIncrement(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        result = OS_ConfigServiceLibrary_parameterEnumeratorIncrement(
-                     localHandle,
-                     enumerator);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-    return result;
+    return OS_ConfigServiceLibrary_parameterEnumeratorIncrement(
+               localHandle,
+               enumerator);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterEnumeratorGetElement(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_Parameter_t* parameter)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        result = OS_ConfigServiceLibrary_parameterEnumeratorGetElement(localHandle,
-                 enumerator, parameter);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-    return result;
+    return OS_ConfigServiceLibrary_parameterEnumeratorGetElement(localHandle,
+            enumerator, parameter);
 }
 
 //------------------------------------------------------------------------------
@@ -357,59 +260,41 @@ OS_ConfigServiceServer_domainGetName(
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_domainCreateParameterEnumerator(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Domain_t const* domain,
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* parameterEnumerator)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        result = OS_ConfigServiceLibrary_domainCreateParameterEnumerator(
-                     localHandle,
-                     domain,
-                     parameterName,
-                     parameterEnumerator);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-    return result;
+    return OS_ConfigServiceLibrary_domainCreateParameterEnumerator(
+               localHandle,
+               domain,
+               parameterName,
+               parameterEnumerator);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_domainGetElement(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Domain_t const* domain,
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_Parameter_t* parameter)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        result = OS_ConfigServiceLibrary_domainGetElement(
-                     localHandle,
-                     domain,
-                     parameterName,
-                     parameter);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-    return result;
+    return OS_ConfigServiceLibrary_domainGetElement(
+               localHandle,
+               domain,
+               parameterName,
+               parameter);
 }
 
 //------------------------------------------------------------------------------
@@ -441,341 +326,261 @@ OS_ConfigServiceServer_parameterGetSize(
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterGetValue(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     size_t bufferLength,
     size_t* bytesCopied)
 {
+    OS_ConfigServiceHandle_t* copyOfRemoteHandle = getLocalCopyOfHandle();
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
+
+    if (bufferLength > copyOfRemoteHandle->context.rpc.dataportSize)
     {
-        if (bufferLength > handle.context.rpc.dataportSize)
-        {
-            return OS_ERROR_BUFFER_TOO_SMALL;
-        }
-        result = OS_ConfigServiceLibrary_parameterGetValue(
-                     localHandle,
-                     parameter,
-                     handle.context.rpc.dataport,
-                     bufferLength,
-                     bytesCopied);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_BUFFER_TOO_SMALL;
     }
 
-    return result;
+    return OS_ConfigServiceLibrary_parameterGetValue(
+               localHandle,
+               parameter,
+               copyOfRemoteHandle->context.rpc.dataport,
+               bufferLength,
+               bytesCopied);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsU32(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     uint32_t* value)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        result = OS_ConfigServiceLibrary_parameterGetValueAsU32(
-                     localHandle,
-                     parameter,
-                     value);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-    return result;
+    return OS_ConfigServiceLibrary_parameterGetValueAsU32(
+               localHandle,
+               parameter,
+               value);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsU64(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     uint64_t* value)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        result = OS_ConfigServiceLibrary_parameterGetValueAsU64(
-                     localHandle,
-                     parameter,
-                     value);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-    return result;
+    return OS_ConfigServiceLibrary_parameterGetValueAsU64(
+               localHandle,
+               parameter,
+               value);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsString(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     size_t bufferLength)
 {
+    OS_ConfigServiceHandle_t* copyOfRemoteHandle = getLocalCopyOfHandle();
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
+
+    if (bufferLength > copyOfRemoteHandle->context.rpc.dataportSize)
     {
-        if (bufferLength > handle.context.rpc.dataportSize)
-        {
-            return OS_ERROR_BUFFER_TOO_SMALL;
-        }
-        result = OS_ConfigServiceLibrary_parameterGetValueAsString(
-                     localHandle,
-                     parameter,
-                     handle.context.rpc.dataport,
-                     bufferLength);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_BUFFER_TOO_SMALL;
     }
 
-    return result;
+    return OS_ConfigServiceLibrary_parameterGetValueAsString(
+               localHandle,
+               parameter,
+               copyOfRemoteHandle->context.rpc.dataport,
+               bufferLength);
+
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsBlob(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     size_t bufferLength)
 {
+    OS_ConfigServiceHandle_t* copyOfRemoteHandle = getLocalCopyOfHandle();
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
+
+    if (bufferLength > copyOfRemoteHandle->context.rpc.dataportSize)
     {
-        if (bufferLength > handle.context.rpc.dataportSize)
-        {
-            return OS_ERROR_BUFFER_TOO_SMALL;
-        }
-        result = OS_ConfigServiceLibrary_parameterGetValueAsBlob(
-                     localHandle,
-                     parameter,
-                     handle.context.rpc.dataport,
-                     bufferLength);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_BUFFER_TOO_SMALL;
     }
 
-    return result;
+    return OS_ConfigServiceLibrary_parameterGetValueAsBlob(
+               localHandle,
+               parameter,
+               copyOfRemoteHandle->context.rpc.dataport,
+               bufferLength);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterSetValue(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     size_t bufferLength)
 {
+    OS_ConfigServiceHandle_t* copyOfRemoteHandle = getLocalCopyOfHandle();
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
+
+    if (bufferLength > copyOfRemoteHandle->context.rpc.dataportSize)
     {
-        if (bufferLength > handle.context.rpc.dataportSize)
-        {
-            return OS_ERROR_BUFFER_TOO_SMALL;
-        }
-        result = OS_ConfigServiceLibrary_parameterSetValue(
-                     localHandle,
-                     enumerator,
-                     parameterType,
-                     handle.context.rpc.dataport,
-                     bufferLength);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_BUFFER_TOO_SMALL;
     }
 
-    return result;
+    return OS_ConfigServiceLibrary_parameterSetValue(
+               localHandle,
+               enumerator,
+               parameterType,
+               copyOfRemoteHandle->context.rpc.dataport,
+               bufferLength);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterSetValueAsU32(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     uint32_t value)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        result = OS_ConfigServiceLibrary_parameterSetValueAsU32(
-                     localHandle,
-                     enumerator,
-                     value);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-    return result;
+    return OS_ConfigServiceLibrary_parameterSetValueAsU32(
+               localHandle,
+               enumerator,
+               value);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterSetValueAsU64(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     uint64_t value)
 {
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
-    {
-        result = OS_ConfigServiceLibrary_parameterSetValueAsU64(
-                     localHandle,
-                     enumerator,
-                     value);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
-    }
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
 
-    return result;
+    return OS_ConfigServiceLibrary_parameterSetValueAsU64(
+               localHandle,
+               enumerator,
+               value);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterSetValueAsString(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     size_t bufferLength)
 {
+    OS_ConfigServiceHandle_t* copyOfRemoteHandle = getLocalCopyOfHandle();
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
+
+    if (bufferLength > copyOfRemoteHandle->context.rpc.dataportSize)
     {
-        if (bufferLength > handle.context.rpc.dataportSize)
-        {
-            return OS_ERROR_BUFFER_TOO_SMALL;
-        }
-        result = OS_ConfigServiceLibrary_parameterSetValueAsString(
-                     localHandle,
-                     enumerator,
-                     parameterType,
-                     handle.context.rpc.dataport,
-                     bufferLength);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_BUFFER_TOO_SMALL;
     }
 
-    return result;
+    return OS_ConfigServiceLibrary_parameterSetValueAsString(
+               localHandle,
+               enumerator,
+               parameterType,
+               copyOfRemoteHandle->context.rpc.dataport,
+               bufferLength);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterSetValueAsBlob(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     size_t bufferLength)
 {
+    OS_ConfigServiceHandle_t* copyOfRemoteHandle = getLocalCopyOfHandle();
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t result;
 
-    if (OS_SUCCESS ==
-        OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(handle,
-                &localHandle))
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
+
+    if (bufferLength > copyOfRemoteHandle->context.rpc.dataportSize)
     {
-        if (bufferLength > handle.context.rpc.dataportSize)
-        {
-            return OS_ERROR_BUFFER_TOO_SMALL;
-        }
-        result = OS_ConfigServiceLibrary_parameterSetValueAsBlob(
-                     localHandle,
-                     enumerator,
-                     parameterType,
-                     handle.context.rpc.dataport,
-                     bufferLength);
-    }
-    else
-    {
-        result = OS_ERROR_INVALID_PARAMETER;
+        return OS_ERROR_BUFFER_TOO_SMALL;
     }
 
-    return result;
+    return OS_ConfigServiceLibrary_parameterSetValueAsBlob(
+               localHandle,
+               enumerator,
+               parameterType,
+               copyOfRemoteHandle->context.rpc.dataport,
+               bufferLength);
 }
 
 //------------------------------------------------------------------------------
 OS_Error_t
 OS_ConfigServiceServer_parameterGetValueFromDomainName(
-    OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_DomainName_t const* domainName,
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     size_t bufferLength,
     size_t* bytesCopied)
 {
-
+    OS_ConfigServiceHandle_t* copyOfRemoteHandle = getLocalCopyOfHandle();
     OS_ConfigServiceHandle_t localHandle;
-    OS_Error_t ret = OS_ConfigServiceServer_transformRemoteHandleToLocalHandle(
-                         handle,
-                         &localHandle);
-    if (OS_SUCCESS != ret)
-    {
-        return OS_ERROR_INVALID_PARAMETER;
-    }
 
-    if (bufferLength > handle.context.rpc.dataportSize)
+    OS_ConfigServiceHandle_initLocalHandle(
+        &serverInstance,
+        &localHandle);
+
+    if (bufferLength > copyOfRemoteHandle->context.rpc.dataportSize)
     {
         return OS_ERROR_BUFFER_TOO_SMALL;
     }
+
     return OS_ConfigServiceLibrary_parameterGetValueFromDomainName(
                localHandle,
                domainName,
                parameterName,
                parameterType,
-               handle.context.rpc.dataport,
+               copyOfRemoteHandle->context.rpc.dataport,
                bufferLength,
                bytesCopied);
 }

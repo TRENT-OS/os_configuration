@@ -17,12 +17,8 @@
 #include "OS_Error.h"
 
 #include "OS_ConfigServiceDataTypes.h"
-#include "OS_ConfigServiceInstanceStore.h"
 
 /* Exported functions --------------------------------------------------------*/
-OS_ConfigServiceInstanceStore_t*
-OS_ConfigServiceLibrary_getInstances(void);
-
 OS_Error_t
 OS_ConfigServiceLibrary_createHandle(
     OS_ConfigServiceHandle_HandleKind_t handleKind,

@@ -398,13 +398,13 @@ OS_ConfigService_parameterGetValue(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        int result =
+        OS_Error_t err =
             OS_ConfigServiceServer_parameterGetValue(
                 parameter,
                 bufferLength,
                 bytesCopied);
 
-        if (result == OS_SUCCESS)
+        if (err == OS_SUCCESS)
         {
             if (*bytesCopied > bufferLength)
             {
@@ -416,7 +416,7 @@ OS_ConfigService_parameterGetValue(
             memcpy(buffer, *clientCtx->dataport.io, *bytesCopied);
         }
 
-        return result;
+        return err;
 #else
         return OS_ERROR_INVALID_PARAMETER;
 #endif
@@ -498,12 +498,12 @@ OS_ConfigService_parameterGetValueAsString(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        int result =
+        OS_Error_t err =
             OS_ConfigServiceServer_parameterGetValueAsString(
                 parameter,
                 bufferLength);
 
-        if (result == OS_SUCCESS)
+        if (err == OS_SUCCESS)
         {
             OS_ConfigService_ClientCtx_t* clientCtx =
                 (OS_ConfigService_ClientCtx_t*)
@@ -511,7 +511,7 @@ OS_ConfigService_parameterGetValueAsString(
             memcpy(buffer, *clientCtx->dataport.io, bufferLength);
         }
 
-        return result;
+        return err;
 #else
         return OS_ERROR_INVALID_PARAMETER;
 #endif
@@ -538,12 +538,12 @@ OS_ConfigService_parameterGetValueAsBlob(
             handle))
     {
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
-        int result =
+        OS_Error_t err =
             OS_ConfigServiceServer_parameterGetValueAsBlob(
                 parameter,
                 bufferLength);
 
-        if (result == OS_SUCCESS)
+        if (err == OS_SUCCESS)
         {
             OS_ConfigService_ClientCtx_t* clientCtx =
                 (OS_ConfigService_ClientCtx_t*)
@@ -551,7 +551,7 @@ OS_ConfigService_parameterGetValueAsBlob(
             memcpy(buffer, *clientCtx->dataport.io, bufferLength);
         }
 
-        return result;
+        return err;
 #else
         return OS_ERROR_INVALID_PARAMETER;
 #endif
@@ -763,14 +763,14 @@ OS_ConfigService_parameterGetValueFromDomainName(
 
 #if defined(OS_CONFIG_SERVICE_CAMKES_CLIENT)
 
-        int result = OS_ConfigServiceServer_parameterGetValueFromDomainName(
-                         domainName,
-                         parameterName,
-                         parameterType,
-                         bufferLength,
-                         bytesCopied);
+        OS_Error_t err = OS_ConfigServiceServer_parameterGetValueFromDomainName(
+                             domainName,
+                             parameterName,
+                             parameterType,
+                             bufferLength,
+                             bytesCopied);
 
-        if (result == OS_SUCCESS)
+        if (err == OS_SUCCESS)
         {
             OS_ConfigService_ClientCtx_t* clientCtx =
                 (OS_ConfigService_ClientCtx_t*)
@@ -783,7 +783,7 @@ OS_ConfigService_parameterGetValueFromDomainName(
             memcpy(buffer, *clientCtx->dataport.io, *bytesCopied);
         }
 
-        return result;
+        return err;
 
 #else
         return OS_ERROR_INVALID_PARAMETER;

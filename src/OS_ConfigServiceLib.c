@@ -16,21 +16,21 @@ OS_ConfigServiceLib_enumeratorRawIncrement(
     unsigned int maxIndex,
     uint32_t* index)
 {
-    OS_Error_t result;
+    OS_Error_t err;
 
     if (*index + 1 == maxIndex)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         Debug_LOG_DEBUG("Error: index: %u - maxIndex: %u\n", *index, maxIndex);
-        result = OS_ERROR_GENERIC;
+        err = OS_ERROR_GENERIC;
     }
     else
     {
         *index += 1;
-        result = OS_SUCCESS;
+        err = OS_SUCCESS;
     }
 
-    return result;
+    return err;
 }
 
 //------------------------------------------------------------------------------
@@ -89,18 +89,18 @@ OS_ConfigServiceLib_findParamter(
 
     for (;;)
     {
-        OS_Error_t ret;
+        OS_Error_t err;
 
         OS_ConfigServiceLibTypes_Parameter_t parameter = {0};
-        ret = OS_ConfigServiceBackend_readRecord(
+        err = OS_ConfigServiceBackend_readRecord(
                   &instance->parameterBackend,
                   searchEnumerator.index,
                   &parameter,
                   sizeof(OS_ConfigServiceLibTypes_Parameter_t));
 
-        if (OS_SUCCESS != ret)
+        if (OS_SUCCESS != err)
         {
-            Debug_LOG_ERROR("OS_ConfigServiceBackend_readRecord() failed, error %d", ret);
+            Debug_LOG_ERROR("OS_ConfigServiceBackend_readRecord() failed, error %d", err);
             return OS_ERROR_GENERIC;
         }
 
@@ -111,13 +111,13 @@ OS_ConfigServiceLib_findParamter(
             return OS_SUCCESS;
         }
 
-        ret = OS_ConfigServiceLib_parameterEnumeratorRawIncrement(
+        err = OS_ConfigServiceLib_parameterEnumeratorRawIncrement(
                   instance,
                   &searchEnumerator);
-        if (OS_SUCCESS != ret)
+        if (OS_SUCCESS != err)
         {
             Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorRawIncrement() failed, error %d",
-                            ret);
+                            err);
             return OS_ERROR_GENERIC;
         }
     }
@@ -447,13 +447,13 @@ OS_ConfigServiceLib_domainEnumeratorIncrement(
     // misalignment.
     uint32_t enumeratorIncrement = enumerator->index;
 
-    OS_Error_t result = OS_ConfigServiceLib_enumeratorRawIncrement(
-                            OS_ConfigServiceBackend_getNumberOfRecords(&instance->domainBackend),
-                            &enumeratorIncrement);
-    if (OS_SUCCESS != result)
+    OS_Error_t err = OS_ConfigServiceLib_enumeratorRawIncrement(
+                         OS_ConfigServiceBackend_getNumberOfRecords(&instance->domainBackend),
+                         &enumeratorIncrement);
+    if (OS_SUCCESS != err)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        return result;
+        return err;
     }
 
     // Increment the index with successfully incremented temporary variable.
@@ -494,18 +494,18 @@ OS_ConfigServiceLib_parameterEnumeratorInit(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
     OS_ConfigServiceLibTypes_ParameterEnumerator_t initEnumerator;
-    OS_Error_t result;
+    OS_Error_t err;
 
     initEnumerator.domainEnumerator = *domainEnumerator;
-    result = OS_ConfigServiceLib_parameterEnumeratorReset(
-                 instance,
-                 &initEnumerator);
-    if (OS_SUCCESS == result)
+    err = OS_ConfigServiceLib_parameterEnumeratorReset(
+              instance,
+              &initEnumerator);
+    if (OS_SUCCESS == err)
     {
         *enumerator = initEnumerator;
     }
 
-    return result;
+    return err;
 }
 
 //------------------------------------------------------------------------------
@@ -525,20 +525,20 @@ OS_ConfigServiceLib_parameterEnumeratorReset(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
     OS_ConfigServiceLibTypes_ParameterEnumerator_t searchEnumerator;
-    OS_Error_t result;
+    OS_Error_t err;
 
     searchEnumerator.index = 0;
     searchEnumerator.domainEnumerator = enumerator->domainEnumerator;
-    result = OS_ConfigServiceLib_advanceParameterEnumerator(
-                 instance,
-                 &searchEnumerator,
-                 enumerator);
-    if (OS_SUCCESS == result)
+    err = OS_ConfigServiceLib_advanceParameterEnumerator(
+              instance,
+              &searchEnumerator,
+              enumerator);
+    if (OS_SUCCESS == err)
     {
         *enumerator = searchEnumerator;
     }
 
-    return result;
+    return err;
 }
 
 //------------------------------------------------------------------------------
@@ -554,11 +554,11 @@ OS_Error_t OS_ConfigServiceLib_parameterEnumeratorIncrement(
             instance,
             &searchEnumerator))
     {
-        OS_Error_t result = OS_ConfigServiceLib_advanceParameterEnumerator(
-                                instance,
-                                &searchEnumerator,
-                                enumerator);
-        return result;
+        OS_Error_t err = OS_ConfigServiceLib_advanceParameterEnumerator(
+                             instance,
+                             &searchEnumerator,
+                             enumerator);
+        return err;
     }
     else
     {
@@ -615,11 +615,11 @@ OS_ConfigServiceLib_domainCreateParameterEnumerator(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t searchEnumerator;
     OS_ConfigServiceLibTypes_Parameter_t searchParameter;
 
-    OS_Error_t result = OS_ConfigServiceLib_parameterEnumeratorInit(
-                            instance,
-                            &domain->enumerator,
-                            &searchEnumerator);
-    if (OS_SUCCESS != result)
+    OS_Error_t err = OS_ConfigServiceLib_parameterEnumeratorInit(
+                         instance,
+                         &domain->enumerator,
+                         &searchEnumerator);
+    if (OS_SUCCESS != err)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return OS_ERROR_GENERIC;
@@ -627,11 +627,11 @@ OS_ConfigServiceLib_domainCreateParameterEnumerator(
 
     for (;;)
     {
-        result = OS_ConfigServiceLib_parameterEnumeratorGetElement(
-                     instance,
-                     &searchEnumerator,
-                     &searchParameter);
-        if (OS_SUCCESS != result)
+        err = OS_ConfigServiceLib_parameterEnumeratorGetElement(
+                  instance,
+                  &searchEnumerator,
+                  &searchParameter);
+        if (OS_SUCCESS != err)
         {
             Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
             return OS_ERROR_GENERIC;
@@ -644,10 +644,10 @@ OS_ConfigServiceLib_domainCreateParameterEnumerator(
             *parameterEnumerator = searchEnumerator;
             return OS_SUCCESS;
         }
-        result = OS_ConfigServiceLib_parameterEnumeratorIncrement(
-                     instance,
-                     &searchEnumerator);
-        if (OS_SUCCESS != result)
+        err = OS_ConfigServiceLib_parameterEnumeratorIncrement(
+                  instance,
+                  &searchEnumerator);
+        if (OS_SUCCESS != err)
         {
             Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
             return OS_ERROR_GENERIC;
@@ -666,23 +666,23 @@ OS_ConfigServiceLib_domainGetElement(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t parameterEnumerator;
     OS_ConfigServiceLibTypes_Parameter_t searchParameter;
 
-    OS_Error_t result = OS_ConfigServiceLib_domainCreateParameterEnumerator(
-                            instance,
-                            domain,
-                            parameterName,
-                            &parameterEnumerator);
+    OS_Error_t err = OS_ConfigServiceLib_domainCreateParameterEnumerator(
+                         instance,
+                         domain,
+                         parameterName,
+                         &parameterEnumerator);
 
-    if (OS_SUCCESS != result)
+    if (OS_SUCCESS != err)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return OS_ERROR_GENERIC;
     }
 
-    result = OS_ConfigServiceLib_parameterEnumeratorGetElement(
-                 instance,
-                 &parameterEnumerator,
-                 &searchParameter);
-    if (OS_SUCCESS == result)
+    err = OS_ConfigServiceLib_parameterEnumeratorGetElement(
+              instance,
+              &parameterEnumerator,
+              &searchParameter);
+    if (OS_SUCCESS == err)
     {
         *parameter = searchParameter;
         return OS_SUCCESS;
@@ -764,26 +764,26 @@ OS_ConfigServiceLib_parameterGetValue(
 
         case OS_CONFIG_LIB_PARAMETER_TYPE_STRING:
         {
-            OS_Error_t result = OS_ConfigServiceLib_fetchVariableLengthString(
-                                    &instance->stringBackend,
-                                    parameter->parameterValue.valueString.index,
-                                    parameterSize,
-                                    buffer,
-                                    bufferLength);
-            *bytesCopied = (result == OS_SUCCESS) ? parameterSize : 0;
+            OS_Error_t err = OS_ConfigServiceLib_fetchVariableLengthString(
+                                 &instance->stringBackend,
+                                 parameter->parameterValue.valueString.index,
+                                 parameterSize,
+                                 buffer,
+                                 bufferLength);
+            *bytesCopied = (err == OS_SUCCESS) ? parameterSize : 0;
         }
         break;
 
         case OS_CONFIG_LIB_PARAMETER_TYPE_BLOB:
         {
-            OS_Error_t result = OS_ConfigServiceLib_fetchVariableLengthBlob(
-                                    &instance->blobBackend,
-                                    parameterSize,
-                                    parameter->parameterValue.valueBlob.index,
-                                    parameter->parameterValue.valueBlob.numberOfBlocks,
-                                    buffer,
-                                    bufferLength);
-            *bytesCopied = (result == OS_SUCCESS) ? parameterSize : 0;
+            OS_Error_t err = OS_ConfigServiceLib_fetchVariableLengthBlob(
+                                 &instance->blobBackend,
+                                 parameterSize,
+                                 parameter->parameterValue.valueBlob.index,
+                                 parameter->parameterValue.valueBlob.numberOfBlocks,
+                                 buffer,
+                                 bufferLength);
+            *bytesCopied = (err == OS_SUCCESS) ? parameterSize : 0;
         }
         break;
 
@@ -887,18 +887,18 @@ OS_ConfigServiceLib_parameterSetValue(
     // String and blob: check the given size is ok and
     // which may be smaller than the maximum record size.
 
-    int result = OS_ConfigServiceLib_parameterEnumeratorGetElement(
-                     instance,
-                     enumerator,
-                     &parameter);
-    if (OS_SUCCESS != result)
+    OS_Error_t err = OS_ConfigServiceLib_parameterEnumeratorGetElement(
+                         instance,
+                         enumerator,
+                         &parameter);
+    if (OS_SUCCESS != err)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return OS_ERROR_GENERIC;
     }
 
-    result = OS_ConfigServiceLib_ParameterIsWriteableForMe(&parameter) ? 0 : -1;
-    if (OS_SUCCESS != result)
+    err = OS_ConfigServiceLib_ParameterIsWriteableForMe(&parameter) ? 0 : -1;
+    if (OS_SUCCESS != err)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return OS_ERROR_GENERIC;
@@ -919,57 +919,57 @@ OS_ConfigServiceLib_parameterSetValue(
         if (parameterSize == bufferLength)
         {
             memcpy(&parameter.parameterValue, buffer, parameterSize);
-            result = OS_SUCCESS;
+            err = OS_SUCCESS;
         }
         else
         {
             Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-            result = OS_ERROR_GENERIC;
+            err = OS_ERROR_GENERIC;
         }
         break;
 
     case OS_CONFIG_LIB_PARAMETER_TYPE_STRING:
         parameter.parameterValue.valueString.size = bufferLength;
 
-        result = OS_ConfigServiceLib_writeVariableLengthString(
-                     &instance->stringBackend,
-                     parameter.parameterValue.valueString.index,
-                     buffer,
-                     bufferLength);
+        err = OS_ConfigServiceLib_writeVariableLengthString(
+                  &instance->stringBackend,
+                  parameter.parameterValue.valueString.index,
+                  buffer,
+                  bufferLength);
         break;
 
     case OS_CONFIG_LIB_PARAMETER_TYPE_BLOB:
         parameter.parameterValue.valueBlob.size = bufferLength;
 
-        result = OS_ConfigServiceLib_writeVariableLengthBlob(
-                     &instance->blobBackend,
-                     parameter.parameterValue.valueBlob.index,
-                     parameter.parameterValue.valueBlob.numberOfBlocks,
-                     buffer,
-                     bufferLength);
+        err = OS_ConfigServiceLib_writeVariableLengthBlob(
+                  &instance->blobBackend,
+                  parameter.parameterValue.valueBlob.index,
+                  parameter.parameterValue.valueBlob.numberOfBlocks,
+                  buffer,
+                  bufferLength);
         break;
 
     default:
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        result = OS_ERROR_GENERIC;
+        err = OS_ERROR_GENERIC;
         break;
     }
 
-    if (OS_SUCCESS == result)
+    if (OS_SUCCESS == err)
     {
-        result = OS_ConfigServiceBackend_writeRecord(
-                     &instance->parameterBackend,
-                     enumerator->index,
-                     &parameter,
-                     sizeof(parameter));
+        err = OS_ConfigServiceBackend_writeRecord(
+                  &instance->parameterBackend,
+                  enumerator->index,
+                  &parameter,
+                  sizeof(parameter));
     }
     else
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        result = OS_ERROR_GENERIC;
+        err = OS_ERROR_GENERIC;
     }
 
-    return result;
+    return err;
 }
 
 //------------------------------------------------------------------------------
@@ -1049,30 +1049,30 @@ find_parameter(
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_Parameter_t* parameter)
 {
-    OS_Error_t ret;
+    OS_Error_t err;
     OS_ConfigServiceLibTypes_ParameterEnumerator_t paramEnumerator = {0};
 
-    ret = OS_ConfigServiceLib_parameterEnumeratorInit(
+    err = OS_ConfigServiceLib_parameterEnumeratorInit(
               instance,
               domainEnumerator,
               &paramEnumerator);
-    if (0 != ret)
+    if (0 != err)
     {
-        Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorInit() failed, ret %d",
-                        ret);
+        Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorInit() failed, err %d",
+                        err);
         return OS_ERROR_GENERIC;
     }
 
     for (;;)
     {
-        ret = OS_ConfigServiceLib_parameterEnumeratorGetElement(
+        err = OS_ConfigServiceLib_parameterEnumeratorGetElement(
                   instance,
                   &paramEnumerator,
                   parameter);
-        if (0 != ret)
+        if (0 != err)
         {
-            Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorGetElement() failed, ret %d",
-                            ret);
+            Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorGetElement() failed, err %d",
+                            err);
             return OS_ERROR_GENERIC;
         }
 
@@ -1086,13 +1086,13 @@ find_parameter(
             return OS_SUCCESS;
         }
 
-        ret = OS_ConfigServiceLib_parameterEnumeratorIncrement(
+        err = OS_ConfigServiceLib_parameterEnumeratorIncrement(
                   instance,
                   &paramEnumerator);
-        if (0 != ret)
+        if (0 != err)
         {
-            Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorIncrement() failed, ret %d",
-                            ret);
+            Debug_LOG_ERROR("OS_ConfigServiceLib_parameterEnumeratorIncrement() failed, err %d",
+                            err);
             return OS_ERROR_GENERIC;
         }
     } // end for(;;)
@@ -1106,20 +1106,20 @@ find_domain(
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator,
     OS_ConfigServiceLibTypes_DomainName_t const* domainName)
 {
-    int ret;
+    OS_Error_t err;
     OS_ConfigServiceLib_domainEnumeratorInit(instance, enumerator);
 
     for (;;)
     {
         OS_ConfigServiceLibTypes_Domain_t domain;
-        ret = OS_ConfigServiceLib_domainEnumeratorGetElement(
+        err = OS_ConfigServiceLib_domainEnumeratorGetElement(
                   instance,
                   enumerator,
                   &domain);
-        if (0 != ret)
+        if (0 != err)
         {
-            Debug_LOG_ERROR("OS_ConfigServiceLib_domainEnumeratorGetElement() failed, ret %d",
-                            ret);
+            Debug_LOG_ERROR("OS_ConfigServiceLib_domainEnumeratorGetElement() failed, err %d",
+                            err);
             return OS_ERROR_GENERIC;
         }
 
@@ -1133,11 +1133,11 @@ find_domain(
             return OS_SUCCESS;
         }
 
-        ret = OS_ConfigServiceLib_domainEnumeratorIncrement(instance, enumerator);
-        if (0 != ret)
+        err = OS_ConfigServiceLib_domainEnumeratorIncrement(instance, enumerator);
+        if (0 != err)
         {
-            Debug_LOG_ERROR("OS_ConfigServiceLib_domainEnumeratorIncrement() failed, ret %d",
-                            ret);
+            Debug_LOG_ERROR("OS_ConfigServiceLib_domainEnumeratorIncrement() failed, err %d",
+                            err);
             return OS_ERROR_GENERIC;
         }
     } // end for(;;)
@@ -1154,21 +1154,21 @@ OS_ConfigServiceLib_parameterGetValueFromDomainName(
     size_t bufferLength,
     size_t* bytesCopied)
 {
-    OS_Error_t ret;
+    OS_Error_t err;
 
     OS_ConfigServiceLibTypes_DomainEnumerator_t domain_enumerator = {0};
-    ret = find_domain(instance, &domain_enumerator, domainName);
-    if (OS_SUCCESS != ret)
+    err = find_domain(instance, &domain_enumerator, domainName);
+    if (OS_SUCCESS != err)
     {
-        Debug_LOG_ERROR("find_domain() failed, ret %d", ret);
+        Debug_LOG_ERROR("find_domain() failed, err %d", err);
         return OS_ERROR_CONFIG_DOMAIN_NOT_FOUND;
     }
 
     OS_ConfigServiceLibTypes_Parameter_t parameter = {0};
-    ret = find_parameter(instance, &domain_enumerator, parameterName, &parameter);
-    if (OS_SUCCESS != ret)
+    err = find_parameter(instance, &domain_enumerator, parameterName, &parameter);
+    if (OS_SUCCESS != err)
     {
-        Debug_LOG_ERROR("find_parameter() failed, ret %d", ret);
+        Debug_LOG_ERROR("find_parameter() failed, err %d", err);
         return OS_ERROR_CONFIG_PARAMETER_NOT_FOUND;
     }
 
@@ -1179,15 +1179,15 @@ OS_ConfigServiceLib_parameterGetValueFromDomainName(
         return OS_ERROR_CONFIG_TYPE_MISMATCH;
     }
 
-    int err = OS_ConfigServiceLib_parameterGetValue(
-                  instance,
-                  &parameter,
-                  buffer,
-                  bufferLength,
-                  bytesCopied);
+    err = OS_ConfigServiceLib_parameterGetValue(
+              instance,
+              &parameter,
+              buffer,
+              bufferLength,
+              bytesCopied);
     if (err < 0)
     {
-        Debug_LOG_ERROR("OS_ConfigServiceLib_parameterGetValue() failed, ret %d", ret);
+        Debug_LOG_ERROR("OS_ConfigServiceLib_parameterGetValue() failed, err %d", err);
         // ToDo: OS_ConfigServiceLib_parameterGetValue() should return error codes
         //       about the actual problem, so we can return them
         return OS_ERROR_GENERIC;

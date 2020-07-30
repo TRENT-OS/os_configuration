@@ -273,11 +273,11 @@ OS_ConfigServiceBackend_createFileBackend(
     backendFsLayout.numberOfRecords = numberOfRecords;
     backendFsLayout.sizeOfRecord = sizeOfRecord;
 
-    OS_Error_t result = OS_ConfigServiceBackend_createFile(hFs, name.buffer,
-                                                           fileSize);
-    if (OS_SUCCESS != result)
+    OS_Error_t err = OS_ConfigServiceBackend_createFile(hFs, name.buffer,
+                                                        fileSize);
+    if (OS_SUCCESS != err)
     {
-        return result;
+        return err;
     }
 
     return OS_ConfigServiceBackend_writeToFile(

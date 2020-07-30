@@ -366,7 +366,7 @@ OS_ConfigServiceLib_writeVariableLengthBlob(
 }
 
 //------------------------------------------------------------------------------
-int
+OS_Error_t
 OS_ConfigServiceLib_Init(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceBackend_t const* parameterBackend,

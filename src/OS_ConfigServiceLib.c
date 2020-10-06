@@ -9,6 +9,9 @@
 #include "OS_ConfigServiceAppIdentifier.h"
 #include "LibDebug/Debug.h"
 
+#define LOG_NOT_INITIALIZED(func)\
+    Debug_LOG_ERROR("initialization failed or missing, fail call %s()", (func))
+
 /* Exported functions --------------------------------------------------------*/
 static
 OS_Error_t
@@ -374,6 +377,8 @@ OS_ConfigServiceLib_Init(
     OS_ConfigServiceBackend_t const* stringBackend,
     OS_ConfigServiceBackend_t const* blobBackend)
 {
+    instance->isInitialized = false;
+
     if (OS_ConfigServiceBackend_getSizeOfRecords(parameterBackend) != sizeof(
             OS_ConfigServiceLibTypes_Parameter_t))
     {
@@ -407,34 +412,54 @@ OS_ConfigServiceLib_Init(
     instance->stringBackend = *stringBackend;
     instance->blobBackend = *blobBackend;
 
+    instance->isInitialized = true;
+
     return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
-void
+OS_Error_t
 OS_ConfigServiceLib_domainEnumeratorInit(
     OS_ConfigServiceLib_t const* instance,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
     OS_ConfigServiceLib_domainEnumeratorReset(instance, enumerator);
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
-void
+OS_Error_t
 OS_ConfigServiceLib_domainEnumeratorClose(
     OS_ConfigServiceLib_t const* instance,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
     // No action required.
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
-void
+OS_Error_t
 OS_ConfigServiceLib_domainEnumeratorReset(
     OS_ConfigServiceLib_t const* instance,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
     enumerator->index = 0;
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
@@ -443,6 +468,11 @@ OS_ConfigServiceLib_domainEnumeratorIncrement(
     OS_ConfigServiceLib_t const* instance,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
     // Store the packed index value in a temporary variable to avoid pointer
     // misalignment.
     uint32_t enumeratorIncrement = enumerator->index;
@@ -468,6 +498,12 @@ OS_ConfigServiceLib_domainEnumeratorGetElement(
     OS_ConfigServiceLibTypes_DomainEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_Domain_t* domain)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     OS_Error_t fetchResult = OS_ConfigServiceBackend_readRecord(
                                  &instance->domainBackend,
                                  enumerator->index,
@@ -493,6 +529,12 @@ OS_ConfigServiceLib_parameterEnumeratorInit(
     OS_ConfigServiceLibTypes_DomainEnumerator_t const* domainEnumerator,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     OS_ConfigServiceLibTypes_ParameterEnumerator_t initEnumerator;
     OS_Error_t err;
 
@@ -509,12 +551,18 @@ OS_ConfigServiceLib_parameterEnumeratorInit(
 }
 
 //------------------------------------------------------------------------------
-void
+OS_Error_t
 OS_ConfigServiceLib_parameterEnumeratorClose(
     OS_ConfigServiceLib_t const* instance,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
     // No action required.
+    return OS_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
@@ -524,6 +572,12 @@ OS_ConfigServiceLib_parameterEnumeratorReset(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     OS_ConfigServiceLibTypes_ParameterEnumerator_t searchEnumerator;
     OS_Error_t err;
 
@@ -548,6 +602,12 @@ OS_Error_t OS_ConfigServiceLib_parameterEnumeratorIncrement(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     OS_ConfigServiceLibTypes_ParameterEnumerator_t searchEnumerator = *enumerator;
 
     if (OS_SUCCESS == OS_ConfigServiceLib_parameterEnumeratorRawIncrement(
@@ -574,6 +634,12 @@ OS_ConfigServiceLib_parameterEnumeratorGetElement(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_Parameter_t* parameter)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     OS_ConfigServiceLibTypes_Parameter_t retrievedParameter;
 
     OS_Error_t fetchResult = OS_ConfigServiceBackend_readRecord(
@@ -612,6 +678,12 @@ OS_ConfigServiceLib_domainCreateParameterEnumerator(
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* parameterEnumerator)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     OS_ConfigServiceLibTypes_ParameterEnumerator_t searchEnumerator;
     OS_ConfigServiceLibTypes_Parameter_t searchParameter;
 
@@ -663,6 +735,12 @@ OS_ConfigServiceLib_domainGetElement(
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_Parameter_t* parameter)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     OS_ConfigServiceLibTypes_ParameterEnumerator_t parameterEnumerator;
     OS_ConfigServiceLibTypes_Parameter_t searchParameter;
 
@@ -750,6 +828,12 @@ OS_ConfigServiceLib_parameterGetValue(
     size_t bufferLength,
     size_t* bytesCopied)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     size_t parameterSize = OS_ConfigServiceLib_parameterGetSize(parameter);
 
     if (parameterSize <= bufferLength)
@@ -813,6 +897,12 @@ OS_ConfigServiceLib_parameterGetValueAsU32(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     uint32_t* value)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     *value = parameter->parameterValue.valueInteger32;
 
     return OS_SUCCESS;
@@ -826,6 +916,12 @@ OS_ConfigServiceLib_parameterGetValueAsU64(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     uint64_t* value)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     *value = parameter->parameterValue.valueInteger64;
 
     return OS_SUCCESS;
@@ -840,6 +936,12 @@ OS_ConfigServiceLib_parameterGetValueAsString(
     char* buffer,
     size_t bufferLength)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     size_t bytesCopied;
 
     return OS_ConfigServiceLib_parameterGetValue(
@@ -859,6 +961,12 @@ OS_ConfigServiceLib_parameterGetValueAsBlob(
     void* buffer,
     size_t bufferLength)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     size_t bytesCopied;
 
     return OS_ConfigServiceLib_parameterGetValue(
@@ -879,6 +987,12 @@ OS_ConfigServiceLib_parameterSetValue(
     void const* buffer,
     size_t bufferLength)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     OS_ConfigServiceLibTypes_Parameter_t parameter;
 
     // Fetch the parameter pointed to by the enumerator.
@@ -980,6 +1094,12 @@ OS_ConfigServiceLib_parameterSetValueAsU32(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     uint32_t value)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     return OS_ConfigServiceLib_parameterSetValue(
                instance,
                enumerator,
@@ -996,6 +1116,12 @@ OS_ConfigServiceLib_parameterSetValueAsU64(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     uint64_t value)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     return OS_ConfigServiceLib_parameterSetValue(
                instance,
                enumerator,
@@ -1014,6 +1140,12 @@ OS_ConfigServiceLib_parameterSetValueAsString(
     char const* buffer,
     size_t bufferLength)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     return OS_ConfigServiceLib_parameterSetValue(
                instance,
                enumerator,
@@ -1032,6 +1164,12 @@ OS_ConfigServiceLib_parameterSetValueAsBlob(
     void const* buffer,
     size_t bufferLength)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     return OS_ConfigServiceLib_parameterSetValue(
                instance,
                enumerator,
@@ -1106,8 +1244,12 @@ find_domain(
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator,
     OS_ConfigServiceLibTypes_DomainName_t const* domainName)
 {
-    OS_Error_t err;
-    OS_ConfigServiceLib_domainEnumeratorInit(instance, enumerator);
+    OS_Error_t err = OS_ConfigServiceLib_domainEnumeratorInit(instance,
+                                                              enumerator);
+    if (OS_SUCCESS != err)
+    {
+        return err;
+    }
 
     for (;;)
     {
@@ -1154,6 +1296,12 @@ OS_ConfigServiceLib_parameterGetValueFromDomainName(
     size_t bufferLength,
     size_t* bytesCopied)
 {
+    if (!instance->isInitialized)
+    {
+        LOG_NOT_INITIALIZED(__func__);
+        return OS_ERROR_INVALID_STATE;
+    }
+
     OS_Error_t err;
 
     OS_ConfigServiceLibTypes_DomainEnumerator_t domain_enumerator = {0};

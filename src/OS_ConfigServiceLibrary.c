@@ -28,9 +28,7 @@ OS_ConfigServiceLibrary_domainEnumeratorInit(
     {
         OS_ConfigServiceLib_t* instance = (OS_ConfigServiceLib_t*)
                                           OS_ConfigServiceHandle_getLocalInstance(handle);
-        OS_ConfigServiceLib_domainEnumeratorInit(instance, enumerator);
-
-        return OS_SUCCESS;
+        return OS_ConfigServiceLib_domainEnumeratorInit(instance, enumerator);
     }
     else
     {
@@ -49,9 +47,7 @@ OS_ConfigServiceLibrary_domainEnumeratorClose(
     {
         OS_ConfigServiceLib_t* instance = (OS_ConfigServiceLib_t*)
                                           OS_ConfigServiceHandle_getLocalInstance(handle);
-        OS_ConfigServiceLib_domainEnumeratorClose(instance, enumerator);
-
-        return OS_SUCCESS;
+        return OS_ConfigServiceLib_domainEnumeratorClose(instance, enumerator);
     }
     else
     {
@@ -70,9 +66,7 @@ OS_ConfigServiceLibrary_domainEnumeratorReset(
     {
         OS_ConfigServiceLib_t* instance = (OS_ConfigServiceLib_t*)
                                           OS_ConfigServiceHandle_getLocalInstance(handle);
-        OS_ConfigServiceLib_domainEnumeratorReset(instance, enumerator);
-
-        return OS_SUCCESS;
+        return OS_ConfigServiceLib_domainEnumeratorReset(instance, enumerator);
     }
     else
     {
@@ -156,9 +150,8 @@ OS_ConfigServiceLibrary_parameterEnumeratorClose(
     {
         OS_ConfigServiceLib_t* instance = (OS_ConfigServiceLib_t*)
                                           OS_ConfigServiceHandle_getLocalInstance(handle);
-        OS_ConfigServiceLib_parameterEnumeratorClose(instance, enumerator);
-
-        return OS_SUCCESS;
+        return OS_ConfigServiceLib_parameterEnumeratorClose(instance,
+                                                            enumerator);
     }
     else
     {

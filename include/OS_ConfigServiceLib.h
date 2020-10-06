@@ -24,6 +24,8 @@ typedef struct
     OS_ConfigServiceBackend_t domainBackend;
     OS_ConfigServiceBackend_t stringBackend;
     OS_ConfigServiceBackend_t blobBackend;
+
+    bool isInitialized;
 }
 OS_ConfigServiceLib_t;
 
@@ -37,18 +39,18 @@ OS_ConfigServiceLib_Init(
     OS_ConfigServiceBackend_t const* blobBackend);
 
 // Note: enumerator points to first domain. There is always at least one domain.
-void
+OS_Error_t
 OS_ConfigServiceLib_domainEnumeratorInit(
     OS_ConfigServiceLib_t const* instance,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator);
 
-void
+OS_Error_t
 OS_ConfigServiceLib_domainEnumeratorClose(
     OS_ConfigServiceLib_t const* instance,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator);
 
 // Make the enumerator point to the first domain.
-void
+OS_Error_t
 OS_ConfigServiceLib_domainEnumeratorReset(
     OS_ConfigServiceLib_t const* instance,
     OS_ConfigServiceLibTypes_DomainEnumerator_t* enumerator);
@@ -74,7 +76,7 @@ OS_ConfigServiceLib_parameterEnumeratorInit(
     OS_ConfigServiceLibTypes_DomainEnumerator_t const* domainEnumerator,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator);
 
-void
+OS_Error_t
 OS_ConfigServiceLib_parameterEnumeratorClose(
     OS_ConfigServiceLib_t const* instance,
     OS_ConfigServiceLibTypes_ParameterEnumerator_t* enumerator);

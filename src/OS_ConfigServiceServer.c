@@ -13,7 +13,7 @@
 #include <camkes.h>
 
 /* Local types ---------------------------------------------------------------*/
-static OS_ConfigServiceLib_t serverInstance;
+static OS_ConfigServiceLib_t serverInstance = { 0 };
 
 // Not generated yet by camkes
 seL4_Word OS_ConfigServiceServer_get_sender_id(void);
@@ -105,11 +105,8 @@ OS_ConfigServiceServer_domainEnumeratorClose(
         &serverInstance,
         &localHandle);
 
-    OS_ConfigServiceLibrary_domainEnumeratorClose(
-        localHandle,
-        enumerator);
-
-    return OS_SUCCESS;
+    return OS_ConfigServiceLibrary_domainEnumeratorClose(localHandle,
+                                                         enumerator);
 }
 
 //------------------------------------------------------------------------------
@@ -123,11 +120,8 @@ OS_ConfigServiceServer_domainEnumeratorReset(
         &serverInstance,
         &localHandle);
 
-    OS_ConfigServiceLibrary_domainEnumeratorReset(
-        localHandle,
-        enumerator);
-
-    return OS_SUCCESS;
+    return OS_ConfigServiceLibrary_domainEnumeratorReset(localHandle,
+                                                         enumerator);
 }
 
 //------------------------------------------------------------------------------

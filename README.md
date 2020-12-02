@@ -1,17 +1,14 @@
 # TRENTOS ConfigService
 
-
 ## Overview
 
 Provides the TRENTOS ConfigService API that allows to write and retrieve
 configuration parameters either by using it locally in
 a component or as a separate remote server component.
 
-
 ### Dependencies
 
 * TRENTOS FileSystem
-
 
 ### Build options
 
@@ -74,7 +71,8 @@ A client component will have to only include the relevant lib and set the correc
             os_configuration
     )
 
-#### Integrating the CAmkES interface file when building a server component:
+#### Integrating the CAmkES interface file when building a server component
+
 As mentioned above, the TRENTOS SDK already provides the necessary files
 (**os_core_api**) to set up an interface for the ConfigServer built as a
 CAmkES component. Simply import the **<if_OS_ConfigService.camkes>** interface
@@ -105,7 +103,6 @@ setting a dataport:
         dataport Buf cfg_dataport_buf;
     }
 
-
 #### Initialization
 
 Using the ConfigService API requires to include only one header:
@@ -116,7 +113,6 @@ To initialize the local configuration Library in a Server or Library setup, the 
 
     OS_ConfigServiceLib_t* configLib =
         OS_ConfigService_getInstance();
-
 
 If your storage partition already contains a complete configuration file (e.g by
 utilizing the Configuration Provisioning Tool), then these are
@@ -164,7 +160,6 @@ FileSystem documentation.
     initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_LEN, BLOB_FILE);
     OS_ConfigServiceBackend_initializeFileBackend(&blobBackend, name, hFs);
 
-
 Initializing the Configuration lib with a memory backend does not utilize any
 filesystem and you can skip the init process for the filesystem handle. Apart
 from that, the
@@ -179,7 +174,6 @@ functions:
     OS_ConfigServiceBackend_initializeMemBackend(&parameterBackend, parameterBuf, sizeof(parameterBuf));
 
     //...
-
 
 Finally initialize the backend in the config library instance with the different
 parameter types:
@@ -209,7 +203,6 @@ possible to create a local handle:
 
     //Open a local handle of the ConfigServer API.
     OS_ConfigService_createHandleLocal(&localHandle);
-
 
 ### API Reference
 

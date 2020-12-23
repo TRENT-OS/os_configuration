@@ -7,7 +7,7 @@
 
 #include "OS_ConfigServiceLib.h"
 #include "OS_ConfigServiceAppIdentifier.h"
-#include "LibDebug/Debug.h"
+#include "lib_debug/Debug.h"
 
 #define LOG_NOT_INITIALIZED(func)\
     Debug_LOG_ERROR("initialization failed or missing, fail call %s()", (func))

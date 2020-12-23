@@ -48,7 +48,6 @@ filesystem backend would result in:
             -DOS_CONFIG_SERVICE_CAMKES_SERVER
         LIBS
             ...
-            os_libs
             os_core_api
             os_configuration
             os_filesystem

@@ -3,7 +3,7 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "LibDebug/Debug.h"
+#include "lib_debug/Debug.h"
 #include "OS_Error.h"
 #include "OS_ConfigServiceBackend.h"
 

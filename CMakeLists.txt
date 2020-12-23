@@ -46,5 +46,5 @@ target_sources(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     INTERFACE
-        os_libs
+        lib_debug
 )

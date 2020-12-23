@@ -8,7 +8,7 @@
 #include "OS_ConfigServiceServer.h"
 #include "OS_ConfigServiceLibrary.h"
 
-#include "LibDebug/Debug.h"
+#include "lib_debug/Debug.h"
 
 #include <camkes.h>
 

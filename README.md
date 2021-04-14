@@ -87,7 +87,7 @@ to connect to as seen in this example:
 
         //-------------------------------------------------
         // dataports for clients
-        dataport Buf cfg_dataport_buf;
+        dataport Buf cfg_port;
     }
 
 A client would then connect to this server by also integrating the interface and
@@ -99,7 +99,7 @@ setting a dataport:
         control;
 
         uses if_OS_ConfigService OS_ConfigServiceServer;
-        dataport Buf cfg_dataport_buf;
+        dataport Buf cfg_port;
     }
 
 #### Initialization
@@ -187,7 +187,7 @@ acting as clients and connecting to a remote ConfigServer component only require
 
     OS_ConfigService_ClientCtx_t ctx =
     {
-        .dataport = OS_DATAPORT_ASSIGN(cfg_dataport_buf)
+        .dataport = OS_DATAPORT_ASSIGN(cfg_port)
     };
 
     OS_ConfigServiceHandle_t configServiceHandle;

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019, Hensoldt Cyber GmbH
+ *  Copyright (C) 2019-2021, HENSOLDT Cyber GmbH
  */
 
 /* Includes ------------------------------------------------------------------*/
@@ -157,7 +157,7 @@ OS_ConfigServiceLib_compareParameterName(
     OS_ConfigServiceLibTypes_ParameterName_t const* a,
     OS_ConfigServiceLibTypes_ParameterName_t const* b)
 {
-    for (unsigned int k = 0; k < OS_CONFIG_LIB_PARAMETER_NAME_LEN; ++k)
+    for (unsigned int k = 0; k < OS_CONFIG_LIB_PARAMETER_NAME_SIZE; ++k)
     {
         if (a->name[k] != b->name[k])
         {
@@ -176,7 +176,7 @@ OS_ConfigServiceLib_compareDomainName(
     OS_ConfigServiceLibTypes_DomainName_t const* a,
     OS_ConfigServiceLibTypes_DomainName_t const* b)
 {
-    for (unsigned int k = 0; k < OS_CONFIG_LIB_DOMAIN_NAME_LEN; ++k)
+    for (unsigned int k = 0; k < OS_CONFIG_LIB_DOMAIN_NAME_SIZE; ++k)
     {
         if (a->name[k] != b->name[k])
         {
@@ -196,12 +196,12 @@ OS_ConfigServiceLib_fetchVariableLengthString(
     uint32_t index,
     size_t stringSize,
     void* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     // We anticipate a maximum size here which should be ok to place on the stack.
-    char tmpBuf[OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH];
+    char tmpBuf[OS_CONFIG_LIB_PARAMETER_MAX_STRING_SIZE];
 
-    if (stringSize > bufferLength)
+    if (stringSize > bufferSize)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return OS_ERROR_GENERIC;
@@ -234,16 +234,16 @@ OS_ConfigServiceLib_fetchVariableLengthBlob(
     uint32_t index,
     uint32_t numberOfBlocks,
     void* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
-    if (blobSize > bufferLength)
+    if (blobSize > bufferSize)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return OS_ERROR_GENERIC;
     }
 
     // We anticipate a maximum size here which should be ok to place on the stack.
-    char tmpBuf[OS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_LENGTH];
+    char tmpBuf[OS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_SIZE];
     size_t blobBlockSize = OS_ConfigServiceBackend_getSizeOfRecords(backend);
     size_t bytesCopied = 0;
 
@@ -288,19 +288,19 @@ OS_ConfigServiceLib_writeVariableLengthString(
     OS_ConfigServiceBackend_t* backend,
     uint32_t index,
     void const* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     // We anticipate a maximum size here which should be ok to place on the stack.
-    char tmpBuf[OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH];
+    char tmpBuf[OS_CONFIG_LIB_PARAMETER_MAX_STRING_SIZE];
 
-    if (bufferLength > OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH)
+    if (bufferSize > OS_CONFIG_LIB_PARAMETER_MAX_STRING_SIZE)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return OS_ERROR_GENERIC;
     }
 
-    memset(tmpBuf, 0, OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH);
-    memcpy(tmpBuf, buffer, bufferLength);
+    memset(tmpBuf, 0, OS_CONFIG_LIB_PARAMETER_MAX_STRING_SIZE);
+    memcpy(tmpBuf, buffer, bufferSize);
 
     OS_Error_t writeResult = OS_ConfigServiceBackend_writeRecord(
                                  backend,
@@ -319,32 +319,32 @@ OS_ConfigServiceLib_writeVariableLengthBlob(
     uint32_t index,
     uint32_t numberOfBlocks,
     void const* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     size_t blobBlockSize = OS_ConfigServiceBackend_getSizeOfRecords(backend);
     size_t blobCapacity = blobBlockSize * numberOfBlocks;
 
-    if (bufferLength > blobCapacity)
+    if (bufferSize > blobCapacity)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return OS_ERROR_GENERIC;
     }
 
     // We anticipate a maximum size here which should be ok to place on the stack.
-    char tmpBuf[OS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_LENGTH];
+    char tmpBuf[OS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_SIZE];
     size_t bytesCopied = 0;
 
-    while (bytesCopied < bufferLength)
+    while (bytesCopied < bufferSize)
     {
         size_t bytesToCopy;
 
-        if ((bufferLength - bytesCopied) >= blobBlockSize)
+        if ((bufferSize - bytesCopied) >= blobBlockSize)
         {
             bytesToCopy = blobBlockSize;
         }
         else
         {
-            bytesToCopy = bufferLength - bytesCopied;
+            bytesToCopy = bufferSize - bytesCopied;
         }
 
         memcpy(tmpBuf, (char*)buffer + bytesCopied, bytesToCopy);
@@ -394,14 +394,14 @@ OS_ConfigServiceLib_Init(
     }
 
     if (OS_ConfigServiceBackend_getSizeOfRecords(stringBackend) !=
-        OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH)
+        OS_CONFIG_LIB_PARAMETER_MAX_STRING_SIZE)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return OS_ERROR_INVALID_PARAMETER;
     }
 
     if (OS_ConfigServiceBackend_getSizeOfRecords(blobBackend) !=
-        OS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_LENGTH)
+        OS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_SIZE)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return OS_ERROR_INVALID_PARAMETER;
@@ -825,7 +825,7 @@ OS_ConfigServiceLib_parameterGetValue(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     void* buffer,
-    size_t bufferLength,
+    size_t bufferSize,
     size_t* bytesCopied)
 {
     if (!instance->isInitialized)
@@ -836,7 +836,7 @@ OS_ConfigServiceLib_parameterGetValue(
 
     size_t parameterSize = OS_ConfigServiceLib_parameterGetSize(parameter);
 
-    if (parameterSize <= bufferLength)
+    if (parameterSize <= bufferSize)
     {
         switch (parameter->parameterType)
         {
@@ -853,7 +853,7 @@ OS_ConfigServiceLib_parameterGetValue(
                                  parameter->parameterValue.valueString.index,
                                  parameterSize,
                                  buffer,
-                                 bufferLength);
+                                 bufferSize);
             *bytesCopied = (err == OS_SUCCESS) ? parameterSize : 0;
         }
         break;
@@ -866,7 +866,7 @@ OS_ConfigServiceLib_parameterGetValue(
                                  parameter->parameterValue.valueBlob.index,
                                  parameter->parameterValue.valueBlob.numberOfBlocks,
                                  buffer,
-                                 bufferLength);
+                                 bufferSize);
             *bytesCopied = (err == OS_SUCCESS) ? parameterSize : 0;
         }
         break;
@@ -934,7 +934,7 @@ OS_ConfigServiceLib_parameterGetValueAsString(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     char* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (!instance->isInitialized)
     {
@@ -948,7 +948,7 @@ OS_ConfigServiceLib_parameterGetValueAsString(
                instance,
                parameter,
                buffer,
-               bufferLength,
+               bufferSize,
                &bytesCopied);
 }
 
@@ -959,7 +959,7 @@ OS_ConfigServiceLib_parameterGetValueAsBlob(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     void* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (!instance->isInitialized)
     {
@@ -973,7 +973,7 @@ OS_ConfigServiceLib_parameterGetValueAsBlob(
                instance,
                parameter,
                buffer,
-               bufferLength,
+               bufferSize,
                &bytesCopied);
 }
 
@@ -985,7 +985,7 @@ OS_ConfigServiceLib_parameterSetValue(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void const* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (!instance->isInitialized)
     {
@@ -1030,7 +1030,7 @@ OS_ConfigServiceLib_parameterSetValue(
     {
     case OS_CONFIG_LIB_PARAMETER_TYPE_INTEGER32:
     case OS_CONFIG_LIB_PARAMETER_TYPE_INTEGER64:
-        if (parameterSize == bufferLength)
+        if (parameterSize == bufferSize)
         {
             memcpy(&parameter.parameterValue, buffer, parameterSize);
             err = OS_SUCCESS;
@@ -1043,24 +1043,24 @@ OS_ConfigServiceLib_parameterSetValue(
         break;
 
     case OS_CONFIG_LIB_PARAMETER_TYPE_STRING:
-        parameter.parameterValue.valueString.size = bufferLength;
+        parameter.parameterValue.valueString.size = bufferSize;
 
         err = OS_ConfigServiceLib_writeVariableLengthString(
                   &instance->stringBackend,
                   parameter.parameterValue.valueString.index,
                   buffer,
-                  bufferLength);
+                  bufferSize);
         break;
 
     case OS_CONFIG_LIB_PARAMETER_TYPE_BLOB:
-        parameter.parameterValue.valueBlob.size = bufferLength;
+        parameter.parameterValue.valueBlob.size = bufferSize;
 
         err = OS_ConfigServiceLib_writeVariableLengthBlob(
                   &instance->blobBackend,
                   parameter.parameterValue.valueBlob.index,
                   parameter.parameterValue.valueBlob.numberOfBlocks,
                   buffer,
-                  bufferLength);
+                  bufferSize);
         break;
 
     default:
@@ -1138,7 +1138,7 @@ OS_ConfigServiceLib_parameterSetValueAsString(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     char const* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (!instance->isInitialized)
     {
@@ -1151,7 +1151,7 @@ OS_ConfigServiceLib_parameterSetValueAsString(
                enumerator,
                OS_CONFIG_LIB_PARAMETER_TYPE_STRING,
                buffer,
-               bufferLength);
+               bufferSize);
 }
 
 //------------------------------------------------------------------------------
@@ -1162,7 +1162,7 @@ OS_ConfigServiceLib_parameterSetValueAsBlob(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void const* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (!instance->isInitialized)
     {
@@ -1175,7 +1175,7 @@ OS_ConfigServiceLib_parameterSetValueAsBlob(
                enumerator,
                OS_CONFIG_LIB_PARAMETER_TYPE_BLOB,
                buffer,
-               bufferLength);
+               bufferSize);
 }
 
 //------------------------------------------------------------------------------
@@ -1293,7 +1293,7 @@ OS_ConfigServiceLib_parameterGetValueFromDomainName(
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void* buffer,
-    size_t bufferLength,
+    size_t bufferSize,
     size_t* bytesCopied)
 {
     if (!instance->isInitialized)
@@ -1331,7 +1331,7 @@ OS_ConfigServiceLib_parameterGetValueFromDomainName(
               instance,
               &parameter,
               buffer,
-              bufferLength,
+              bufferSize,
               bytesCopied);
     if (err < 0)
     {

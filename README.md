@@ -144,19 +144,19 @@ FileSystem documentation.
     }
 
     // domain backend
-    initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_LEN, DOMAIN_FILE);
+    initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_SIZE, DOMAIN_FILE);
     OS_ConfigServiceBackend_initializeFileBackend(&domainBackend, name, hFs);
 
     // parameter backend
-    initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_LEN, PARAMETER_FILE);
+    initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_SIZE, PARAMETER_FILE);
     OS_ConfigServiceBackend_initializeFileBackend(&parameterBackend, name, hFs);
 
     // string parameter backend
-    initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_LEN, STRING_FILE);
+    initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_SIZE, STRING_FILE);
     OS_ConfigServiceBackend_initializeFileBackend(&stringBackend, name, hFs);
 
     // blob parameter backend
-    initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_LEN, BLOB_FILE);
+    initializeName(name.buffer, OS_CONFIG_BACKEND_MAX_FILE_NAME_SIZE, BLOB_FILE);
     OS_ConfigServiceBackend_initializeFileBackend(&blobBackend, name, hFs);
 
 Initializing the Configuration lib with a memory backend does not utilize any
@@ -229,16 +229,16 @@ possible to create a local handle:
     void OS_ConfigService_parameterGetType(refin OS_ConfigServiceLibTypes_Parameter_t parameter, out OS_ConfigServiceLibTypes_ParameterType_t parameterType);
     size_t OS_ConfigService_parameterGetSize(refin OS_ConfigServiceLibTypes_Parameter_t parameter);
 
-    OS_Error_t OS_ConfigService_parameterGetValue(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, size_t bufferLength, out size_t bytesCopied);
+    OS_Error_t OS_ConfigService_parameterGetValue(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, size_t bufferSize, out size_t bytesCopied);
     OS_Error_t OS_ConfigService_parameterGetValueAsU32(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, out uint32_t value);
     OS_Error_t OS_ConfigService_parameterGetValueAsU64(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, out uint64_t value);
-    OS_Error_t OS_ConfigService_parameterGetValueAsString(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, size_t bufferLength);
-    OS_Error_t OS_ConfigService_parameterGetValueAsBlob(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, size_t bufferLength);
+    OS_Error_t OS_ConfigService_parameterGetValueAsString(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, size_t bufferSize);
+    OS_Error_t OS_ConfigService_parameterGetValueAsBlob(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_Parameter_t parameter, size_t bufferSize);
 
-    OS_Error_t OS_ConfigService_parameterSetValue(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, OS_ConfigServiceLibTypes_ParameterType_t parameterType, size_t bufferLength);
+    OS_Error_t OS_ConfigService_parameterSetValue(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, OS_ConfigServiceLibTypes_ParameterType_t parameterType, size_t bufferSize);
     OS_Error_t OS_ConfigService_parameterSetValueAsU32(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, uint32_t value);
     OS_Error_t OS_ConfigService_parameterSetValueAsU64(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, uint64_t value);
-    OS_Error_t OS_ConfigService_parameterSetValueAsString(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, OS_ConfigServiceLibTypes_ParameterType_t parameterType, size_t bufferLength);
-    OS_Error_t OS_ConfigService_parameterSetValueAsBlob(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, OS_ConfigServiceLibTypes_ParameterType_t parameterType, size_t bufferLength);
+    OS_Error_t OS_ConfigService_parameterSetValueAsString(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, OS_ConfigServiceLibTypes_ParameterType_t parameterType, size_t bufferSize);
+    OS_Error_t OS_ConfigService_parameterSetValueAsBlob(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_ParameterEnumerator_t enumerator, OS_ConfigServiceLibTypes_ParameterType_t parameterType, size_t bufferSize);
 
-    OS_Error_t OS_ConfigService_parameterGetValueFromDomainName(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_DomainName_t domainName, refin OS_ConfigServiceLibTypes_ParameterName_t parameterName, OS_ConfigServiceLibTypes_ParameterType_t parameterType, size_t bufferLength, out size_t bytesCopied);
+    OS_Error_t OS_ConfigService_parameterGetValueFromDomainName(OS_ConfigServiceHandle_t handle, refin OS_ConfigServiceLibTypes_DomainName_t domainName, refin OS_ConfigServiceLibTypes_ParameterName_t parameterName, OS_ConfigServiceLibTypes_ParameterType_t parameterType, size_t bufferSize, out size_t bytesCopied);

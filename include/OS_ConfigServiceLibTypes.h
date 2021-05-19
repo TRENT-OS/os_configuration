@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020, Hensoldt Cyber GmbH
+ * Copyright (C) 2020-2021, HENSOLDT Cyber GmbH
  *
  * @addtogroup Lib
  * @{
@@ -24,10 +24,14 @@
 // Important: these limits have to be small enough to be allocated on the stack.
 typedef enum
 {
-    OS_CONFIG_LIB_PARAMETER_MAX_STRING_LENGTH = 32,
-    OS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_LENGTH = 64,
-    OS_CONFIG_LIB_PARAMETER_NAME_LEN = 32,
-    OS_CONFIG_LIB_DOMAIN_NAME_LEN = 32,
+    //! max size of a parameter string including null terminator
+    OS_CONFIG_LIB_PARAMETER_MAX_STRING_SIZE = 32,
+    //! max size of blob block
+    OS_CONFIG_LIB_PARAMETER_MAX_BLOB_BLOCK_SIZE = 64,
+    //! max size of a parameter name including null terminator
+    OS_CONFIG_LIB_PARAMETER_NAME_SIZE = 32,
+    //! max size of a domain name including null terminator
+    OS_CONFIG_LIB_DOMAIN_NAME_SIZE = 32,
 } OS_ConfigServiceLibTypes_Limits_t;
 
 
@@ -44,7 +48,7 @@ typedef enum
 // The name of a paramter.
 typedef struct
 {
-    char name[OS_CONFIG_LIB_PARAMETER_NAME_LEN];
+    char name[OS_CONFIG_LIB_PARAMETER_NAME_SIZE]; // null terminated string
 }
 OS_ConfigServiceLibTypes_ParameterName_t;
 
@@ -132,7 +136,7 @@ OS_ConfigServiceLibTypes_Parameter_t;
 // Name of a domain.
 typedef struct
 {
-    char name[OS_CONFIG_LIB_DOMAIN_NAME_LEN];
+    char name[OS_CONFIG_LIB_DOMAIN_NAME_SIZE]; // null terminated string
 }
 OS_ConfigServiceLibTypes_DomainName_t;
 

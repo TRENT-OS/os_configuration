@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020, Hensoldt Cyber GmbH
+ * Copyright (C) 2020-2021, HENSOLDT Cyber GmbH
  *
  * @addtogroup ServerWrapper
  * @{
@@ -108,7 +108,7 @@ OS_ConfigServiceServer_parameterGetSize(
 OS_Error_t
 OS_ConfigServiceServer_parameterGetValue(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
-    size_t bufferLength,
+    size_t bufferSize,
     size_t* bytesCopied);
 
 OS_Error_t
@@ -124,18 +124,18 @@ OS_ConfigServiceServer_parameterGetValueAsU64(
 OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsString(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
-    size_t bufferLength);
+    size_t bufferSize);
 
 OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsBlob(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
-    size_t bufferLength);
+    size_t bufferSize);
 
 OS_Error_t
 OS_ConfigServiceServer_parameterSetValue(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    size_t bufferLength);
+    size_t bufferSize);
 
 OS_Error_t
 OS_ConfigServiceServer_parameterSetValueAsU32(
@@ -151,20 +151,20 @@ OS_Error_t
 OS_ConfigServiceServer_parameterSetValueAsString(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    size_t bufferLength);
+    size_t bufferSize);
 
 OS_Error_t
 OS_ConfigServiceServer_parameterSetValueAsBlob(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    size_t bufferLength);
+    size_t bufferSize);
 
 OS_Error_t
 OS_ConfigServiceServer_parameterGetValueFromDomainName(
     OS_ConfigServiceLibTypes_DomainName_t const* domainName,
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    size_t bufferLength,
+    size_t bufferSize,
     size_t* bytesCopied);
 
 /** @} */

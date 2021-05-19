@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019, Hensoldt Cyber GmbH
+ *  Copyright (C) 2019-2021, HENSOLDT Cyber GmbH
  */
 
 /* Includes ------------------------------------------------------------------*/
@@ -32,7 +32,7 @@ OS_Error_t OS_ConfigServiceBackend_writeToFile(
     const char*   name,
     unsigned int  offset,
     void*         buffer,
-    int           length)
+    int           size)
 {
     OS_FileSystemFile_Handle_t hFile;
 
@@ -51,14 +51,14 @@ OS_Error_t OS_ConfigServiceBackend_writeToFile(
 
     Debug_LOG_DEBUG("file_write name:%s\n", name);
     Debug_LOG_DEBUG("file_write offset:%u\n", offset);
-    Debug_LOG_DEBUG("file_write length:%d\n", length);
+    Debug_LOG_DEBUG("file_write size:%d\n", size);
 
     // Call filesystem API function to write into a file
     err = OS_FileSystemFile_write(
               hFs,
               hFile,
               (long)offset,
-              (long)length,
+              (long)size,
               buffer);
     if (OS_SUCCESS != err)
     {
@@ -84,7 +84,7 @@ OS_Error_t OS_ConfigServiceBackend_readFromFile(
     const char*   name,
     unsigned int  offset,
     void*         buffer,
-    int           length)
+    int           size)
 {
     OS_FileSystemFile_Handle_t hFile;
 
@@ -103,14 +103,14 @@ OS_Error_t OS_ConfigServiceBackend_readFromFile(
 
     Debug_LOG_DEBUG("file_read name:%s\n", name);
     Debug_LOG_DEBUG("file_read offset:%u\n", offset);
-    Debug_LOG_DEBUG("file_read length:%d\n", length);
+    Debug_LOG_DEBUG("file_read size:%d\n", size);
 
     // Call filesystem API function to write into a file
     err = OS_FileSystemFile_read(
               hFs,
               hFile,
               (long)offset,
-              (long)length,
+              (long)size,
               buffer);
     if (OS_SUCCESS != err)
     {
@@ -134,7 +134,7 @@ static
 OS_Error_t OS_ConfigServiceBackend_createFile(
     OS_FileSystem_Handle_t  hFs,
     const char*   name,
-    int           length)
+    int           size)
 {
     enum {BLOCK_SIZE = 256};
     static char buf[256];
@@ -153,14 +153,14 @@ OS_Error_t OS_ConfigServiceBackend_createFile(
         return err;
     }
 
-    Debug_LOG_DEBUG("file_create: size: %d\n", length);
+    Debug_LOG_DEBUG("file_create: size: %d\n", size);
 
     // fill buffer with test data
     memset(buf, 0, BLOCK_SIZE);
 
     // Call filesystem API function to write into a file
-    unsigned int numberOfBlocks = length / BLOCK_SIZE;
-    unsigned int sizeOfLastBlock = length % BLOCK_SIZE;
+    unsigned int numberOfBlocks = size / BLOCK_SIZE;
+    unsigned int sizeOfLastBlock = size % BLOCK_SIZE;
     unsigned int fileSize = 0;
 
     for (unsigned int k = 0; k < numberOfBlocks; ++k)
@@ -209,7 +209,7 @@ writeRecord_backend_filesystem(
     OS_ConfigServiceBackend_t*   instance,
     unsigned int         recordIndex,
     const void*          buf,
-    size_t               bufLen)
+    size_t               bufSize)
 {
     unsigned int offset = sizeof(OS_ConfigServiceBackend_BackendFsLayout_t) +
                           recordIndex *
@@ -220,7 +220,7 @@ writeRecord_backend_filesystem(
                                  instance->backend.fileSystem.name.buffer,
                                  offset,
                                  (void*)buf,
-                                 bufLen);
+                                 bufSize);
 
     if (OS_SUCCESS != writeResult)
     {
@@ -236,7 +236,7 @@ readRecord_backend_filesystem(
     OS_ConfigServiceBackend_t*   instance,
     unsigned int         recordIndex,
     void*                buf,
-    size_t               bufLen)
+    size_t               bufSize)
 {
     unsigned int offset = sizeof(OS_ConfigServiceBackend_BackendFsLayout_t) +
                           recordIndex *
@@ -247,7 +247,7 @@ readRecord_backend_filesystem(
                                 instance->backend.fileSystem.name.buffer,
                                 offset,
                                 buf,
-                                bufLen);
+                                bufSize);
 
     if (OS_SUCCESS != readResult)
     {
@@ -346,7 +346,7 @@ writeRecord_backend_memory(
     OS_ConfigServiceBackend_t*   instance,
     unsigned int         recordIndex,
     const void*          buf,
-    size_t               bufLen)
+    size_t               bufSize)
 {
     OS_ConfigServiceBackend_BackendMemLayout_t* memLayout =
         (OS_ConfigServiceBackend_BackendMemLayout_t*)(instance->backend.memory.buffer);
@@ -362,7 +362,7 @@ readRecord_backend_memory(
     OS_ConfigServiceBackend_t*   instance,
     unsigned int         recordIndex,
     void*                buf,
-    size_t               bufLen)
+    size_t               bufSize)
 {
     OS_ConfigServiceBackend_BackendMemLayout_t* memLayout =
         (OS_ConfigServiceBackend_BackendMemLayout_t*)(instance->backend.memory.buffer);
@@ -466,7 +466,7 @@ OS_ConfigServiceBackend_readRecord(
     OS_ConfigServiceBackend_t*   instance,
     unsigned int         recordIndex,
     void*                buf,
-    size_t               bufLen)
+    size_t               bufSize)
 {
     if (recordIndex >= instance->numberOfRecords)
     {
@@ -474,7 +474,7 @@ OS_ConfigServiceBackend_readRecord(
         return OS_ERROR_INVALID_PARAMETER;
     }
 
-    if (bufLen < instance->sizeOfRecord)
+    if (bufSize < instance->sizeOfRecord)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
         return OS_ERROR_INVALID_PARAMETER;
@@ -490,7 +490,7 @@ OS_ConfigServiceBackend_readRecord(
                    instance,
                    recordIndex,
                    buf,
-                   bufLen);
+                   bufSize);
 
 #endif // OS_CONFIG_SERVICE_BACKEND_FILESYSTEM)
 
@@ -501,7 +501,7 @@ OS_ConfigServiceBackend_readRecord(
                    instance,
                    recordIndex,
                    buf,
-                   bufLen);
+                   bufSize);
 
 #endif // OS_CONFIG_SERVICE_BACKEND_MEMORY)
 
@@ -520,7 +520,7 @@ OS_ConfigServiceBackend_writeRecord(
     OS_ConfigServiceBackend_t*   instance,
     unsigned int         recordIndex,
     const void*          buf,
-    size_t               bufLen)
+    size_t               bufSize)
 {
     if (recordIndex >= instance->numberOfRecords)
     {
@@ -528,11 +528,11 @@ OS_ConfigServiceBackend_writeRecord(
         return OS_ERROR_INVALID_PARAMETER;
     }
 
-    if (bufLen != instance->sizeOfRecord)
+    if (bufSize != instance->sizeOfRecord)
     {
         Debug_LOG_DEBUG("Error: function: %s - line: %d\n", __FUNCTION__, __LINE__);
-        Debug_LOG_DEBUG("Error: bufLen: %zu - instance->sizeOfRecord: %zu\n",
-                        bufLen, instance->sizeOfRecord);
+        Debug_LOG_DEBUG("Error: bufSize: %zu - instance->sizeOfRecord: %zu\n",
+                        bufSize, instance->sizeOfRecord);
         return OS_ERROR_INVALID_PARAMETER;
     }
 
@@ -546,7 +546,7 @@ OS_ConfigServiceBackend_writeRecord(
                    instance,
                    recordIndex,
                    buf,
-                   bufLen);
+                   bufSize);
 
 #endif // OS_CONFIG_SERVICE_BACKEND_FILESYSTEM)
 
@@ -557,7 +557,7 @@ OS_ConfigServiceBackend_writeRecord(
                    instance,
                    recordIndex,
                    buf,
-                   bufLen);
+                   bufSize);
 
 #endif // OS_CONFIG_SERVICE_BACKEND_MEMORY)
 

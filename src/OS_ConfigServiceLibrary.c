@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019, Hensoldt Cyber GmbH
+ *  Copyright (C) 2019-2021, HENSOLDT Cyber GmbH
  */
 
 /* Includes ------------------------------------------------------------------*/
@@ -311,7 +311,7 @@ OS_ConfigServiceLibrary_parameterGetValue(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     void* buffer,
-    size_t bufferLength,
+    size_t bufferSize,
     size_t* bytesCopied)
 {
     if (OS_CONFIG_HANDLE_KIND_LOCAL == OS_ConfigServiceHandle_getHandleKind(
@@ -323,7 +323,7 @@ OS_ConfigServiceLibrary_parameterGetValue(
                    instance,
                    parameter,
                    buffer,
-                   bufferLength,
+                   bufferSize,
                    bytesCopied);
     }
     else
@@ -378,7 +378,7 @@ OS_ConfigServiceLibrary_parameterGetValueAsString(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     char* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (OS_CONFIG_HANDLE_KIND_LOCAL == OS_ConfigServiceHandle_getHandleKind(
             handle))
@@ -389,7 +389,7 @@ OS_ConfigServiceLibrary_parameterGetValueAsString(
                    instance,
                    parameter,
                    buffer,
-                   bufferLength);
+                   bufferSize);
     }
     else
     {
@@ -403,7 +403,7 @@ OS_ConfigServiceLibrary_parameterGetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     void* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (OS_CONFIG_HANDLE_KIND_LOCAL == OS_ConfigServiceHandle_getHandleKind(
             handle))
@@ -414,7 +414,7 @@ OS_ConfigServiceLibrary_parameterGetValueAsBlob(
                    instance,
                    parameter,
                    buffer,
-                   bufferLength);
+                   bufferSize);
     }
     else
     {
@@ -429,7 +429,7 @@ OS_ConfigServiceLibrary_parameterSetValue(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void const* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (OS_CONFIG_HANDLE_KIND_LOCAL == OS_ConfigServiceHandle_getHandleKind(
             handle))
@@ -441,7 +441,7 @@ OS_ConfigServiceLibrary_parameterSetValue(
                    enumerator,
                    parameterType,
                    buffer,
-                   bufferLength);
+                   bufferSize);
     }
     else
     {
@@ -496,7 +496,7 @@ OS_ConfigServiceLibrary_parameterSetValueAsString(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     char const* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (OS_CONFIG_HANDLE_KIND_LOCAL == OS_ConfigServiceHandle_getHandleKind(
             handle))
@@ -508,7 +508,7 @@ OS_ConfigServiceLibrary_parameterSetValueAsString(
                    enumerator,
                    parameterType,
                    buffer,
-                   bufferLength);
+                   bufferSize);
     }
     else
     {
@@ -523,7 +523,7 @@ OS_ConfigServiceLibrary_parameterSetValueAsBlob(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void const* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (OS_CONFIG_HANDLE_KIND_LOCAL == OS_ConfigServiceHandle_getHandleKind(
             handle))
@@ -535,7 +535,7 @@ OS_ConfigServiceLibrary_parameterSetValueAsBlob(
                    enumerator,
                    parameterType,
                    buffer,
-                   bufferLength);
+                   bufferSize);
     }
     else
     {
@@ -551,7 +551,7 @@ OS_ConfigServiceLibrary_parameterGetValueFromDomainName(
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void* buffer,
-    size_t bufferLength,
+    size_t bufferSize,
     size_t* bytesCopied)
 {
     if (OS_CONFIG_HANDLE_KIND_LOCAL == OS_ConfigServiceHandle_getHandleKind(
@@ -565,7 +565,7 @@ OS_ConfigServiceLibrary_parameterGetValueFromDomainName(
                    parameterName,
                    parameterType,
                    buffer,
-                   bufferLength,
+                   bufferSize,
                    bytesCopied);
     }
     else

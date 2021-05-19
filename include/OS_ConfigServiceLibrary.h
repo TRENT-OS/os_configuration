@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020, Hensoldt Cyber GmbH
+ * Copyright (C) 2020-2021, HENSOLDT Cyber GmbH
  *
  * @addtogroup LibraryWrapper
  * @{
@@ -117,7 +117,7 @@ OS_ConfigServiceLibrary_parameterGetValue(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     void* buffer,
-    size_t bufferLength,
+    size_t bufferSize,
     size_t* bytesCopied);
 
 OS_Error_t
@@ -137,14 +137,14 @@ OS_ConfigServiceLibrary_parameterGetValueAsString(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     char* buffer,
-    size_t bufferLength);
+    size_t bufferSize);
 
 OS_Error_t
 OS_ConfigServiceLibrary_parameterGetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     void* buffer,
-    size_t bufferLength);
+    size_t bufferSize);
 
 OS_Error_t
 OS_ConfigServiceLibrary_parameterSetValue(
@@ -152,7 +152,7 @@ OS_ConfigServiceLibrary_parameterSetValue(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void const* buffer,
-    size_t bufferLength);
+    size_t bufferSize);
 
 OS_Error_t
 OS_ConfigServiceLibrary_parameterSetValueAsU32(
@@ -172,7 +172,7 @@ OS_ConfigServiceLibrary_parameterSetValueAsString(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     char const* buffer,
-    size_t bufferLength);
+    size_t bufferSize);
 
 OS_Error_t
 OS_ConfigServiceLibrary_parameterSetValueAsBlob(
@@ -180,7 +180,7 @@ OS_ConfigServiceLibrary_parameterSetValueAsBlob(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void const* buffer,
-    size_t bufferLength);
+    size_t bufferSize);
 
 OS_Error_t
 OS_ConfigServiceLibrary_parameterGetValueFromDomainName(
@@ -189,7 +189,7 @@ OS_ConfigServiceLibrary_parameterGetValueFromDomainName(
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void* buffer,
-    size_t bufferLength,
+    size_t bufferSize,
     size_t* bytesCopied);
 
 /** @} */

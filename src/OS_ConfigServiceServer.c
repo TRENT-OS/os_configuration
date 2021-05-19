@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019, Hensoldt Cyber GmbH
+ *  Copyright (C) 2019-2021, HENSOLDT Cyber GmbH
  */
 
 /* Includes ------------------------------------------------------------------*/
@@ -321,7 +321,7 @@ OS_ConfigServiceServer_parameterGetSize(
 OS_Error_t
 OS_ConfigServiceServer_parameterGetValue(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
-    size_t bufferLength,
+    size_t bufferSize,
     size_t* bytesCopied)
 {
     OS_ConfigServiceHandle_t* copyOfRemoteHandle = getLocalCopyOfHandle();
@@ -331,7 +331,7 @@ OS_ConfigServiceServer_parameterGetValue(
         &serverInstance,
         &localHandle);
 
-    if (bufferLength > copyOfRemoteHandle->context.rpc.dataportSize)
+    if (bufferSize > copyOfRemoteHandle->context.rpc.dataportSize)
     {
         return OS_ERROR_BUFFER_TOO_SMALL;
     }
@@ -340,7 +340,7 @@ OS_ConfigServiceServer_parameterGetValue(
                localHandle,
                parameter,
                copyOfRemoteHandle->context.rpc.dataport,
-               bufferLength,
+               bufferSize,
                bytesCopied);
 }
 
@@ -384,7 +384,7 @@ OS_ConfigServiceServer_parameterGetValueAsU64(
 OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsString(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     OS_ConfigServiceHandle_t* copyOfRemoteHandle = getLocalCopyOfHandle();
     OS_ConfigServiceHandle_t localHandle;
@@ -393,7 +393,7 @@ OS_ConfigServiceServer_parameterGetValueAsString(
         &serverInstance,
         &localHandle);
 
-    if (bufferLength > copyOfRemoteHandle->context.rpc.dataportSize)
+    if (bufferSize > copyOfRemoteHandle->context.rpc.dataportSize)
     {
         return OS_ERROR_BUFFER_TOO_SMALL;
     }
@@ -402,7 +402,7 @@ OS_ConfigServiceServer_parameterGetValueAsString(
                localHandle,
                parameter,
                copyOfRemoteHandle->context.rpc.dataport,
-               bufferLength);
+               bufferSize);
 
 }
 
@@ -410,7 +410,7 @@ OS_ConfigServiceServer_parameterGetValueAsString(
 OS_Error_t
 OS_ConfigServiceServer_parameterGetValueAsBlob(
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     OS_ConfigServiceHandle_t* copyOfRemoteHandle = getLocalCopyOfHandle();
     OS_ConfigServiceHandle_t localHandle;
@@ -419,7 +419,7 @@ OS_ConfigServiceServer_parameterGetValueAsBlob(
         &serverInstance,
         &localHandle);
 
-    if (bufferLength > copyOfRemoteHandle->context.rpc.dataportSize)
+    if (bufferSize > copyOfRemoteHandle->context.rpc.dataportSize)
     {
         return OS_ERROR_BUFFER_TOO_SMALL;
     }
@@ -428,7 +428,7 @@ OS_ConfigServiceServer_parameterGetValueAsBlob(
                localHandle,
                parameter,
                copyOfRemoteHandle->context.rpc.dataport,
-               bufferLength);
+               bufferSize);
 }
 
 //------------------------------------------------------------------------------
@@ -436,7 +436,7 @@ OS_Error_t
 OS_ConfigServiceServer_parameterSetValue(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     OS_ConfigServiceHandle_t* copyOfRemoteHandle = getLocalCopyOfHandle();
     OS_ConfigServiceHandle_t localHandle;
@@ -445,7 +445,7 @@ OS_ConfigServiceServer_parameterSetValue(
         &serverInstance,
         &localHandle);
 
-    if (bufferLength > copyOfRemoteHandle->context.rpc.dataportSize)
+    if (bufferSize > copyOfRemoteHandle->context.rpc.dataportSize)
     {
         return OS_ERROR_BUFFER_TOO_SMALL;
     }
@@ -455,7 +455,7 @@ OS_ConfigServiceServer_parameterSetValue(
                enumerator,
                parameterType,
                copyOfRemoteHandle->context.rpc.dataport,
-               bufferLength);
+               bufferSize);
 }
 
 //------------------------------------------------------------------------------
@@ -499,7 +499,7 @@ OS_Error_t
 OS_ConfigServiceServer_parameterSetValueAsString(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     OS_ConfigServiceHandle_t* copyOfRemoteHandle = getLocalCopyOfHandle();
     OS_ConfigServiceHandle_t localHandle;
@@ -508,7 +508,7 @@ OS_ConfigServiceServer_parameterSetValueAsString(
         &serverInstance,
         &localHandle);
 
-    if (bufferLength > copyOfRemoteHandle->context.rpc.dataportSize)
+    if (bufferSize > copyOfRemoteHandle->context.rpc.dataportSize)
     {
         return OS_ERROR_BUFFER_TOO_SMALL;
     }
@@ -518,7 +518,7 @@ OS_ConfigServiceServer_parameterSetValueAsString(
                enumerator,
                parameterType,
                copyOfRemoteHandle->context.rpc.dataport,
-               bufferLength);
+               bufferSize);
 }
 
 //------------------------------------------------------------------------------
@@ -526,7 +526,7 @@ OS_Error_t
 OS_ConfigServiceServer_parameterSetValueAsBlob(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     OS_ConfigServiceHandle_t* copyOfRemoteHandle = getLocalCopyOfHandle();
     OS_ConfigServiceHandle_t localHandle;
@@ -535,7 +535,7 @@ OS_ConfigServiceServer_parameterSetValueAsBlob(
         &serverInstance,
         &localHandle);
 
-    if (bufferLength > copyOfRemoteHandle->context.rpc.dataportSize)
+    if (bufferSize > copyOfRemoteHandle->context.rpc.dataportSize)
     {
         return OS_ERROR_BUFFER_TOO_SMALL;
     }
@@ -545,7 +545,7 @@ OS_ConfigServiceServer_parameterSetValueAsBlob(
                enumerator,
                parameterType,
                copyOfRemoteHandle->context.rpc.dataport,
-               bufferLength);
+               bufferSize);
 }
 
 //------------------------------------------------------------------------------
@@ -554,7 +554,7 @@ OS_ConfigServiceServer_parameterGetValueFromDomainName(
     OS_ConfigServiceLibTypes_DomainName_t const* domainName,
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
-    size_t bufferLength,
+    size_t bufferSize,
     size_t* bytesCopied)
 {
     OS_ConfigServiceHandle_t* copyOfRemoteHandle = getLocalCopyOfHandle();
@@ -564,7 +564,7 @@ OS_ConfigServiceServer_parameterGetValueFromDomainName(
         &serverInstance,
         &localHandle);
 
-    if (bufferLength > copyOfRemoteHandle->context.rpc.dataportSize)
+    if (bufferSize > copyOfRemoteHandle->context.rpc.dataportSize)
     {
         return OS_ERROR_BUFFER_TOO_SMALL;
     }
@@ -575,7 +575,7 @@ OS_ConfigServiceServer_parameterGetValueFromDomainName(
                parameterName,
                parameterType,
                copyOfRemoteHandle->context.rpc.dataport,
-               bufferLength,
+               bufferSize,
                bytesCopied);
 }
 

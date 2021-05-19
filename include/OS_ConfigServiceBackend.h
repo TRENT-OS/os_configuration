@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020, Hensoldt Cyber GmbH
+ * Copyright (C) 2020-2021, HENSOLDT Cyber GmbH
  *
  * @addtogroup Backend
  * @{
@@ -29,12 +29,13 @@
 
 enum
 {
-    OS_CONFIG_BACKEND_MAX_FILE_NAME_LEN  = (8 + 1 + 3 + 1)
+    // Max size of a config backend file name (including null terminator).
+    OS_CONFIG_BACKEND_MAX_FILE_NAME_SIZE  = (8 + 1 + 3 + 1)
 };
 
 typedef struct
 {
-    char buffer[OS_CONFIG_BACKEND_MAX_FILE_NAME_LEN];
+    char buffer[OS_CONFIG_BACKEND_MAX_FILE_NAME_SIZE];
 }
 OS_ConfigServiceBackend_FileName_t;
 
@@ -161,13 +162,13 @@ OS_ConfigServiceBackend_readRecord(
     OS_ConfigServiceBackend_t* instance,
     unsigned int recordIndex,
     void* buf,
-    size_t bufLen);
+    size_t bufSize);
 
 OS_Error_t
 OS_ConfigServiceBackend_writeRecord(
     OS_ConfigServiceBackend_t* instance,
     unsigned int recordIndex,
     const void* buf,
-    size_t bufLen);
+    size_t bufSize);
 
 /** @} */

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019, Hensoldt Cyber GmbH
+ *  Copyright (C) 2019-2021, HENSOLDT Cyber GmbH
  */
 
 /* Includes ------------------------------------------------------------------*/
@@ -391,7 +391,7 @@ OS_ConfigService_parameterGetValue(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     void* buffer,
-    size_t bufferLength,
+    size_t bufferSize,
     size_t* bytesCopied)
 {
     if (OS_CONFIG_HANDLE_KIND_RPC == OS_ConfigServiceHandle_getHandleKind(
@@ -401,12 +401,12 @@ OS_ConfigService_parameterGetValue(
         OS_Error_t err =
             OS_ConfigServiceServer_parameterGetValue(
                 parameter,
-                bufferLength,
+                bufferSize,
                 bytesCopied);
 
         if (err == OS_SUCCESS)
         {
-            if (*bytesCopied > bufferLength)
+            if (*bytesCopied > bufferSize)
             {
                 return OS_ERROR_BUFFER_TOO_SMALL;
             }
@@ -427,7 +427,7 @@ OS_ConfigService_parameterGetValue(
                    handle,
                    parameter,
                    buffer,
-                   bufferLength,
+                   bufferSize,
                    bytesCopied);
     }
 }
@@ -492,7 +492,7 @@ OS_ConfigService_parameterGetValueAsString(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     char* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (OS_CONFIG_HANDLE_KIND_RPC == OS_ConfigServiceHandle_getHandleKind(
             handle))
@@ -501,14 +501,14 @@ OS_ConfigService_parameterGetValueAsString(
         OS_Error_t err =
             OS_ConfigServiceServer_parameterGetValueAsString(
                 parameter,
-                bufferLength);
+                bufferSize);
 
         if (err == OS_SUCCESS)
         {
             OS_ConfigService_ClientCtx_t* clientCtx =
                 (OS_ConfigService_ClientCtx_t*)
                 OS_ConfigServiceHandle_getClientContext(&handle);
-            memcpy(buffer, *clientCtx->dataport.io, bufferLength);
+            memcpy(buffer, *clientCtx->dataport.io, bufferSize);
         }
 
         return err;
@@ -522,7 +522,7 @@ OS_ConfigService_parameterGetValueAsString(
                    handle,
                    parameter,
                    buffer,
-                   bufferLength);
+                   bufferSize);
     }
 }
 
@@ -532,7 +532,7 @@ OS_ConfigService_parameterGetValueAsBlob(
     OS_ConfigServiceHandle_t handle,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     void* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (OS_CONFIG_HANDLE_KIND_RPC == OS_ConfigServiceHandle_getHandleKind(
             handle))
@@ -541,14 +541,14 @@ OS_ConfigService_parameterGetValueAsBlob(
         OS_Error_t err =
             OS_ConfigServiceServer_parameterGetValueAsBlob(
                 parameter,
-                bufferLength);
+                bufferSize);
 
         if (err == OS_SUCCESS)
         {
             OS_ConfigService_ClientCtx_t* clientCtx =
                 (OS_ConfigService_ClientCtx_t*)
                 OS_ConfigServiceHandle_getClientContext(&handle);
-            memcpy(buffer, *clientCtx->dataport.io, bufferLength);
+            memcpy(buffer, *clientCtx->dataport.io, bufferSize);
         }
 
         return err;
@@ -562,7 +562,7 @@ OS_ConfigService_parameterGetValueAsBlob(
                    handle,
                    parameter,
                    buffer,
-                   bufferLength);
+                   bufferSize);
     }
 }
 
@@ -573,7 +573,7 @@ OS_ConfigService_parameterSetValue(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void const* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (OS_CONFIG_HANDLE_KIND_RPC == OS_ConfigServiceHandle_getHandleKind(
             handle))
@@ -583,16 +583,16 @@ OS_ConfigService_parameterSetValue(
             (OS_ConfigService_ClientCtx_t*)
             OS_ConfigServiceHandle_getClientContext(&handle);
 
-        if (bufferLength > clientCtx->dataport.size)
+        if (bufferSize > clientCtx->dataport.size)
         {
             return OS_ERROR_BUFFER_TOO_SMALL;
         }
-        memcpy(*clientCtx->dataport.io, buffer, bufferLength);
+        memcpy(*clientCtx->dataport.io, buffer, bufferSize);
 
         return OS_ConfigServiceServer_parameterSetValue(
                    enumerator,
                    parameterType,
-                   bufferLength);
+                   bufferSize);
 #else
         return OS_ERROR_INVALID_PARAMETER;
 #endif
@@ -604,7 +604,7 @@ OS_ConfigService_parameterSetValue(
                    enumerator,
                    parameterType,
                    buffer,
-                   bufferLength);
+                   bufferSize);
     }
 }
 
@@ -669,7 +669,7 @@ OS_ConfigService_parameterSetValueAsString(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     char const* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (OS_CONFIG_HANDLE_KIND_RPC == OS_ConfigServiceHandle_getHandleKind(
             handle))
@@ -679,16 +679,16 @@ OS_ConfigService_parameterSetValueAsString(
             (OS_ConfigService_ClientCtx_t*)
             OS_ConfigServiceHandle_getClientContext(&handle);
 
-        if (bufferLength > clientCtx->dataport.size)
+        if (bufferSize > clientCtx->dataport.size)
         {
             return OS_ERROR_BUFFER_TOO_SMALL;
         }
-        memcpy(*clientCtx->dataport.io, buffer, bufferLength);
+        memcpy(*clientCtx->dataport.io, buffer, bufferSize);
 
         return OS_ConfigServiceServer_parameterSetValueAsString(
                    enumerator,
                    parameterType,
-                   bufferLength);
+                   bufferSize);
 #else
         return OS_ERROR_INVALID_PARAMETER;
 #endif
@@ -700,7 +700,7 @@ OS_ConfigService_parameterSetValueAsString(
                    enumerator,
                    parameterType,
                    buffer,
-                   bufferLength);
+                   bufferSize);
     }
 }
 
@@ -711,7 +711,7 @@ OS_ConfigService_parameterSetValueAsBlob(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void const* buffer,
-    size_t bufferLength)
+    size_t bufferSize)
 {
     if (OS_CONFIG_HANDLE_KIND_RPC == OS_ConfigServiceHandle_getHandleKind(
             handle))
@@ -721,16 +721,16 @@ OS_ConfigService_parameterSetValueAsBlob(
             (OS_ConfigService_ClientCtx_t*)
             OS_ConfigServiceHandle_getClientContext(&handle);
 
-        if (bufferLength > clientCtx->dataport.size)
+        if (bufferSize > clientCtx->dataport.size)
         {
             return OS_ERROR_BUFFER_TOO_SMALL;
         }
-        memcpy(*clientCtx->dataport.io, buffer, bufferLength);
+        memcpy(*clientCtx->dataport.io, buffer, bufferSize);
 
         return OS_ConfigServiceServer_parameterSetValueAsBlob(
                    enumerator,
                    parameterType,
-                   bufferLength);
+                   bufferSize);
 #else
         return OS_ERROR_INVALID_PARAMETER;
 #endif
@@ -742,7 +742,7 @@ OS_ConfigService_parameterSetValueAsBlob(
                    enumerator,
                    parameterType,
                    buffer,
-                   bufferLength);
+                   bufferSize);
     }
 }
 
@@ -754,7 +754,7 @@ OS_ConfigService_parameterGetValueFromDomainName(
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void* buffer,
-    size_t bufferLength,
+    size_t bufferSize,
     size_t* bytesCopied)
 {
     if (OS_CONFIG_HANDLE_KIND_RPC == OS_ConfigServiceHandle_getHandleKind(
@@ -767,7 +767,7 @@ OS_ConfigService_parameterGetValueFromDomainName(
                              domainName,
                              parameterName,
                              parameterType,
-                             bufferLength,
+                             bufferSize,
                              bytesCopied);
 
         if (err == OS_SUCCESS)
@@ -776,7 +776,7 @@ OS_ConfigService_parameterGetValueFromDomainName(
                 (OS_ConfigService_ClientCtx_t*)
                 OS_ConfigServiceHandle_getClientContext(&handle);
 
-            if (*bytesCopied > bufferLength)
+            if (*bytesCopied > bufferSize)
             {
                 return OS_ERROR_BUFFER_TOO_SMALL;
             }
@@ -799,7 +799,7 @@ OS_ConfigService_parameterGetValueFromDomainName(
                    parameterName,
                    parameterType,
                    buffer,
-                   bufferLength,
+                   bufferSize,
                    bytesCopied);
     }
 }

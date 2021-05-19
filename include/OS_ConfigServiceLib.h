@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020, Hensoldt Cyber GmbH
+ * Copyright (C) 2020-2021, HENSOLDT Cyber GmbH
  *
  * @addtogroup Lib
  * @{
@@ -145,7 +145,7 @@ OS_ConfigServiceLib_parameterGetValue(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     void* buffer,
-    size_t bufferLength,
+    size_t bufferSize,
     size_t* bytesCopied);
 
 // Get the parameter value - specific format.
@@ -168,7 +168,7 @@ OS_ConfigServiceLib_parameterGetValueAsString(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     char* buffer,
-    size_t bufferLength);
+    size_t bufferSize);
 
 // Get the parameter value - specific format.
 OS_Error_t
@@ -176,7 +176,7 @@ OS_ConfigServiceLib_parameterGetValueAsBlob(
     OS_ConfigServiceLib_t* instance,
     OS_ConfigServiceLibTypes_Parameter_t const* parameter,
     void* buffer,
-    size_t bufferLength);
+    size_t bufferSize);
 
 // Set the parameter value - raw format.
 OS_Error_t
@@ -185,7 +185,7 @@ OS_ConfigServiceLib_parameterSetValue(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void const* buffer,
-    size_t bufferLength);
+    size_t bufferSize);
 
 // Set the parameter value - specific format.
 OS_Error_t
@@ -208,7 +208,7 @@ OS_ConfigServiceLib_parameterSetValueAsString(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     char const* buffer,
-    size_t bufferLength);
+    size_t bufferSize);
 
 // Set the parameter value - specific format.
 OS_Error_t
@@ -217,7 +217,7 @@ OS_ConfigServiceLib_parameterSetValueAsBlob(
     OS_ConfigServiceLibTypes_ParameterEnumerator_t const* enumerator,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void const* buffer,
-    size_t bufferLength);
+    size_t bufferSize);
 
 OS_Error_t
 OS_ConfigServiceLib_parameterGetValueFromDomainName(
@@ -226,7 +226,7 @@ OS_ConfigServiceLib_parameterGetValueFromDomainName(
     OS_ConfigServiceLibTypes_ParameterName_t const* parameterName,
     OS_ConfigServiceLibTypes_ParameterType_t parameterType,
     void* buffer,
-    size_t bufferLength,
+    size_t bufferSize,
     size_t* bytesCopied);
 
 /** @} */

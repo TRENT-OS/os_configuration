@@ -1,14 +1,14 @@
-# TRENTOS ConfigService
+# OS ConfigService
 
 ## Overview
 
-Provides the TRENTOS ConfigService API that allows to write and retrieve
-configuration parameters either by using it locally in
-a component or as a separate remote server component.
+Provides the OS ConfigService API that allows to write and retrieve
+configuration parameters either by using it locally in a component or as a
+separate remote server component.
 
 ### Dependencies
 
-* TRENTOS FileSystem
+- OS FileSystem
 
 ### Build options
 

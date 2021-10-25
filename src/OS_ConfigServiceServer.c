@@ -20,7 +20,7 @@ seL4_Word OS_ConfigServiceServer_get_sender_id(void);
 
 // How many parallel remote instances can we handle? This number can be easily
 // increased, for now it is aligned with the limits of other server systems
-// which are provided by TRENTOS-M SDK 1.0
+// which are provided by TRENTOS.
 #define MAX_REMOTE_HANDLES 8
 static OS_ConfigServiceHandle_t localHandleCopies[MAX_REMOTE_HANDLES];
 

@@ -6,7 +6,7 @@
  *
  * @brief Collection of functions to manage the access rights for the  module
  *
- * Copyright (C) 2020, Hensoldt Cyber GmbH
+ * Copyright (C) 2020, HENSOLDT Cyber GmbH
  */
 
 
